@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <script type="text/javascript" src="../babylon/babylon.js"></script>
+    <script type="text/javascript" src="../babylon/babylon.skyMaterial.min.js"></script>
+    <script type="text/javascript" src="../babylon/babylon.materials.min.js"></script>
+    <script type="text/javascript" src="../babylon/babylon.gui.min.js"></script>
+    <script type="text/javascript" src="../babylon/pep.js"></script>
+    <script type="text/javascript" src="../babylon/cannon.js"></script>
+
+
+    <style>
+        html, body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="Vue0" style="width:100%;height:100%;touch-action:none"></canvas>
+    <script type="text/javascript">
+        var canvas = document.getElementById("Vue0");
+
+        canvas.addEventListener('contextmenu', e => {
+            e.preventDefault();
+        });
+
+    </script>
+    <script type="text/javascript" src="./Human.js">
+    </script>
+
+
+
+</body>
+</html> 
