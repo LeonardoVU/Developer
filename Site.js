@@ -620,6 +620,7 @@ const createScene = function () {
             panel.children.forEach(element => {
                 element.dispose();
             });
+
             /*             if (orn === 1 && panel._columns !== 1) {
                             panel._columns = 1;
                             ca = -ca;
@@ -671,6 +672,11 @@ const createScene = function () {
                 en.push(e);
                 enlen = en.length - 1;
                 e = en[enlen][stxt];
+                if (panel.isVertical) {
+                    anchor.position.y = 5;
+                } else {
+                    anchor.position.x = 0;
+                }
                 //console.log(en, enlen, mstxt)
             }
             clk = -1;
@@ -746,7 +752,7 @@ const createScene = function () {
             case BABYLON.PointerEventTypes.POINTERWHEEL:
                 if (panel.isVertical) {
                     text0.text = "POINTER WHEEL";
-                   // console.log(scene);
+                    // console.log(scene);
                 }
                 //text0.text = "POINTER WHEEL";
                 break;
