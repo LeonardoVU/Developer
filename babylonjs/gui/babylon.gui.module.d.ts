@@ -117,7 +117,8 @@ export class AdvancedDynamicTexture extends DynamicTexture {
     _layerToDispose: Nullable<Layer>;
     /** @internal */
     _linkedControls: Control[];
-    private _isFullscreen;
+    /** @internal */
+    _isFullscreen: boolean;
     private _fullscreenViewport;
     private _idealWidth;
     private _idealHeight;
@@ -1123,6 +1124,10 @@ export class Control implements IAnimatable {
     private _gradient;
     /** @internal */
     protected _rebuildLayout: boolean;
+    /**
+     * Observable that fires when the control's enabled state changes
+     */
+    onEnabledStateChangedObservable: Observable<boolean>;
     /** @internal */
     _customData: any;
     /** @internal */
@@ -8893,7 +8898,8 @@ declare module BABYLON.GUI {
         _layerToDispose: BABYLON.Nullable<BABYLON.Layer>;
         /** @internal */
         _linkedControls: Control[];
-        private _isFullscreen;
+        /** @internal */
+        _isFullscreen: boolean;
         private _fullscreenViewport;
         private _idealWidth;
         private _idealHeight;
@@ -9845,6 +9851,10 @@ declare module BABYLON.GUI {
         private _gradient;
         /** @internal */
         protected _rebuildLayout: boolean;
+        /**
+         * BABYLON.Observable that fires when the control's enabled state changes
+         */
+        onEnabledStateChangedObservable: BABYLON.Observable<boolean>;
         /** @internal */
         _customData: any;
         /** @internal */

@@ -169,6 +169,9 @@ declare module BABYLON {
         private _getTransformedReferenceCoordinate;
         private _updateAlignment;
         private _checkAndUpdateValues;
+        private _addOrUpdateMetadata;
+        private _removeFromMetadata;
+        private _getCommonPropertyKeys;
         private _markChildrenAsDirty;
         componentWillUnmount(): void;
         _filterFontDuplicates(array: {

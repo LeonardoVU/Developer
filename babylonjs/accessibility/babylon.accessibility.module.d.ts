@@ -1,8 +1,20 @@
 
+declare module "babylonjs-accessibility/HtmlTwin/htmlTwinAccessibilityItem" {
+import { ReactElement } from "react";
+import { HTMLTwinItem } from "babylonjs-accessibility/HtmlTwin/htmlTwinItem";
+export interface IHTMLTwinItemComponentProps {
+    description: string | undefined;
+    children: ReactElement[];
+    a11yItem: HTMLTwinItem;
+}
+export function HTMLTwinAccessibilityItem(props: IHTMLTwinItemComponentProps): JSX.Element;
+
+}
 declare module "babylonjs-accessibility/HtmlTwin/htmlTwinGUIItem" {
 import { Scene } from "babylonjs/scene";
 import { Control } from "babylonjs-gui/2D/controls/control";
 import { HTMLTwinItem } from "babylonjs-accessibility/HtmlTwin/htmlTwinItem";
+import { IHTMLTwinRendererOptions } from "babylonjs-accessibility/HtmlTwin/htmlTwinRenderer";
 /**
  * A abstract layer to store the html twin tree structure. It is constructed from the BabylonJS scene entities that need to be accessible. It informs the parent-children relationship of html twin tree, and informs how to render: description, isActionable, onclick/onrightclick/onfocus/onblur.
  */
@@ -11,15 +23,12 @@ export class HTMLTwinGUIItem extends HTMLTwinItem {
      * The corresponding BabylonJS entity. Can be a Node or a Control.
      */
     entity: Control;
-    /**
-     * The children of this item in the html twin tree.
-     */
-    children: HTMLTwinGUIItem[];
-    constructor(entity: Control, scene: Scene, children: HTMLTwinGUIItem[]);
+    constructor(entity: Control, scene: Scene);
     /**
      * The text content displayed in HTML element.
+     * @param options - Options to render HTML twin tree where this element is contained.
      */
-    get description(): string;
+    getDescription(options: IHTMLTwinRendererOptions): string;
     /**
      * If this entity is actionable (can be clicked).
      */
@@ -58,24 +67,9 @@ interface IHTMLTwinHostComponentState {
     a11yTreeItems: HTMLTwinItem[];
 }
 export class HTMLTwinHostComponent extends React.Component<IHTMLTwinHostComponentProps, IHTMLTwinHostComponentState> {
-    private _observersMap;
     private _options;
     constructor(props: IHTMLTwinHostComponentProps);
-    componentDidUpdate(prevProps: Readonly<IHTMLTwinHostComponentProps>, prevState: Readonly<IHTMLTwinHostComponentState>, snapshot?: any): void;
-    /**
-     * Adds observables to update the tree if any of the scene's nodes or GUI controls change.
-     */
-    _addSceneObservers: () => void;
-    componentDidMount(): void;
-    componentWillUnmount(): void;
     render(): JSX.Element;
-    private _updateHTMLTwinItems;
-    private _getHTMLTwinItemsFromNodes;
-    private _hasChildrenWithA11yTag;
-    private _emptyTree;
-    private _getHTMLTwinItemsFromGUI;
-    private _isFullscreenGUI;
-    private _isMeshGUI;
 }
 export {};
 
@@ -83,8 +77,31 @@ export {};
 declare module "babylonjs-accessibility/HtmlTwin/htmlTwinItem" {
 import { Node } from "babylonjs/node";
 import { Scene } from "babylonjs/scene";
+import { AdvancedDynamicTexture } from "babylonjs-gui/2D/advancedDynamicTexture";
 import { Control } from "babylonjs-gui/2D/controls/control";
+import { IHTMLTwinRendererOptions } from "babylonjs-accessibility/HtmlTwin/htmlTwinRenderer";
+/**
+ * The BabylonJS entities that can be accessible. It can be a Node or a Control.
+ */
 export type AccessibilityEntity = Node | Control;
+/**
+ * Retrieve an instance of texture with accessible elements (AdvancedDynamicTexture)
+ * @param item the item to retrieve the texture from
+ * @returns an accessible texture if found, undefined otherwise
+ */
+export function getAccessibleTexture(item: AccessibilityEntity): AdvancedDynamicTexture | undefined;
+/**
+ * Get the direct children of an accessible item.
+ * @param item an accessible item
+ * @returns a list of accessible items
+ */
+export function getDirectChildrenOf(item: AccessibilityEntity): AccessibilityEntity[];
+/**
+ * Given an accessible item, return if it's visible or not.
+ * @param item an accessible item
+ * @returns its visibility status
+ */
+export function isVisible(item: AccessibilityEntity): boolean;
 /**
  * A abstract layer to store the html twin tree structure. It is constructed from the BabylonJS scene entities that need to be accessible. It informs the parent-children relationship of html twin tree, and informs how to render: description, isActionable, onclick/onrightclick/onfocus/onblur.
  */
@@ -97,16 +114,13 @@ export class HTMLTwinItem {
      * The BabylonJS scene that the corresponding BabylonJS entity is in.
      */
     scene: Scene;
-    /**
-     * The children of this item in the html twin tree.
-     */
-    children: HTMLTwinItem[];
-    constructor(entity: AccessibilityEntity, scene: Scene, children: HTMLTwinItem[]);
+    constructor(entity: AccessibilityEntity, scene: Scene);
     /**
      * The text content displayed in HTML element.
      * Returns the description in accessibilityTag, if defined (returns "" by default).
+     * @param _options - The options to render the HTML twin tree where this item is contained. Not used in this class, but in its children.
      */
-    get description(): string;
+    getDescription(_options: IHTMLTwinRendererOptions): string;
     /**
      * If this entity is actionable (can be clicked).
      * Implemented by child classes
@@ -138,6 +152,24 @@ export class HTMLTwinItem {
 }
 
 }
+declare module "babylonjs-accessibility/HtmlTwin/htmlTwinItemAdapter" {
+/// <reference types="react" />
+import { AccessibilityEntity } from "babylonjs-accessibility/HtmlTwin/htmlTwinItem";
+import { Scene } from "babylonjs/scene";
+import { IHTMLTwinRendererOptions } from "babylonjs-accessibility/HtmlTwin/htmlTwinRenderer";
+/**
+ * An adapter that transforms a Accessible entity in a React element. Contains observables for the events that can
+ * change the state of the entity or the accesible tree.
+ * @param props the props of the adapter
+ * @returns
+ */
+export function HTMLTwinItemAdapter(props: {
+    node: AccessibilityEntity;
+    scene: Scene;
+    options: IHTMLTwinRendererOptions;
+}): JSX.Element | null;
+
+}
 declare module "babylonjs-accessibility/HtmlTwin/htmlTwinNodeItem" {
 import { Node } from "babylonjs/node";
 import { Scene } from "babylonjs/scene";
@@ -150,11 +182,7 @@ export class HTMLTwinNodeItem extends HTMLTwinItem {
      * The corresponding BabylonJS entity. Can be a Node or a Control.
      */
     entity: Node;
-    /**
-     * The children of this item in the html twin tree.
-     */
-    children: HTMLTwinItem[];
-    constructor(entity: Node, scene: Scene, children: HTMLTwinItem[]);
+    constructor(entity: Node, scene: Scene);
     /**
      * If this entity is actionable (can be clicked).
      */
@@ -208,21 +236,30 @@ export class HTMLTwinRenderer {
 }
 
 }
-declare module "babylonjs-accessibility/HtmlTwin/htmlTwinTreeComponent" {
-import * as React from "react";
-import { HTMLTwinItem } from "babylonjs-accessibility/HtmlTwin/htmlTwinItem";
-interface IHTMLTwinItemComponentProps {
-    a11yItem: HTMLTwinItem;
-    level: number;
+declare module "babylonjs-accessibility/HtmlTwin/htmlTwinSceneContext" {
+/// <reference types="react" />
+/**
+ * Context used to update a scene when an entity is added or removed from the accessibility tree.
+ */
+export interface ISceneContext {
+    updateScene: () => void;
 }
-export class HTMLTwinItemComponent extends React.Component<IHTMLTwinItemComponentProps> {
-    constructor(props: IHTMLTwinItemComponentProps);
-    render(): JSX.Element;
-    private _renderLeafNode;
-    private _renderParentNode;
-    private _renderChildren;
+export const SceneContext: import("react").Context<ISceneContext>;
+
 }
-export {};
+declare module "babylonjs-accessibility/HtmlTwin/htmlTwinSceneTree" {
+/// <reference types="react" />
+import { Scene } from "babylonjs/scene";
+import { IHTMLTwinRendererOptions } from "babylonjs-accessibility/HtmlTwin/htmlTwinRenderer";
+/**
+ * The scene tree of the HTML twin. It contain all the top level nodes
+ * @param props
+ * @returns
+ */
+export function HTMLTwinSceneTree(props: {
+    scene: Scene;
+    options: IHTMLTwinRendererOptions;
+}): JSX.Element;
 
 }
 declare module "babylonjs-accessibility/HtmlTwin/index" {
@@ -244,6 +281,14 @@ declare module "babylonjs-accessibility" {
 
 
 declare module BABYLON.Accessibility {
+    export interface IHTMLTwinItemComponentProps {
+        description: string | undefined;
+        children: React.ReactElement[];
+        a11yItem: HTMLTwinItem;
+    }
+    export function HTMLTwinAccessibilityItem(props: IHTMLTwinItemComponentProps): JSX.Element;
+
+
     /**
      * A abstract layer to store the html twin tree structure. It is constructed from the BabylonJS scene entities that need to be accessible. It informs the parent-children relationship of html twin tree, and informs how to render: description, isActionable, onclick/onrightclick/onfocus/onblur.
      */
@@ -252,15 +297,12 @@ declare module BABYLON.Accessibility {
          * The corresponding BabylonJS entity. Can be a Node or a BABYLON.GUI.Control.
          */
         entity: BABYLON.GUI.Control;
-        /**
-         * The children of this item in the html twin tree.
-         */
-        children: HTMLTwinGUIItem[];
-        constructor(entity: BABYLON.GUI.Control, scene: BABYLON.Scene, children: HTMLTwinGUIItem[]);
+        constructor(entity: BABYLON.GUI.Control, scene: BABYLON.Scene);
         /**
          * The text content displayed in HTML element.
+         * @param options - Options to render HTML twin tree where this element is contained.
          */
-        get description(): string;
+        getDescription(options: IHTMLTwinRendererOptions): string;
         /**
          * If this entity is actionable (can be clicked).
          */
@@ -294,28 +336,34 @@ declare module BABYLON.Accessibility {
         a11yTreeItems: HTMLTwinItem[];
     }
     export class HTMLTwinHostComponent extends React.Component<IHTMLTwinHostComponentProps, IHTMLTwinHostComponentState> {
-        private _observersMap;
         private _options;
         constructor(props: IHTMLTwinHostComponentProps);
-        componentDidUpdate(prevProps: Readonly<IHTMLTwinHostComponentProps>, prevState: Readonly<IHTMLTwinHostComponentState>, snapshot?: any): void;
-        /**
-         * Adds observables to update the tree if any of the scene's nodes or GUI controls change.
-         */
-        _addSceneObservers: () => void;
-        componentDidMount(): void;
-        componentWillUnmount(): void;
         render(): JSX.Element;
-        private _updateHTMLTwinItems;
-        private _getHTMLTwinItemsFromNodes;
-        private _hasChildrenWithA11yTag;
-        private _emptyTree;
-        private _getHTMLTwinItemsFromGUI;
-        private _isFullscreenGUI;
-        private _isMeshGUI;
     }
 
 
+    /**
+     * The BabylonJS entities that can be accessible. It can be a BABYLON.Node or a BABYLON.GUI.Control.
+     */
     export type AccessibilityEntity = BABYLON.Node | BABYLON.GUI.Control;
+    /**
+     * Retrieve an instance of texture with accessible elements (AdvancedDynamicTexture)
+     * @param item the item to retrieve the texture from
+     * @returns an accessible texture if found, undefined otherwise
+     */
+    export function getAccessibleTexture(item: AccessibilityEntity): BABYLON.GUI.AdvancedDynamicTexture | undefined;
+    /**
+     * Get the direct children of an accessible item.
+     * @param item an accessible item
+     * @returns a list of accessible items
+     */
+    export function getDirectChildrenOf(item: AccessibilityEntity): AccessibilityEntity[];
+    /**
+     * Given an accessible item, return if it's visible or not.
+     * @param item an accessible item
+     * @returns its visibility status
+     */
+    export function isVisible(item: AccessibilityEntity): boolean;
     /**
      * A abstract layer to store the html twin tree structure. It is constructed from the BabylonJS scene entities that need to be accessible. It informs the parent-children relationship of html twin tree, and informs how to render: description, isActionable, onclick/onrightclick/onfocus/onblur.
      */
@@ -328,16 +376,13 @@ declare module BABYLON.Accessibility {
          * The BabylonJS scene that the corresponding BabylonJS entity is in.
          */
         scene: BABYLON.Scene;
-        /**
-         * The children of this item in the html twin tree.
-         */
-        children: HTMLTwinItem[];
-        constructor(entity: AccessibilityEntity, scene: BABYLON.Scene, children: HTMLTwinItem[]);
+        constructor(entity: AccessibilityEntity, scene: BABYLON.Scene);
         /**
          * The text content displayed in HTML element.
          * Returns the description in accessibilityTag, if defined (returns "" by default).
+         * @param _options - The options to render the HTML twin tree where this item is contained. Not used in this class, but in its children.
          */
-        get description(): string;
+        getDescription(_options: IHTMLTwinRendererOptions): string;
         /**
          * If this entity is actionable (can be clicked).
          * Implemented by child classes
@@ -369,6 +414,20 @@ declare module BABYLON.Accessibility {
     }
 
 
+    /// <reference types="react" />
+    /**
+     * An adapter that transforms a Accessible entity in a React element. Contains observables for the events that can
+     * change the state of the entity or the accesible tree.
+     * @param props the props of the adapter
+     * @returns
+     */
+    export function HTMLTwinItemAdapter(props: {
+        node: AccessibilityEntity;
+        scene: BABYLON.Scene;
+        options: IHTMLTwinRendererOptions;
+    }): JSX.Element | null;
+
+
     /**
      * A abstract layer to store the html twin tree structure. It is constructed from the BabylonJS scene entities that need to be accessible. It informs the parent-children relationship of html twin tree, and informs how to render: description, isActionable, onclick/onrightclick/onfocus/onblur.
      */
@@ -377,11 +436,7 @@ declare module BABYLON.Accessibility {
          * The corresponding BabylonJS entity. Can be a BABYLON.Node or a Control.
          */
         entity: BABYLON.Node;
-        /**
-         * The children of this item in the html twin tree.
-         */
-        children: HTMLTwinItem[];
-        constructor(entity: BABYLON.Node, scene: BABYLON.Scene, children: HTMLTwinItem[]);
+        constructor(entity: BABYLON.Node, scene: BABYLON.Scene);
         /**
          * If this entity is actionable (can be clicked).
          */
@@ -433,17 +488,26 @@ declare module BABYLON.Accessibility {
     }
 
 
-    interface IHTMLTwinItemComponentProps {
-        a11yItem: HTMLTwinItem;
-        level: number;
+    /// <reference types="react" />
+    /**
+     * Context used to update a scene when an entity is added or removed from the accessibility tree.
+     */
+    export interface ISceneContext {
+        updateScene: () => void;
     }
-    export class HTMLTwinItemComponent extends React.Component<IHTMLTwinItemComponentProps> {
-        constructor(props: IHTMLTwinItemComponentProps);
-        render(): JSX.Element;
-        private _renderLeafNode;
-        private _renderParentNode;
-        private _renderChildren;
-    }
+    export var SceneContext: import("react").Context<ISceneContext>;
+
+
+    /// <reference types="react" />
+    /**
+     * The scene tree of the HTML twin. It contain all the top level nodes
+     * @param props
+     * @returns
+     */
+    export function HTMLTwinSceneTree(props: {
+        scene: BABYLON.Scene;
+        options: IHTMLTwinRendererOptions;
+    }): JSX.Element;
 
 
 

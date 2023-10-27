@@ -3289,13 +3289,13 @@ declare module INSPECTOR {
             previousOne?: any;
             found?: boolean;
         }): boolean;
-        processKeys(keyEvent: React.KeyboardEvent<HTMLDivElement>): void;
+        processKeys(keyEvent: React.KeyboardEvent<HTMLDivElement>, allNodes: any[]): void;
         private _getPipelineContextMenus;
         private _getNodeContextMenus;
         private _getMaterialsContextMenus;
         private _getSpriteManagersContextMenus;
         private _getParticleSystemsContextMenus;
-        renderContent(): JSX.Element | null;
+        renderContent(allNodes: any[]): JSX.Element | null;
         onClose(): void;
         onPopup(): void;
         render(): JSX.Element;
