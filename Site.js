@@ -411,7 +411,7 @@ var e = mn;
 var en = [];
 var mstxt = [];
 var enlen = 0;
-var cz = 2.5;
+var cz = 1.5;
 var ca = 3 * PI / 2;
 
 var strt = [];
@@ -566,12 +566,12 @@ const createScene = function () {
         if (this.outerWidth > this.outerHeight) {
             panel.isVertical = false;
             whr = this.outerWidth / this.outerHeight;
-            cz = 2.5;
+            cz = 1.5;
             anchor.position.y = 5;
         } else {
             panel.isVertical = true;
             whr = this.outerHeight / this.outerWidth;
-            cz = 2.5;
+            cz = 1.5;
             anchor.position.x = 0;
 
         }
