@@ -1,605 +1,474 @@
 
-declare module "babylonjs-serializers/glTF/2.0/Extensions/EXT_mesh_gpu_instancing" {
-import { INode } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { _BinaryWriter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { Nullable } from "babylonjs/types";
-import { Node } from "babylonjs/node";
-import "babylonjs/Meshes/thinInstanceMesh";
-/**
- * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
- */
-export class EXT_mesh_gpu_instancing implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    private _exporter;
-    private _wasUsed;
-    constructor(exporter: _Exporter);
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
-    postExportNodeAsync(context: string, node: Nullable<INode>, babylonNode: Node, nodeMap: {
-        [key: number]: number;
-    }, binaryWriter: _BinaryWriter): Promise<Nullable<INode>>;
-    private _buildAccessor;
-}
+declare module "babylonjs-serializers/index" {
+export * from "babylonjs-serializers/OBJ/index";
+export * from "babylonjs-serializers/glTF/index";
+export * from "babylonjs-serializers/stl/index";
+export * from "babylonjs-serializers/USDZ/index";
 
 }
-declare module "babylonjs-serializers/glTF/2.0/Extensions/index" {
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_texture_transform";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_lights_punctual";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_clearcoat";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_iridescence";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_anisotropy";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_sheen";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_unlit";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_ior";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_specular";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_volume";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_transmission";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/EXT_mesh_gpu_instancing";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_emissive_strength";
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_lights_punctual" {
-import { Nullable } from "babylonjs/types";
-import { Node } from "babylonjs/node";
-import { INode } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+declare module "babylonjs-serializers/stl/stlSerializer" {
+import { Mesh } from "babylonjs/Meshes/mesh";
+import { InstancedMesh } from "babylonjs/Meshes/instancedMesh";
 /**
- * [Specification](https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_lights_punctual/README.md)
+ * Class for generating STL data from a Babylon scene.
  */
-export class KHR_lights_punctual implements IGLTFExporterExtensionV2 {
-    /** The name of this extension. */
-    readonly name: string;
-    /** Defines whether this extension is enabled. */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    /** Reference to the glTF exporter */
-    private _exporter;
-    private _lights;
+export class STLExport {
     /**
-     * @internal
+     * Exports the geometry of a Mesh array in .STL file format (ASCII)
+     * @param meshes list defines the mesh to serialize
+     * @param download triggers the automatic download of the file.
+     * @param fileName changes the downloads fileName.
+     * @param binary changes the STL to a binary type.
+     * @param isLittleEndian toggle for binary type exporter.
+     * @param doNotBakeTransform toggle if meshes transforms should be baked or not.
+     * @param supportInstancedMeshes toggle to export instanced Meshes. Enabling support for instanced meshes will override doNoBakeTransform as true
+     * @param exportIndividualMeshes toggle to export each mesh as an independent mesh. By default, all the meshes are combined into one mesh. This property has no effect when exporting in binary format
+     * @returns the STL as UTF8 string
      */
+    static CreateSTL(meshes: (Mesh | InstancedMesh)[], download?: boolean, fileName?: string, binary?: boolean, isLittleEndian?: boolean, doNotBakeTransform?: boolean, supportInstancedMeshes?: boolean, exportIndividualMeshes?: boolean): any;
+}
+
+}
+declare module "babylonjs-serializers/stl/index" {
+export * from "babylonjs-serializers/stl/stlSerializer";
+
+}
+declare module "babylonjs-serializers/glTF/index" {
+export * from "babylonjs-serializers/glTF/glTFFileExporter";
+export * from "babylonjs-serializers/glTF/2.0/index";
+
+}
+declare module "babylonjs-serializers/glTF/glTFFileExporter" {
+/** @internal */
+export var __IGLTFExporterExtension: number;
+/**
+ * Interface for extending the exporter
+ * @internal
+ */
+export interface IGLTFExporterExtension {
+    /**
+     * The name of this extension
+     */
+    readonly name: string;
+    /**
+     * Defines whether this extension is enabled
+     */
+    enabled: boolean;
+    /**
+     * Defines whether this extension is required
+     */
+    required: boolean;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/index" {
+export * from "babylonjs-serializers/glTF/2.0/glTFAnimation";
+export * from "babylonjs-serializers/glTF/2.0/glTFData";
+export * from "babylonjs-serializers/glTF/2.0/glTFExporter";
+export * from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+export * from "babylonjs-serializers/glTF/2.0/glTFMaterialExporter";
+export * from "babylonjs-serializers/glTF/2.0/glTFSerializer";
+export * from "babylonjs-serializers/glTF/2.0/glTFUtilities";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/index";
+
+}
+declare module "babylonjs-serializers/glTF/2.0/glTFUtilities" {
+import { IBufferView, AccessorComponentType, IAccessor } from "babylonjs-gltf2interface";
+import { AccessorType } from "babylonjs-gltf2interface";
+import { FloatArray, Nullable } from "babylonjs/types";
+import { Vector4 } from "babylonjs/Maths/math.vector";
+import { Vector3 } from "babylonjs/Maths/math.vector";
+/**
+ * @internal
+ */
+export class _GLTFUtilities {
+    /**
+     * Creates a buffer view based on the supplied arguments
+     * @param bufferIndex index value of the specified buffer
+     * @param byteOffset byte offset value
+     * @param byteLength byte length of the bufferView
+     * @param byteStride byte distance between conequential elements
+     * @param name name of the buffer view
+     * @returns bufferView for glTF
+     */
+    static _CreateBufferView(bufferIndex: number, byteOffset: number, byteLength: number, byteStride?: number, name?: string): IBufferView;
+    /**
+     * Creates an accessor based on the supplied arguments
+     * @param bufferviewIndex The index of the bufferview referenced by this accessor
+     * @param name The name of the accessor
+     * @param type The type of the accessor
+     * @param componentType The datatype of components in the attribute
+     * @param count The number of attributes referenced by this accessor
+     * @param byteOffset The offset relative to the start of the bufferView in bytes
+     * @param min Minimum value of each component in this attribute
+     * @param max Maximum value of each component in this attribute
+     * @returns accessor for glTF
+     */
+    static _CreateAccessor(bufferviewIndex: number, name: string, type: AccessorType, componentType: AccessorComponentType, count: number, byteOffset: Nullable<number>, min: Nullable<number[]>, max: Nullable<number[]>): IAccessor;
+    /**
+     * Calculates the minimum and maximum values of an array of position floats
+     * @param positions Positions array of a mesh
+     * @param vertexStart Starting vertex offset to calculate min and max values
+     * @param vertexCount Number of vertices to check for min and max values
+     * @returns min number array and max number array
+     */
+    static _CalculateMinMaxPositions(positions: FloatArray, vertexStart: number, vertexCount: number): {
+        min: number[];
+        max: number[];
+    };
+    static _NormalizeTangentFromRef(tangent: Vector4 | Vector3): void;
+    static _GetDataAccessorElementCount(accessorType: AccessorType): 1 | 3 | 2 | 4 | 9 | 16;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/glTFSerializer" {
+import { Node } from "babylonjs/node";
+import { Scene } from "babylonjs/scene";
+import { Animation } from "babylonjs/Animations/animation";
+import { GLTFData } from "babylonjs-serializers/glTF/2.0/glTFData";
+/**
+ * Holds a collection of exporter options and parameters
+ */
+export interface IExportOptions {
+    /**
+     * Function which indicates whether a babylon node should be exported or not
+     * @param node source Babylon node. It is used to check whether it should be exported to glTF or not
+     * @returns boolean, which indicates whether the node should be exported (true) or not (false)
+     */
+    shouldExportNode?(node: Node): boolean;
+    /**
+     * Function which indicates whether an animation on the scene should be exported or not
+     * @param animation source animation
+     * @returns boolean, which indicates whether the animation should be exported (true) or not (false)
+     */
+    shouldExportAnimation?(animation: Animation): boolean;
+    /**
+     * Function used to extract the part of node's metadata that will be exported into glTF node extras
+     * @param metadata source metadata to read from
+     * @returns the data to store to glTF node extras
+     */
+    metadataSelector?(metadata: any): any;
+    /**
+     * The sample rate to bake animation curves. Defaults to 1 / 60.
+     */
+    animationSampleRate?: number;
+    /**
+     * Begin serialization without waiting for the scene to be ready. Defaults to false.
+     */
+    exportWithoutWaitingForScene?: boolean;
+    /**
+     * Indicates if unused vertex uv attributes should be included in export. Defaults to false.
+     */
+    exportUnusedUVs?: boolean;
+    /**
+     * Remove no-op root nodes when possible. Defaults to true.
+     */
+    removeNoopRootNodes?: boolean;
+    /**
+     * Indicates if coordinate system swapping root nodes should be included in export. Defaults to false.
+     * @deprecated Please use removeNoopRootNodes instead
+     */
+    includeCoordinateSystemConversionNodes?: boolean;
+}
+/**
+ * Class for generating glTF data from a Babylon scene.
+ */
+export class GLTF2Export {
+    /**
+     * Exports the geometry of the scene to .gltf file format asynchronously
+     * @param scene Babylon scene with scene hierarchy information
+     * @param filePrefix File prefix to use when generating the glTF file
+     * @param options Exporter options
+     * @returns Returns an object with a .gltf file and associates texture names
+     * as keys and their data and paths as values
+     */
+    static GLTFAsync(scene: Scene, filePrefix: string, options?: IExportOptions): Promise<GLTFData>;
+    private static _PreExportAsync;
+    private static _PostExportAsync;
+    /**
+     * Exports the geometry of the scene to .glb file format asychronously
+     * @param scene Babylon scene with scene hierarchy information
+     * @param filePrefix File prefix to use when generating glb file
+     * @param options Exporter options
+     * @returns Returns an object with a .glb filename as key and data as value
+     */
+    static GLBAsync(scene: Scene, filePrefix: string, options?: IExportOptions): Promise<GLTFData>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/glTFMaterialExporter" {
+import { ITextureInfo, IMaterial, IMaterialPbrMetallicRoughness } from "babylonjs-gltf2interface";
+import { ImageMimeType } from "babylonjs-gltf2interface";
+import { Nullable } from "babylonjs/types";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { Material } from "babylonjs/Materials/material";
+import { StandardMaterial } from "babylonjs/Materials/standardMaterial";
+import { PBRBaseMaterial } from "babylonjs/Materials/PBR/pbrBaseMaterial";
+/**
+ * Utility methods for working with glTF material conversion properties.  This class should only be used internally
+ * @internal
+ */
+export class _GLTFMaterialExporter {
+    /**
+     * Represents the dielectric specular values for R, G and B
+     */
+    private static readonly _DielectricSpecular;
+    /**
+     * Allows the maximum specular power to be defined for material calculations
+     */
+    private static readonly _MaxSpecularPower;
+    /**
+     * Mapping to store textures
+     */
+    private _textureMap;
+    private _internalTextureToImage;
+    /**
+     * Numeric tolerance value
+     */
+    private static readonly _Epsilon;
+    /**
+     * Reference to the glTF Exporter
+     */
+    private _exporter;
     constructor(exporter: _Exporter);
-    /** @internal */
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
-    /** @internal */
-    onExporting(): void;
+    /**
+     * Specifies if two colors are approximately equal in value
+     * @param color1 first color to compare to
+     * @param color2 second color to compare to
+     * @param epsilon threshold value
+     * @returns boolean specifying if the colors are approximately equal in value
+     */
+    private static _FuzzyEquals;
+    /**
+     * Gets the materials from a Babylon scene and converts them to glTF materials
+     * @param exportMaterials
+     * @param mimeType texture mime type
+     * @param hasTextureCoords specifies if texture coordinates are present on the material
+     * @returns promise that resolves after all materials have been converted
+     */
+    _convertMaterialsToGLTFAsync(exportMaterials: Set<Material>, mimeType: ImageMimeType, hasTextureCoords: boolean): Promise<void>;
+    /**
+     * Makes a copy of the glTF material without the texture parameters
+     * @param originalMaterial original glTF material
+     * @returns glTF material without texture parameters
+     */
+    _stripTexturesFromMaterial(originalMaterial: IMaterial): IMaterial;
+    /**
+     * Specifies if the material has any texture parameters present
+     * @param material glTF Material
+     * @returns boolean specifying if texture parameters are present
+     */
+    _hasTexturesPresent(material: IMaterial): boolean;
+    _getTextureInfo(babylonTexture: Nullable<BaseTexture>): Nullable<ITextureInfo>;
+    /**
+     * Converts a Babylon StandardMaterial to a glTF Metallic Roughness Material
+     * @param babylonStandardMaterial
+     * @returns glTF Metallic Roughness Material representation
+     */
+    _convertToGLTFPBRMetallicRoughness(babylonStandardMaterial: StandardMaterial): IMaterialPbrMetallicRoughness;
+    /**
+     * Computes the metallic factor
+     * @param diffuse diffused value
+     * @param specular specular value
+     * @param oneMinusSpecularStrength one minus the specular strength
+     * @returns metallic value
+     */
+    static _SolveMetallic(diffuse: number, specular: number, oneMinusSpecularStrength: number): number;
+    /**
+     * Sets the glTF alpha mode to a glTF material from the Babylon Material
+     * @param glTFMaterial glTF material
+     * @param babylonMaterial Babylon material
+     */
+    private static _SetAlphaMode;
+    /**
+     * Converts a Babylon Standard Material to a glTF Material
+     * @param babylonStandardMaterial BJS Standard Material
+     * @param mimeType mime type to use for the textures
+     * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
+     * @returns promise, resolved with the material
+     */
+    _convertStandardMaterialAsync(babylonStandardMaterial: StandardMaterial, mimeType: ImageMimeType, hasTextureCoords: boolean): Promise<IMaterial>;
+    private _finishMaterial;
+    /**
+     * Converts an image typed array buffer to a base64 image
+     * @param buffer typed array buffer
+     * @param width width of the image
+     * @param height height of the image
+     * @param mimeType mimetype of the image
+     * @returns base64 image string
+     */
+    private _getImageDataAsync;
+    /**
+     * Generates a white texture based on the specified width and height
+     * @param width width of the texture in pixels
+     * @param height height of the texture in pixels
+     * @param scene babylonjs scene
+     * @returns white texture
+     */
+    private _createWhiteTexture;
+    /**
+     * Resizes the two source textures to the same dimensions.  If a texture is null, a default white texture is generated.  If both textures are null, returns null
+     * @param texture1 first texture to resize
+     * @param texture2 second texture to resize
+     * @param scene babylonjs scene
+     * @returns resized textures or null
+     */
+    private _resizeTexturesToSameDimensions;
+    /**
+     * Converts an array of pixels to a Float32Array
+     * Throws an error if the pixel format is not supported
+     * @param pixels - array buffer containing pixel values
+     * @returns Float32 of pixels
+     */
+    private _convertPixelArrayToFloat32;
+    /**
+     * Convert Specular Glossiness Textures to Metallic Roughness
+     * See link below for info on the material conversions from PBR Metallic/Roughness and Specular/Glossiness
+     * @link https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Archived/KHR_materials_pbrSpecularGlossiness/examples/convert-between-workflows-bjs/js/babylon.pbrUtilities.js
+     * @param diffuseTexture texture used to store diffuse information
+     * @param specularGlossinessTexture texture used to store specular and glossiness information
+     * @param factors specular glossiness material factors
+     * @param mimeType the mime type to use for the texture
+     * @returns pbr metallic roughness interface or null
+     */
+    private _convertSpecularGlossinessTexturesToMetallicRoughnessAsync;
+    /**
+     * Converts specular glossiness material properties to metallic roughness
+     * @param specularGlossiness interface with specular glossiness material properties
+     * @returns interface with metallic roughness material properties
+     */
+    private _convertSpecularGlossinessToMetallicRoughness;
+    /**
+     * Calculates the surface reflectance, independent of lighting conditions
+     * @param color Color source to calculate brightness from
+     * @returns number representing the perceived brightness, or zero if color is undefined
+     */
+    private _getPerceivedBrightness;
+    /**
+     * Returns the maximum color component value
+     * @param color
+     * @returns maximum color component value, or zero if color is null or undefined
+     */
+    private _getMaxComponent;
+    /**
+     * Convert a PBRMaterial (Metallic/Roughness) to Metallic Roughness factors
+     * @param babylonPBRMaterial BJS PBR Metallic Roughness Material
+     * @param mimeType mime type to use for the textures
+     * @param glTFPbrMetallicRoughness glTF PBR Metallic Roughness interface
+     * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
+     * @returns glTF PBR Metallic Roughness factors
+     */
+    private _convertMetalRoughFactorsToMetallicRoughnessAsync;
+    private _getTextureSampler;
+    private _getGLTFTextureWrapMode;
+    /**
+     * Convert a PBRMaterial (Specular/Glossiness) to Metallic Roughness factors
+     * @param babylonPBRMaterial BJS PBR Metallic Roughness Material
+     * @param mimeType mime type to use for the textures
+     * @param pbrMetallicRoughness glTF PBR Metallic Roughness interface
+     * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
+     * @returns glTF PBR Metallic Roughness factors
+     */
+    private _convertSpecGlossFactorsToMetallicRoughnessAsync;
+    /**
+     * Converts a Babylon PBR Base Material to a glTF Material
+     * @param babylonPBRMaterial BJS PBR Base Material
+     * @param mimeType mime type to use for the textures
+     * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
+     * @returns async glTF Material representation
+     */
+    _convertPBRMaterialAsync(babylonPBRMaterial: PBRBaseMaterial, mimeType: ImageMimeType, hasTextureCoords: boolean): Promise<IMaterial>;
+    private _setMetallicRoughnessPbrMaterial;
+    private _getPixelsFromTexture;
+    /**
+     * Extracts a texture from a Babylon texture into file data and glTF data
+     * @param babylonTexture Babylon texture to extract
+     * @param mimeType Mime Type of the babylonTexture
+     * @returns glTF texture info, or null if the texture format is not supported
+     */
+    _exportTextureAsync(babylonTexture: BaseTexture, mimeType: ImageMimeType): Promise<Nullable<ITextureInfo>>;
+    _exportTextureInfoAsync(babylonTexture: BaseTexture, mimeType: ImageMimeType): Promise<Nullable<ITextureInfo>>;
+    private _exportImage;
+    private _exportTextureInfo;
+    private _exportTextureSampler;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/glTFExporterExtension" {
+import { ImageMimeType, IMeshPrimitive, INode, IMaterial, ITextureInfo } from "babylonjs-gltf2interface";
+import { Node } from "babylonjs/node";
+import { Nullable } from "babylonjs/types";
+import { Texture } from "babylonjs/Materials/Textures/texture";
+import { SubMesh } from "babylonjs/Meshes/subMesh";
+import { IDisposable } from "babylonjs/scene";
+import { _BinaryWriter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { IGLTFExporterExtension } from "babylonjs-serializers/glTF/glTFFileExporter";
+import { Material } from "babylonjs/Materials/material";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+/** @internal */
+export var __IGLTFExporterExtensionV2: number;
+/**
+ * Interface for a glTF exporter extension
+ * @internal
+ */
+export interface IGLTFExporterExtensionV2 extends IGLTFExporterExtension, IDisposable {
+    /**
+     * Define this method to modify the default behavior before exporting a texture
+     * @param context The context when loading the asset
+     * @param babylonTexture The Babylon.js texture
+     * @param mimeType The mime-type of the generated image
+     * @returns A promise that resolves with the exported texture
+     */
+    preExportTextureAsync?(context: string, babylonTexture: Nullable<Texture>, mimeType: ImageMimeType): Promise<Nullable<Texture>>;
+    /**
+     * Define this method to get notified when a texture info is created
+     * @param context The context when loading the asset
+     * @param textureInfo The glTF texture info
+     * @param babylonTexture The Babylon.js texture
+     */
+    postExportTexture?(context: string, textureInfo: ITextureInfo, babylonTexture: BaseTexture): void;
+    /**
+     * Define this method to modify the default behavior when exporting texture info
+     * @param context The context when loading the asset
+     * @param meshPrimitive glTF mesh primitive
+     * @param babylonSubMesh Babylon submesh
+     * @param binaryWriter glTF serializer binary writer instance
+     * @returns nullable IMeshPrimitive promise
+     */
+    postExportMeshPrimitiveAsync?(context: string, meshPrimitive: Nullable<IMeshPrimitive>, babylonSubMesh: SubMesh, binaryWriter: _BinaryWriter): Promise<IMeshPrimitive>;
     /**
      * Define this method to modify the default behavior when exporting a node
      * @param context The context when exporting the node
      * @param node glTF node
      * @param babylonNode BabylonJS node
-     * @param nodeMap Node mapping of unique id to glTF node index
      * @returns nullable INode promise
      */
-    postExportNodeAsync(context: string, node: Nullable<INode>, babylonNode: Node, nodeMap: {
+    postExportNodeAsync?(context: string, node: Nullable<INode>, babylonNode: Node, nodeMap: {
         [key: number]: number;
-    }): Promise<Nullable<INode>>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_anisotropy" {
-import { IMaterial } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { Material } from "babylonjs/Materials/material";
-import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
-/**
- * @internal
- */
-export class KHR_materials_anisotropy implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    private _exporter;
-    private _wasUsed;
-    constructor(exporter: _Exporter);
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
+    }, binaryWriter: _BinaryWriter): Promise<Nullable<INode>>;
+    /**
+     * Define this method to modify the default behavior when exporting a material
+     * @param material glTF material
+     * @param babylonMaterial BabylonJS material
+     * @returns nullable IMaterial promise
+     */
+    postExportMaterialAsync?(context: string, node: Nullable<IMaterial>, babylonMaterial: Material): Promise<IMaterial>;
+    /**
+     * Define this method to return additional textures to export from a material
+     * @param material glTF material
+     * @param babylonMaterial BabylonJS material
+     * @returns List of textures
+     */
     postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
-    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_clearcoat" {
-import { IMaterial } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { Material } from "babylonjs/Materials/material";
-import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
-/**
- * @internal
- */
-export class KHR_materials_clearcoat implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
+    /** Gets a boolean indicating that this extension was used */
+    wasUsed: boolean;
+    /** Gets a boolean indicating that this extension is required for the file to work */
     required: boolean;
-    private _exporter;
-    private _wasUsed;
-    constructor(exporter: _Exporter);
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
-    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
-    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_emissive_strength" {
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { Material } from "babylonjs/Materials/material";
-import { IMaterial } from "babylonjs-gltf2interface";
-/**
- * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_emissive_strength/README.md)
- */
-export class KHR_materials_emissive_strength implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    private _wasUsed;
-    dispose(): void;
-    /** @interal */
-    get wasUsed(): boolean;
-    postExportMaterialAsync(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_ior" {
-import { IMaterial } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { Material } from "babylonjs/Materials/material";
-/**
- * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_ior/README.md)
- */
-export class KHR_materials_ior implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    private _wasUsed;
-    constructor();
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
-    private _isExtensionEnabled;
-    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_iridescence" {
-import { IMaterial } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { Material } from "babylonjs/Materials/material";
-import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
-/**
- * @internal
- */
-export class KHR_materials_iridescence implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    private _exporter;
-    private _wasUsed;
-    constructor(exporter: _Exporter);
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
-    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
-    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_sheen" {
-import { IMaterial } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { Material } from "babylonjs/Materials/material";
-import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
-/**
- * @internal
- */
-export class KHR_materials_sheen implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    private _wasUsed;
-    private _exporter;
-    constructor(exporter: _Exporter);
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
-    postExportMaterialAdditionalTextures(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
-    postExportMaterialAsync(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_specular" {
-import { IMaterial } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { Material } from "babylonjs/Materials/material";
-import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
-/**
- * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md)
- */
-export class KHR_materials_specular implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    private _exporter;
-    private _wasUsed;
-    constructor(exporter: _Exporter);
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
-    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
-    private _isExtensionEnabled;
-    private _hasTexturesExtension;
-    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_transmission" {
-import { IMaterial } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { Material } from "babylonjs/Materials/material";
-import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
-/**
- * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_transmission/README.md)
- */
-export class KHR_materials_transmission implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    private _exporter;
-    private _wasUsed;
-    constructor(exporter: _Exporter);
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
-    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
-    private _isExtensionEnabled;
-    private _hasTexturesExtension;
-    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_unlit" {
-import { IMaterial } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { Material } from "babylonjs/Materials/material";
-/**
- * @internal
- */
-export class KHR_materials_unlit implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    private _wasUsed;
-    constructor();
-    /** @internal */
-    get wasUsed(): boolean;
-    dispose(): void;
-    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_volume" {
-import { IMaterial } from "babylonjs-gltf2interface";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { Material } from "babylonjs/Materials/material";
-import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
-/**
- * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_volume/README.md)
- */
-export class KHR_materials_volume implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    private _exporter;
-    private _wasUsed;
-    constructor(exporter: _Exporter);
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
-    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
-    private _isExtensionEnabled;
-    private _hasTexturesExtension;
-    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_texture_transform" {
-import { ITextureInfo } from "babylonjs-gltf2interface";
-import { Texture } from "babylonjs/Materials/Textures/texture";
-import { Nullable } from "babylonjs/types";
-import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-/**
- * @internal
- */
-export class KHR_texture_transform implements IGLTFExporterExtensionV2 {
-    /** Name of this extension */
-    readonly name: string;
-    /** Defines whether this extension is enabled */
-    enabled: boolean;
-    /** Defines whether this extension is required */
-    required: boolean;
-    /** Reference to the glTF exporter */
-    private _wasUsed;
-    constructor();
-    dispose(): void;
-    /** @internal */
-    get wasUsed(): boolean;
-    postExportTexture?(context: string, textureInfo: ITextureInfo, babylonTexture: Texture): void;
-    preExportTextureAsync(context: string, babylonTexture: Texture): Promise<Nullable<Texture>>;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/glTFAnimation" {
-import { IAnimation, INode, IBufferView, IAccessor } from "babylonjs-gltf2interface";
-import { AnimationSamplerInterpolation, AnimationChannelTargetPath, AccessorType } from "babylonjs-gltf2interface";
-import { Node } from "babylonjs/node";
-import { Nullable } from "babylonjs/types";
-import { Animation } from "babylonjs/Animations/animation";
-import { Scene } from "babylonjs/scene";
-import { _BinaryWriter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-/**
- * @internal
- * Interface to store animation data.
- */
-export interface _IAnimationData {
     /**
-     * Keyframe data.
+     * Called after the exporter state changes to EXPORTING
      */
-    inputs: number[];
-    /**
-     * Value data.
-     */
-    outputs: number[][];
-    /**
-     * Animation interpolation data.
-     */
-    samplerInterpolation: AnimationSamplerInterpolation;
-    /**
-     * Minimum keyframe value.
-     */
-    inputsMin: number;
-    /**
-     * Maximum keyframe value.
-     */
-    inputsMax: number;
-}
-/**
- * @internal
- */
-export interface _IAnimationInfo {
-    /**
-     * The target channel for the animation
-     */
-    animationChannelTargetPath: AnimationChannelTargetPath;
-    /**
-     * The glTF accessor type for the data.
-     */
-    dataAccessorType: AccessorType.VEC3 | AccessorType.VEC4 | AccessorType.SCALAR;
-    /**
-     * Specifies if quaternions should be used.
-     */
-    useQuaternion: boolean;
-}
-/**
- * @internal
- * Utility class for generating glTF animation data from BabylonJS.
- */
-export class _GLTFAnimation {
-    /**
-     * Determine if a node is transformable - ie has properties it should be part of animation of transformation.
-     * @param babylonNode the node to test
-     * @returns true if can be animated, false otherwise. False if the parameter is null or undefined.
-     */
-    private static _IsTransformable;
-    /**
-     * @ignore
-     *
-     * Creates glTF channel animation from BabylonJS animation.
-     * @param babylonTransformNode - BabylonJS mesh.
-     * @param animation - animation.
-     * @param animationChannelTargetPath - The target animation channel.
-     * @param useQuaternion - Specifies if quaternions are used.
-     * @returns nullable IAnimationData
-     */
-    static _CreateNodeAnimation(babylonTransformNode: Node, animation: Animation, animationChannelTargetPath: AnimationChannelTargetPath, useQuaternion: boolean, animationSampleRate: number): Nullable<_IAnimationData>;
-    private static _DeduceAnimationInfo;
-    /**
-     * @ignore
-     * Create node animations from the transform node animations
-     * @param babylonNode
-     * @param runtimeGLTFAnimation
-     * @param idleGLTFAnimations
-     * @param nodeMap
-     * @param nodes
-     * @param binaryWriter
-     * @param bufferViews
-     * @param accessors
-     * @param animationSampleRate
-     */
-    static _CreateNodeAnimationFromNodeAnimations(babylonNode: Node, runtimeGLTFAnimation: IAnimation, idleGLTFAnimations: IAnimation[], nodeMap: {
-        [key: number]: number;
-    }, nodes: INode[], binaryWriter: _BinaryWriter, bufferViews: IBufferView[], accessors: IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
-    /**
-     * @ignore
-     * Create individual morph animations from the mesh's morph target animation tracks
-     * @param babylonNode
-     * @param runtimeGLTFAnimation
-     * @param idleGLTFAnimations
-     * @param nodeMap
-     * @param nodes
-     * @param binaryWriter
-     * @param bufferViews
-     * @param accessors
-     * @param animationSampleRate
-     */
-    static _CreateMorphTargetAnimationFromMorphTargetAnimations(babylonNode: Node, runtimeGLTFAnimation: IAnimation, idleGLTFAnimations: IAnimation[], nodeMap: {
-        [key: number]: number;
-    }, nodes: INode[], binaryWriter: _BinaryWriter, bufferViews: IBufferView[], accessors: IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
-    /**
-     * @ignore
-     * Create node and morph animations from the animation groups
-     * @param babylonScene
-     * @param glTFAnimations
-     * @param nodeMap
-     * @param nodes
-     * @param binaryWriter
-     * @param bufferViews
-     * @param accessors
-     * @param animationSampleRate
-     */
-    static _CreateNodeAndMorphAnimationFromAnimationGroups(babylonScene: Scene, glTFAnimations: IAnimation[], nodeMap: {
-        [key: number]: number;
-    }, binaryWriter: _BinaryWriter, bufferViews: IBufferView[], accessors: IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
-    private static _AddAnimation;
-    /**
-     * Create a baked animation
-     * @param babylonTransformNode BabylonJS mesh
-     * @param animation BabylonJS animation corresponding to the BabylonJS mesh
-     * @param animationChannelTargetPath animation target channel
-     * @param minFrame minimum animation frame
-     * @param maxFrame maximum animation frame
-     * @param fps frames per second of the animation
-     * @param sampleRate
-     * @param inputs input key frames of the animation
-     * @param outputs output key frame data of the animation
-     * @param minMaxFrames
-     * @param minMaxFrames.min
-     * @param minMaxFrames.max
-     * @param useQuaternion specifies if quaternions should be used
-     */
-    private static _CreateBakedAnimation;
-    private static _ConvertFactorToVector3OrQuaternion;
-    private static _SetInterpolatedValue;
-    /**
-     * Creates linear animation from the animation key frames
-     * @param babylonTransformNode BabylonJS mesh
-     * @param animation BabylonJS animation
-     * @param animationChannelTargetPath The target animation channel
-     * @param inputs Array to store the key frame times
-     * @param outputs Array to store the key frame data
-     * @param useQuaternion Specifies if quaternions are used in the animation
-     */
-    private static _CreateLinearOrStepAnimation;
-    /**
-     * Creates cubic spline animation from the animation key frames
-     * @param babylonTransformNode BabylonJS mesh
-     * @param animation BabylonJS animation
-     * @param animationChannelTargetPath The target animation channel
-     * @param frameDelta The difference between the last and first frame of the animation
-     * @param inputs Array to store the key frame times
-     * @param outputs Array to store the key frame data
-     * @param useQuaternion Specifies if quaternions are used in the animation
-     */
-    private static _CreateCubicSplineAnimation;
-    private static _GetBasePositionRotationOrScale;
-    /**
-     * Adds a key frame value
-     * @param keyFrame
-     * @param animation
-     * @param outputs
-     * @param animationChannelTargetPath
-     * @param babylonTransformNode
-     * @param useQuaternion
-     */
-    private static _AddKeyframeValue;
-    /**
-     * Determine the interpolation based on the key frames
-     * @param keyFrames
-     * @param animationChannelTargetPath
-     * @param useQuaternion
-     */
-    private static _DeduceInterpolation;
-    /**
-     * Adds an input tangent or output tangent to the output data
-     * If an input tangent or output tangent is missing, it uses the zero vector or zero quaternion
-     * @param babylonTransformNode
-     * @param tangentType Specifies which type of tangent to handle (inTangent or outTangent)
-     * @param outputs The animation data by keyframe
-     * @param animationChannelTargetPath The target animation channel
-     * @param interpolation The interpolation type
-     * @param keyFrame The key frame with the animation data
-     * @param frameDelta Time difference between two frames used to scale the tangent by the frame delta
-     * @param useQuaternion Specifies if quaternions are used
-     */
-    private static _AddSplineTangent;
-    /**
-     * Get the minimum and maximum key frames' frame values
-     * @param keyFrames animation key frames
-     * @returns the minimum and maximum key frame value
-     */
-    private static _CalculateMinMaxKeyFrames;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/glTFData" {
-/**
- * Class for holding and downloading glTF file data
- */
-export class GLTFData {
-    /**
-     * Object which contains the file name as the key and its data as the value
-     */
-    glTFFiles: {
-        [fileName: string]: string | Blob;
-    };
-    /**
-     * Initializes the glTF file object
-     */
-    constructor();
-    /**
-     * Downloads the glTF data as files based on their names and data
-     */
-    downloadFiles(): void;
+    onExporting?(): void;
 }
 
 }
@@ -812,20 +681,7 @@ export class _Exporter {
      * @param babylonTransformNode
      */
     _writeAttributeData(vertexBufferKind: string, attributeComponentKind: AccessorComponentType, meshAttributeArray: FloatArray, stride: number, binaryWriter: _BinaryWriter, babylonTransformNode: TransformNode): void;
-    /**
-     * Writes mesh attribute data to a data buffer
-     * Returns the bytelength of the data
-     * @param vertexBufferKind Indicates what kind of vertex data is being passed in
-     * @param attributeComponentKind
-     * @param meshPrimitive
-     * @param morphTarget
-     * @param meshAttributeArray Array containing the attribute data
-     * @param morphTargetAttributeArray
-     * @param stride Specifies the space between data
-     * @param binaryWriter The buffer to write the binary data to
-     * @param minMax
-     */
-    writeMorphTargetAttributeData(vertexBufferKind: string, attributeComponentKind: AccessorComponentType, meshPrimitive: SubMesh, meshAttributeArray: FloatArray, morphTargetAttributeArray: FloatArray, stride: number, binaryWriter: _BinaryWriter, minMax?: any): void;
+    private _createMorphTargetBufferViewKind;
     /**
      * Generates glTF json data
      * @param shouldUseGlb Indicates whether the json should be written for a glb file
@@ -874,16 +730,9 @@ export class _Exporter {
      */
     private _createBufferViewKind;
     /**
-     * Creates a bufferview based on the vertices type for the Babylon mesh
-     * @param babylonSubMesh The Babylon submesh that the morph target is applied to
-     * @param meshPrimitive
-     * @param babylonMorphTarget the morph target to be exported
-     * @param binaryWriter The buffer to write the bufferview data to
-     */
-    private _setMorphTargetAttributes;
-    /**
      * The primitive mode of the Babylon mesh
      * @param babylonMesh The BabylonJS mesh
+     * @returns Unsigned integer of the primitive mode or null
      */
     private _getMeshPrimitiveMode;
     /**
@@ -896,7 +745,6 @@ export class _Exporter {
      * Sets the vertex attribute accessor based of the glTF mesh primitive
      * @param meshPrimitive glTF mesh primitive
      * @param attributeKind vertex attribute
-     * @returns boolean specifying if uv coordinates are present
      */
     private _setAttributeKind;
     /**
@@ -904,19 +752,19 @@ export class _Exporter {
      * @param mesh glTF Mesh object to store the primitive attribute information
      * @param babylonTransformNode Babylon mesh to get the primitive attribute data from
      * @param binaryWriter Buffer to write the attribute data to
+     * @returns promise that resolves when done setting the primitive attributes
      */
     private _setPrimitiveAttributesAsync;
     /**
      * Creates a glTF scene based on the array of meshes
-     * Returns the the total byte offset
-     * @param babylonScene Babylon scene to get the mesh data from
+     * Returns the total byte offset
      * @param binaryWriter Buffer to write binary data to
+     * @returns a promise that resolves when done
      */
     private _createSceneAsync;
     /**
      * Getting the nodes and materials that would be exported.
      * @param nodes Babylon transform nodes
-     * @returns Array of nodes which would be exported.
      * @returns Set of materials which would be exported.
      */
     private _getExportNodes;
@@ -936,7 +784,6 @@ export class _Exporter {
     private _createNodeAsync;
     /**
      * Creates a glTF skin from a Babylon skeleton
-     * @param babylonScene Babylon Scene
      * @param nodeMap Babylon transform nodes
      * @param binaryWriter Buffer to write binary data to
      * @returns Node mapping of unique id to index
@@ -968,7 +815,8 @@ export class _BinaryWriter {
     constructor(byteLength: number);
     /**
      * Resize the array buffer to the specified byte length
-     * @param byteLength
+     * @param byteLength The new byte length
+     * @returns The resized array buffer
      */
     private _resizeBuffer;
     /**
@@ -996,6 +844,7 @@ export class _BinaryWriter {
     /**
      * Gets an UInt32 in the array buffer
      * @param byteOffset If defined, specifies where to set the value as an offset.
+     * @returns entry
      */
     getUInt32(byteOffset: number): number;
     getVector3Float32FromRef(vector3: Vector3, byteOffset: number): void;
@@ -1029,448 +878,812 @@ export class _BinaryWriter {
 }
 
 }
-declare module "babylonjs-serializers/glTF/2.0/glTFExporterExtension" {
-import { ImageMimeType, IMeshPrimitive, INode, IMaterial, ITextureInfo } from "babylonjs-gltf2interface";
+declare module "babylonjs-serializers/glTF/2.0/glTFData" {
+/**
+ * Class for holding and downloading glTF file data
+ */
+export class GLTFData {
+    /**
+     * Object which contains the file name as the key and its data as the value
+     */
+    glTFFiles: {
+        [fileName: string]: string | Blob;
+    };
+    /**
+     * Initializes the glTF file object
+     */
+    constructor();
+    /**
+     * Downloads the glTF data as files based on their names and data
+     */
+    downloadFiles(): void;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/glTFAnimation" {
+import { IAnimation, INode, IBufferView, IAccessor } from "babylonjs-gltf2interface";
+import { AnimationSamplerInterpolation, AnimationChannelTargetPath, AccessorType } from "babylonjs-gltf2interface";
 import { Node } from "babylonjs/node";
 import { Nullable } from "babylonjs/types";
-import { Texture } from "babylonjs/Materials/Textures/texture";
-import { SubMesh } from "babylonjs/Meshes/subMesh";
-import { IDisposable } from "babylonjs/scene";
+import { Animation } from "babylonjs/Animations/animation";
+import { Scene } from "babylonjs/scene";
 import { _BinaryWriter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { IGLTFExporterExtension } from "babylonjs-serializers/glTF/glTFFileExporter";
-import { Material } from "babylonjs/Materials/material";
-import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
-/** @internal */
-export var __IGLTFExporterExtensionV2: number;
 /**
- * Interface for a glTF exporter extension
+ * @internal
+ * Interface to store animation data.
+ */
+export interface _IAnimationData {
+    /**
+     * Keyframe data.
+     */
+    inputs: number[];
+    /**
+     * Value data.
+     */
+    outputs: number[][];
+    /**
+     * Animation interpolation data.
+     */
+    samplerInterpolation: AnimationSamplerInterpolation;
+    /**
+     * Minimum keyframe value.
+     */
+    inputsMin: number;
+    /**
+     * Maximum keyframe value.
+     */
+    inputsMax: number;
+}
+/**
  * @internal
  */
-export interface IGLTFExporterExtensionV2 extends IGLTFExporterExtension, IDisposable {
+export interface _IAnimationInfo {
     /**
-     * Define this method to modify the default behavior before exporting a texture
-     * @param context The context when loading the asset
-     * @param babylonTexture The Babylon.js texture
-     * @param mimeType The mime-type of the generated image
-     * @returns A promise that resolves with the exported texture
+     * The target channel for the animation
      */
-    preExportTextureAsync?(context: string, babylonTexture: Nullable<Texture>, mimeType: ImageMimeType): Promise<Nullable<Texture>>;
+    animationChannelTargetPath: AnimationChannelTargetPath;
     /**
-     * Define this method to get notified when a texture info is created
-     * @param context The context when loading the asset
-     * @param textureInfo The glTF texture info
-     * @param babylonTexture The Babylon.js texture
+     * The glTF accessor type for the data.
      */
-    postExportTexture?(context: string, textureInfo: ITextureInfo, babylonTexture: BaseTexture): void;
+    dataAccessorType: AccessorType.VEC3 | AccessorType.VEC4 | AccessorType.SCALAR;
     /**
-     * Define this method to modify the default behavior when exporting texture info
-     * @param context The context when loading the asset
-     * @param meshPrimitive glTF mesh primitive
-     * @param babylonSubMesh Babylon submesh
-     * @param binaryWriter glTF serializer binary writer instance
-     * @returns nullable IMeshPrimitive promise
+     * Specifies if quaternions should be used.
      */
-    postExportMeshPrimitiveAsync?(context: string, meshPrimitive: Nullable<IMeshPrimitive>, babylonSubMesh: SubMesh, binaryWriter: _BinaryWriter): Promise<IMeshPrimitive>;
+    useQuaternion: boolean;
+}
+/**
+ * @internal
+ * Utility class for generating glTF animation data from BabylonJS.
+ */
+export class _GLTFAnimation {
+    /**
+     * Determine if a node is transformable - ie has properties it should be part of animation of transformation.
+     * @param babylonNode the node to test
+     * @returns true if can be animated, false otherwise. False if the parameter is null or undefined.
+     */
+    private static _IsTransformable;
+    /**
+     * @ignore
+     *
+     * Creates glTF channel animation from BabylonJS animation.
+     * @param babylonTransformNode - BabylonJS mesh.
+     * @param animation - animation.
+     * @param animationChannelTargetPath - The target animation channel.
+     * @param useQuaternion - Specifies if quaternions are used.
+     * @returns nullable IAnimationData
+     */
+    static _CreateNodeAnimation(babylonTransformNode: Node, animation: Animation, animationChannelTargetPath: AnimationChannelTargetPath, useQuaternion: boolean, animationSampleRate: number): Nullable<_IAnimationData>;
+    private static _DeduceAnimationInfo;
+    /**
+     * @ignore
+     * Create node animations from the transform node animations
+     * @param babylonNode
+     * @param runtimeGLTFAnimation
+     * @param idleGLTFAnimations
+     * @param nodeMap
+     * @param nodes
+     * @param binaryWriter
+     * @param bufferViews
+     * @param accessors
+     * @param animationSampleRate
+     */
+    static _CreateNodeAnimationFromNodeAnimations(babylonNode: Node, runtimeGLTFAnimation: IAnimation, idleGLTFAnimations: IAnimation[], nodeMap: {
+        [key: number]: number;
+    }, nodes: INode[], binaryWriter: _BinaryWriter, bufferViews: IBufferView[], accessors: IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
+    /**
+     * @ignore
+     * Create individual morph animations from the mesh's morph target animation tracks
+     * @param babylonNode
+     * @param runtimeGLTFAnimation
+     * @param idleGLTFAnimations
+     * @param nodeMap
+     * @param nodes
+     * @param binaryWriter
+     * @param bufferViews
+     * @param accessors
+     * @param animationSampleRate
+     */
+    static _CreateMorphTargetAnimationFromMorphTargetAnimations(babylonNode: Node, runtimeGLTFAnimation: IAnimation, idleGLTFAnimations: IAnimation[], nodeMap: {
+        [key: number]: number;
+    }, nodes: INode[], binaryWriter: _BinaryWriter, bufferViews: IBufferView[], accessors: IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
+    /**
+     * @internal
+     * Create node and morph animations from the animation groups
+     * @param babylonScene
+     * @param glTFAnimations
+     * @param nodeMap
+     * @param nodes
+     * @param binaryWriter
+     * @param bufferViews
+     * @param accessors
+     * @param animationSampleRate
+     */
+    static _CreateNodeAndMorphAnimationFromAnimationGroups(babylonScene: Scene, glTFAnimations: IAnimation[], nodeMap: {
+        [key: number]: number;
+    }, binaryWriter: _BinaryWriter, bufferViews: IBufferView[], accessors: IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
+    private static _AddAnimation;
+    /**
+     * Create a baked animation
+     * @param babylonTransformNode BabylonJS mesh
+     * @param animation BabylonJS animation corresponding to the BabylonJS mesh
+     * @param animationChannelTargetPath animation target channel
+     * @param minFrame minimum animation frame
+     * @param maxFrame maximum animation frame
+     * @param fps frames per second of the animation
+     * @param sampleRate
+     * @param inputs input key frames of the animation
+     * @param outputs output key frame data of the animation
+     * @param minMaxFrames
+     * @param minMaxFrames.min
+     * @param minMaxFrames.max
+     * @param useQuaternion specifies if quaternions should be used
+     */
+    private static _CreateBakedAnimation;
+    private static _ConvertFactorToVector3OrQuaternion;
+    private static _SetInterpolatedValue;
+    /**
+     * Creates linear animation from the animation key frames
+     * @param babylonTransformNode BabylonJS mesh
+     * @param animation BabylonJS animation
+     * @param animationChannelTargetPath The target animation channel
+     * @param inputs Array to store the key frame times
+     * @param outputs Array to store the key frame data
+     * @param useQuaternion Specifies if quaternions are used in the animation
+     */
+    private static _CreateLinearOrStepAnimation;
+    /**
+     * Creates cubic spline animation from the animation key frames
+     * @param babylonTransformNode BabylonJS mesh
+     * @param animation BabylonJS animation
+     * @param animationChannelTargetPath The target animation channel
+     * @param inputs Array to store the key frame times
+     * @param outputs Array to store the key frame data
+     * @param useQuaternion Specifies if quaternions are used in the animation
+     */
+    private static _CreateCubicSplineAnimation;
+    private static _GetBasePositionRotationOrScale;
+    /**
+     * Adds a key frame value
+     * @param keyFrame
+     * @param animation
+     * @param outputs
+     * @param animationChannelTargetPath
+     * @param babylonTransformNode
+     * @param useQuaternion
+     */
+    private static _AddKeyframeValue;
+    /**
+     * @internal
+     * Determine the interpolation based on the key frames
+     * @param keyFrames
+     * @param animationChannelTargetPath
+     * @param useQuaternion
+     */
+    private static _DeduceInterpolation;
+    /**
+     * Adds an input tangent or output tangent to the output data
+     * If an input tangent or output tangent is missing, it uses the zero vector or zero quaternion
+     * @param tangentType Specifies which type of tangent to handle (inTangent or outTangent)
+     * @param outputs The animation data by keyframe
+     * @param animationChannelTargetPath The target animation channel
+     * @param interpolation The interpolation type
+     * @param keyFrame The key frame with the animation data
+     * @param useQuaternion Specifies if quaternions are used
+     */
+    private static _AddSplineTangent;
+    /**
+     * Get the minimum and maximum key frames' frame values
+     * @param keyFrames animation key frames
+     * @returns the minimum and maximum key frame value
+     */
+    private static _CalculateMinMaxKeyFrames;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/index" {
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_texture_transform";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_lights_punctual";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_clearcoat";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_iridescence";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_anisotropy";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_sheen";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_unlit";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_ior";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_specular";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_volume";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_dispersion";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_transmission";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/EXT_mesh_gpu_instancing";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_emissive_strength";
+export * from "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_diffuse_transmission";
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_texture_transform" {
+import { ITextureInfo } from "babylonjs-gltf2interface";
+import { Texture } from "babylonjs/Materials/Textures/texture";
+import { Nullable } from "babylonjs/types";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+/**
+ * @internal
+ */
+export class KHR_texture_transform implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    /** Reference to the glTF exporter */
+    private _wasUsed;
+    constructor();
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    postExportTexture?(context: string, textureInfo: ITextureInfo, babylonTexture: Texture): void;
+    preExportTextureAsync(context: string, babylonTexture: Texture): Promise<Nullable<Texture>>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_volume" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { Material } from "babylonjs/Materials/material";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+/**
+ * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_volume/README.md)
+ */
+export class KHR_materials_volume implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _exporter;
+    private _wasUsed;
+    constructor(exporter: _Exporter);
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    /**
+     * After exporting a material, deal with additional textures
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns array of additional textures to export
+     */
+    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
+    private _isExtensionEnabled;
+    private _hasTexturesExtension;
+    /**
+     * After exporting a material
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns promise that resolves with the updated node
+     */
+    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_unlit" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { Material } from "babylonjs/Materials/material";
+/**
+ * @internal
+ */
+export class KHR_materials_unlit implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _wasUsed;
+    constructor();
+    /** @internal */
+    get wasUsed(): boolean;
+    dispose(): void;
+    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_transmission" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { Material } from "babylonjs/Materials/material";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+/**
+ * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_transmission/README.md)
+ */
+export class KHR_materials_transmission implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _exporter;
+    private _wasUsed;
+    constructor(exporter: _Exporter);
+    /** Dispose */
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    /**
+     * After exporting a material, deal with additional textures
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns array of additional textures to export
+     */
+    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
+    private _isExtensionEnabled;
+    private _hasTexturesExtension;
+    /**
+     * After exporting a material
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns true if successful
+     */
+    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_specular" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { Material } from "babylonjs/Materials/material";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+/**
+ * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md)
+ */
+export class KHR_materials_specular implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _exporter;
+    private _wasUsed;
+    constructor(exporter: _Exporter);
+    /** Dispose */
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    /**
+     * After exporting a material, deal with the additional textures
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns array of additional textures to export
+     */
+    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
+    private _isExtensionEnabled;
+    private _hasTexturesExtension;
+    /**
+     * After exporting a material
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns promise, resolves with the material
+     */
+    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_sheen" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { Material } from "babylonjs/Materials/material";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+/**
+ * @internal
+ */
+export class KHR_materials_sheen implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _wasUsed;
+    private _exporter;
+    constructor(exporter: _Exporter);
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    postExportMaterialAdditionalTextures(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
+    postExportMaterialAsync(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_iridescence" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { Material } from "babylonjs/Materials/material";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+/**
+ * @internal
+ */
+export class KHR_materials_iridescence implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _exporter;
+    private _wasUsed;
+    constructor(exporter: _Exporter);
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
+    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_ior" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { Material } from "babylonjs/Materials/material";
+/**
+ * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_ior/README.md)
+ */
+export class KHR_materials_ior implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _wasUsed;
+    constructor();
+    /** Dispose */
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    private _isExtensionEnabled;
+    /**
+     * After exporting a material
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns promise, resolves with the material
+     */
+    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_emissive_strength" {
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { Material } from "babylonjs/Materials/material";
+import { IMaterial } from "babylonjs-gltf2interface";
+/**
+ * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_emissive_strength/README.md)
+ */
+export class KHR_materials_emissive_strength implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _wasUsed;
+    /** Dispose */
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    /**
+     * After exporting a material
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns promise, resolves with the material
+     */
+    postExportMaterialAsync(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_dispersion" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { Material } from "babylonjs/Materials/material";
+/**
+ * [Specification](https://github.com/KhronosGroup/glTF/blob/87bd64a7f5e23c84b6aef2e6082069583ed0ddb4/extensions/2.0/Khronos/KHR_materials_dispersion/README.md)
+ * @experimental
+ */
+export class KHR_materials_dispersion implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _wasUsed;
+    /** Constructor */
+    constructor();
+    /** Dispose */
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    private _isExtensionEnabled;
+    /**
+     * After exporting a material
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns promise, resolves with the material
+     */
+    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_diffuse_transmission" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { Material } from "babylonjs/Materials/material";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+/**
+ * [Proposed Specification](https://github.com/KhronosGroup/glTF/pull/1825)
+ * !!! Experimental Extension Subject to Changes !!!
+ */
+export class KHR_materials_diffuse_transmission implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _exporter;
+    private _wasUsed;
+    constructor(exporter: _Exporter);
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    /**
+     * After exporting a material, deal with additional textures
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns array of additional textures to export
+     */
+    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
+    private _isExtensionEnabled;
+    private _hasTexturesExtension;
+    /**
+     * After exporting a material
+     * @param context GLTF context of the material
+     * @param node exported GLTF node
+     * @param babylonMaterial corresponding babylon material
+     * @returns promise that resolves with the updated node
+     */
+    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_clearcoat" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { Material } from "babylonjs/Materials/material";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+/**
+ * @internal
+ */
+export class KHR_materials_clearcoat implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _exporter;
+    private _wasUsed;
+    constructor(exporter: _Exporter);
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
+    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_materials_anisotropy" {
+import { IMaterial } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { Material } from "babylonjs/Materials/material";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+/**
+ * @internal
+ */
+export class KHR_materials_anisotropy implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _exporter;
+    private _wasUsed;
+    constructor(exporter: _Exporter);
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
+    postExportMaterialAsync?(context: string, node: IMaterial, babylonMaterial: Material): Promise<IMaterial>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/KHR_lights_punctual" {
+import { Nullable } from "babylonjs/types";
+import { Node } from "babylonjs/node";
+import { INode } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+/**
+ * [Specification](https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_lights_punctual/README.md)
+ */
+export class KHR_lights_punctual implements IGLTFExporterExtensionV2 {
+    /** The name of this extension. */
+    readonly name: string;
+    /** Defines whether this extension is enabled. */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    /** Reference to the glTF exporter */
+    private _exporter;
+    private _lights;
+    /**
+     * @internal
+     */
+    constructor(exporter: _Exporter);
+    /** @internal */
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    /** @internal */
+    onExporting(): void;
     /**
      * Define this method to modify the default behavior when exporting a node
      * @param context The context when exporting the node
      * @param node glTF node
      * @param babylonNode BabylonJS node
+     * @param nodeMap Node mapping of unique id to glTF node index
      * @returns nullable INode promise
      */
-    postExportNodeAsync?(context: string, node: Nullable<INode>, babylonNode: Node, nodeMap: {
+    postExportNodeAsync(context: string, node: Nullable<INode>, babylonNode: Node, nodeMap: {
+        [key: number]: number;
+    }): Promise<Nullable<INode>>;
+}
+
+}
+declare module "babylonjs-serializers/glTF/2.0/Extensions/EXT_mesh_gpu_instancing" {
+import { INode } from "babylonjs-gltf2interface";
+import { IGLTFExporterExtensionV2 } from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
+import { _BinaryWriter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
+import { Nullable } from "babylonjs/types";
+import { Node } from "babylonjs/node";
+import "babylonjs/Meshes/thinInstanceMesh";
+/**
+ * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
+ */
+export class EXT_mesh_gpu_instancing implements IGLTFExporterExtensionV2 {
+    /** Name of this extension */
+    readonly name: string;
+    /** Defines whether this extension is enabled */
+    enabled: boolean;
+    /** Defines whether this extension is required */
+    required: boolean;
+    private _exporter;
+    private _wasUsed;
+    constructor(exporter: _Exporter);
+    dispose(): void;
+    /** @internal */
+    get wasUsed(): boolean;
+    /**
+     * After node is exported
+     * @param context the GLTF context when loading the asset
+     * @param node the node exported
+     * @param babylonNode the corresponding babylon node
+     * @param nodeMap map from babylon node id to node index
+     * @param binaryWriter binary writer
+     * @returns nullable promise, resolves with the node
+     */
+    postExportNodeAsync(context: string, node: Nullable<INode>, babylonNode: Node, nodeMap: {
         [key: number]: number;
     }, binaryWriter: _BinaryWriter): Promise<Nullable<INode>>;
-    /**
-     * Define this method to modify the default behavior when exporting a material
-     * @param material glTF material
-     * @param babylonMaterial BabylonJS material
-     * @returns nullable IMaterial promise
-     */
-    postExportMaterialAsync?(context: string, node: Nullable<IMaterial>, babylonMaterial: Material): Promise<IMaterial>;
-    /**
-     * Define this method to return additional textures to export from a material
-     * @param material glTF material
-     * @param babylonMaterial BabylonJS material
-     * @returns List of textures
-     */
-    postExportMaterialAdditionalTextures?(context: string, node: IMaterial, babylonMaterial: Material): BaseTexture[];
-    /** Gets a boolean indicating that this extension was used */
-    wasUsed: boolean;
-    /** Gets a boolean indicating that this extension is required for the file to work */
-    required: boolean;
-    /**
-     * Called after the exporter state changes to EXPORTING
-     */
-    onExporting?(): void;
+    private _buildAccessor;
 }
 
 }
-declare module "babylonjs-serializers/glTF/2.0/glTFMaterialExporter" {
-import { ITextureInfo, IMaterial, IMaterialPbrMetallicRoughness } from "babylonjs-gltf2interface";
-import { ImageMimeType } from "babylonjs-gltf2interface";
-import { Nullable } from "babylonjs/types";
-import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
-import { _Exporter } from "babylonjs-serializers/glTF/2.0/glTFExporter";
-import { Material } from "babylonjs/Materials/material";
-import { StandardMaterial } from "babylonjs/Materials/standardMaterial";
-import { PBRBaseMaterial } from "babylonjs/Materials/PBR/pbrBaseMaterial";
-/**
- * Utility methods for working with glTF material conversion properties.  This class should only be used internally
- * @internal
- */
-export class _GLTFMaterialExporter {
-    /**
-     * Represents the dielectric specular values for R, G and B
-     */
-    private static readonly _DielectricSpecular;
-    /**
-     * Allows the maximum specular power to be defined for material calculations
-     */
-    private static readonly _MaxSpecularPower;
-    /**
-     * Mapping to store textures
-     */
-    private _textureMap;
-    private _internalTextureToImage;
-    /**
-     * Numeric tolerance value
-     */
-    private static readonly _Epsilon;
-    /**
-     * Reference to the glTF Exporter
-     */
-    private _exporter;
-    constructor(exporter: _Exporter);
-    /**
-     * Specifies if two colors are approximately equal in value
-     * @param color1 first color to compare to
-     * @param color2 second color to compare to
-     * @param epsilon threshold value
-     */
-    private static _FuzzyEquals;
-    /**
-     * Gets the materials from a Babylon scene and converts them to glTF materials
-     * @param exportMaterials
-     * @param mimeType texture mime type
-     * @param hasTextureCoords specifies if texture coordinates are present on the material
-     */
-    _convertMaterialsToGLTFAsync(exportMaterials: Set<Material>, mimeType: ImageMimeType, hasTextureCoords: boolean): Promise<void>;
-    /**
-     * Makes a copy of the glTF material without the texture parameters
-     * @param originalMaterial original glTF material
-     * @returns glTF material without texture parameters
-     */
-    _stripTexturesFromMaterial(originalMaterial: IMaterial): IMaterial;
-    /**
-     * Specifies if the material has any texture parameters present
-     * @param material glTF Material
-     * @returns boolean specifying if texture parameters are present
-     */
-    _hasTexturesPresent(material: IMaterial): boolean;
-    _getTextureInfo(babylonTexture: Nullable<BaseTexture>): Nullable<ITextureInfo>;
-    /**
-     * Converts a Babylon StandardMaterial to a glTF Metallic Roughness Material
-     * @param babylonStandardMaterial
-     * @returns glTF Metallic Roughness Material representation
-     */
-    _convertToGLTFPBRMetallicRoughness(babylonStandardMaterial: StandardMaterial): IMaterialPbrMetallicRoughness;
-    /**
-     * Computes the metallic factor
-     * @param diffuse diffused value
-     * @param specular specular value
-     * @param oneMinusSpecularStrength one minus the specular strength
-     * @returns metallic value
-     */
-    static _SolveMetallic(diffuse: number, specular: number, oneMinusSpecularStrength: number): number;
-    /**
-     * Sets the glTF alpha mode to a glTF material from the Babylon Material
-     * @param glTFMaterial glTF material
-     * @param babylonMaterial Babylon material
-     */
-    private static _SetAlphaMode;
-    /**
-     * Converts a Babylon Standard Material to a glTF Material
-     * @param babylonStandardMaterial BJS Standard Material
-     * @param mimeType mime type to use for the textures
-     * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
-     */
-    _convertStandardMaterialAsync(babylonStandardMaterial: StandardMaterial, mimeType: ImageMimeType, hasTextureCoords: boolean): Promise<IMaterial>;
-    private _finishMaterial;
-    /**
-     * Converts an image typed array buffer to a base64 image
-     * @param buffer typed array buffer
-     * @param width width of the image
-     * @param height height of the image
-     * @param mimeType mimetype of the image
-     * @returns base64 image string
-     */
-    private _getImageDataAsync;
-    /**
-     * Generates a white texture based on the specified width and height
-     * @param width width of the texture in pixels
-     * @param height height of the texture in pixels
-     * @param scene babylonjs scene
-     * @returns white texture
-     */
-    private _createWhiteTexture;
-    /**
-     * Resizes the two source textures to the same dimensions.  If a texture is null, a default white texture is generated.  If both textures are null, returns null
-     * @param texture1 first texture to resize
-     * @param texture2 second texture to resize
-     * @param scene babylonjs scene
-     * @returns resized textures or null
-     */
-    private _resizeTexturesToSameDimensions;
-    /**
-     * Converts an array of pixels to a Float32Array
-     * Throws an error if the pixel format is not supported
-     * @param pixels - array buffer containing pixel values
-     * @returns Float32 of pixels
-     */
-    private _convertPixelArrayToFloat32;
-    /**
-     * Convert Specular Glossiness Textures to Metallic Roughness
-     * See link below for info on the material conversions from PBR Metallic/Roughness and Specular/Glossiness
-     * @link https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Archived/KHR_materials_pbrSpecularGlossiness/examples/convert-between-workflows-bjs/js/babylon.pbrUtilities.js
-     * @param diffuseTexture texture used to store diffuse information
-     * @param specularGlossinessTexture texture used to store specular and glossiness information
-     * @param factors specular glossiness material factors
-     * @param mimeType the mime type to use for the texture
-     * @returns pbr metallic roughness interface or null
-     */
-    private _convertSpecularGlossinessTexturesToMetallicRoughnessAsync;
-    /**
-     * Converts specular glossiness material properties to metallic roughness
-     * @param specularGlossiness interface with specular glossiness material properties
-     * @returns interface with metallic roughness material properties
-     */
-    private _convertSpecularGlossinessToMetallicRoughness;
-    /**
-     * Calculates the surface reflectance, independent of lighting conditions
-     * @param color Color source to calculate brightness from
-     * @returns number representing the perceived brightness, or zero if color is undefined
-     */
-    private _getPerceivedBrightness;
-    /**
-     * Returns the maximum color component value
-     * @param color
-     * @returns maximum color component value, or zero if color is null or undefined
-     */
-    private _getMaxComponent;
-    /**
-     * Convert a PBRMaterial (Metallic/Roughness) to Metallic Roughness factors
-     * @param babylonPBRMaterial BJS PBR Metallic Roughness Material
-     * @param mimeType mime type to use for the textures
-     * @param glTFPbrMetallicRoughness glTF PBR Metallic Roughness interface
-     * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
-     * @returns glTF PBR Metallic Roughness factors
-     */
-    private _convertMetalRoughFactorsToMetallicRoughnessAsync;
-    private _getTextureSampler;
-    private _getGLTFTextureWrapMode;
-    /**
-     * Convert a PBRMaterial (Specular/Glossiness) to Metallic Roughness factors
-     * @param babylonPBRMaterial BJS PBR Metallic Roughness Material
-     * @param mimeType mime type to use for the textures
-     * @param glTFPbrMetallicRoughness glTF PBR Metallic Roughness interface
-     * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
-     * @returns glTF PBR Metallic Roughness factors
-     */
-    private _convertSpecGlossFactorsToMetallicRoughnessAsync;
-    /**
-     * Converts a Babylon PBR Base Material to a glTF Material
-     * @param babylonPBRMaterial BJS PBR Base Material
-     * @param mimeType mime type to use for the textures
-     * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
-     */
-    _convertPBRMaterialAsync(babylonPBRMaterial: PBRBaseMaterial, mimeType: ImageMimeType, hasTextureCoords: boolean): Promise<IMaterial>;
-    private _setMetallicRoughnessPbrMaterial;
-    private _getPixelsFromTexture;
-    /**
-     * Extracts a texture from a Babylon texture into file data and glTF data
-     * @param babylonTexture Babylon texture to extract
-     * @param mimeType Mime Type of the babylonTexture
-     * @returns glTF texture info, or null if the texture format is not supported
-     */
-    _exportTextureAsync(babylonTexture: BaseTexture, mimeType: ImageMimeType): Promise<Nullable<ITextureInfo>>;
-    _exportTextureInfoAsync(babylonTexture: BaseTexture, mimeType: ImageMimeType): Promise<Nullable<ITextureInfo>>;
-    private _exportImage;
-    private _exportTextureInfo;
-    private _exportTextureSampler;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/glTFSerializer" {
-import { Node } from "babylonjs/node";
+declare module "babylonjs-serializers/USDZ/usdzExporter" {
+import { Mesh } from "babylonjs/Meshes/mesh";
 import { Scene } from "babylonjs/scene";
-import { Animation } from "babylonjs/Animations/animation";
-import { GLTFData } from "babylonjs-serializers/glTF/2.0/glTFData";
 /**
- * Holds a collection of exporter options and parameters
+ * Options for the USDZ export
  */
-export interface IExportOptions {
+export interface IUSDZExportOptions {
     /**
-     * Function which indicates whether a babylon node should be exported or not
-     * @param node source Babylon node. It is used to check whether it should be exported to glTF or not
-     * @returns boolean, which indicates whether the node should be exported (true) or not (false)
+     * URL to load the fflate library from
      */
-    shouldExportNode?(node: Node): boolean;
+    fflateUrl?: string;
     /**
-     * Function which indicates whether an animation on the scene should be exported or not
-     * @param animation source animation
-     * @returns boolean, which indicates whether the animation should be exported (true) or not (false)
+     * Include anchoring properties in the USDZ file
      */
-    shouldExportAnimation?(animation: Animation): boolean;
+    includeAnchoringProperties?: boolean;
     /**
-     * Function used to extract the part of node's metadata that will be exported into glTF node extras
-     * @param metadata source metadata to read from
-     * @returns the data to store to glTF node extras
+     * Anchoring type (plane by default)
      */
-    metadataSelector?(metadata: any): any;
+    anchoringType?: string;
     /**
-     * The sample rate to bake animation curves. Defaults to 1 / 60.
+     * Plane anchoring alignment (horizontal by default)
      */
-    animationSampleRate?: number;
+    planeAnchoringAlignment?: string;
     /**
-     * Begin serialization without waiting for the scene to be ready. Defaults to false.
+     * Model file name (model.usda by default)
      */
-    exportWithoutWaitingForScene?: boolean;
+    modelFileName?: string;
     /**
-     * Indicates if unused vertex uv attributes should be included in export. Defaults to false.
+     * Precision to use for number (5 by default)
      */
-    exportUnusedUVs?: boolean;
+    precision?: number;
     /**
-     * Remove no-op root nodes when possible. Defaults to true.
+     * Export the camera (false by default)
      */
-    removeNoopRootNodes?: boolean;
+    exportCamera?: boolean;
     /**
-     * Indicates if coordinate system swapping root nodes should be included in export. Defaults to false.
-     * @deprecated Please use removeNoopRootNodes instead
+     * Camera sensor width (35 by default)
      */
-    includeCoordinateSystemConversionNodes?: boolean;
+    cameraSensorWidth?: number;
 }
 /**
- * Class for generating glTF data from a Babylon scene.
+ *
+ * @param scene scene to export
+ * @param options options to configure the export
+ * @param meshPredicate predicate to filter the meshes to export
+ * @returns a uint8 array containing the USDZ file
+ * #H2G5XW#3 - Simple sphere
+ * #H2G5XW#4 - Red sphere
+ * #5N3RWK#4 - Boombox
  */
-export class GLTF2Export {
-    /**
-     * Exports the geometry of the scene to .gltf file format asynchronously
-     * @param scene Babylon scene with scene hierarchy information
-     * @param filePrefix File prefix to use when generating the glTF file
-     * @param options Exporter options
-     * @returns Returns an object with a .gltf file and associates texture names
-     * as keys and their data and paths as values
-     */
-    static GLTFAsync(scene: Scene, filePrefix: string, options?: IExportOptions): Promise<GLTFData>;
-    private static _PreExportAsync;
-    private static _PostExportAsync;
-    /**
-     * Exports the geometry of the scene to .glb file format asychronously
-     * @param scene Babylon scene with scene hierarchy information
-     * @param filePrefix File prefix to use when generating glb file
-     * @param options Exporter options
-     * @returns Returns an object with a .glb filename as key and data as value
-     */
-    static GLBAsync(scene: Scene, filePrefix: string, options?: IExportOptions): Promise<GLTFData>;
-}
+export function USDZExportAsync(scene: Scene, options: Partial<IUSDZExportOptions>, meshPredicate?: (m: Mesh) => boolean): Promise<Uint8Array>;
 
 }
-declare module "babylonjs-serializers/glTF/2.0/glTFUtilities" {
-import { IBufferView, AccessorComponentType, IAccessor } from "babylonjs-gltf2interface";
-import { AccessorType } from "babylonjs-gltf2interface";
-import { FloatArray, Nullable } from "babylonjs/types";
-import { Vector4 } from "babylonjs/Maths/math.vector";
-/**
- * @internal
- */
-export class _GLTFUtilities {
-    /**
-     * Creates a buffer view based on the supplied arguments
-     * @param bufferIndex index value of the specified buffer
-     * @param byteOffset byte offset value
-     * @param byteLength byte length of the bufferView
-     * @param byteStride byte distance between conequential elements
-     * @param name name of the buffer view
-     * @returns bufferView for glTF
-     */
-    static _CreateBufferView(bufferIndex: number, byteOffset: number, byteLength: number, byteStride?: number, name?: string): IBufferView;
-    /**
-     * Creates an accessor based on the supplied arguments
-     * @param bufferviewIndex The index of the bufferview referenced by this accessor
-     * @param name The name of the accessor
-     * @param type The type of the accessor
-     * @param componentType The datatype of components in the attribute
-     * @param count The number of attributes referenced by this accessor
-     * @param byteOffset The offset relative to the start of the bufferView in bytes
-     * @param min Minimum value of each component in this attribute
-     * @param max Maximum value of each component in this attribute
-     * @returns accessor for glTF
-     */
-    static _CreateAccessor(bufferviewIndex: number, name: string, type: AccessorType, componentType: AccessorComponentType, count: number, byteOffset: Nullable<number>, min: Nullable<number[]>, max: Nullable<number[]>): IAccessor;
-    /**
-     * Calculates the minimum and maximum values of an array of position floats
-     * @param positions Positions array of a mesh
-     * @param vertexStart Starting vertex offset to calculate min and max values
-     * @param vertexCount Number of vertices to check for min and max values
-     * @returns min number array and max number array
-     */
-    static _CalculateMinMaxPositions(positions: FloatArray, vertexStart: number, vertexCount: number): {
-        min: number[];
-        max: number[];
-    };
-    static _NormalizeTangentFromRef(tangent: Vector4): void;
-    static _GetDataAccessorElementCount(accessorType: AccessorType): 1 | 3 | 2 | 4 | 9 | 16;
-}
-
-}
-declare module "babylonjs-serializers/glTF/2.0/index" {
-export * from "babylonjs-serializers/glTF/2.0/glTFAnimation";
-export * from "babylonjs-serializers/glTF/2.0/glTFData";
-export * from "babylonjs-serializers/glTF/2.0/glTFExporter";
-export * from "babylonjs-serializers/glTF/2.0/glTFExporterExtension";
-export * from "babylonjs-serializers/glTF/2.0/glTFMaterialExporter";
-export * from "babylonjs-serializers/glTF/2.0/glTFSerializer";
-export * from "babylonjs-serializers/glTF/2.0/glTFUtilities";
-export * from "babylonjs-serializers/glTF/2.0/Extensions/index";
-
-}
-declare module "babylonjs-serializers/glTF/glTFFileExporter" {
-/** @internal */
-export var __IGLTFExporterExtension: number;
-/**
- * Interface for extending the exporter
- * @internal
- */
-export interface IGLTFExporterExtension {
-    /**
-     * The name of this extension
-     */
-    readonly name: string;
-    /**
-     * Defines whether this extension is enabled
-     */
-    enabled: boolean;
-    /**
-     * Defines whether this extension is required
-     */
-    required: boolean;
-}
-
-}
-declare module "babylonjs-serializers/glTF/index" {
-export * from "babylonjs-serializers/glTF/glTFFileExporter";
-export * from "babylonjs-serializers/glTF/2.0/index";
-
-}
-declare module "babylonjs-serializers/index" {
-export * from "babylonjs-serializers/OBJ/index";
-export * from "babylonjs-serializers/glTF/index";
-export * from "babylonjs-serializers/stl/index";
-
-}
-declare module "babylonjs-serializers/OBJ/index" {
-export * from "babylonjs-serializers/OBJ/objSerializer";
+declare module "babylonjs-serializers/USDZ/index" {
+export * from "babylonjs-serializers/USDZ/usdzExporter";
 
 }
 declare module "babylonjs-serializers/OBJ/objSerializer" {
@@ -1481,13 +1694,13 @@ import { Mesh } from "babylonjs/Meshes/mesh";
 export class OBJExport {
     /**
      * Exports the geometry of a Mesh array in .OBJ file format (text)
-     * @param mesh defines the list of meshes to serialize
+     * @param meshes defines the list of meshes to serialize
      * @param materials defines if materials should be exported
      * @param matlibname defines the name of the associated mtl file
      * @param globalposition defines if the exported positions are globals or local to the exported mesh
      * @returns the OBJ content
      */
-    static OBJ(mesh: Mesh[], materials?: boolean, matlibname?: string, globalposition?: boolean): string;
+    static OBJ(meshes: Mesh[], materials?: boolean, matlibname?: string, globalposition?: boolean): string;
     /**
      * Exports the material(s) of a mesh in .MTL file format (text)
      * @param mesh defines the mesh to extract the material from
@@ -1497,44 +1710,8 @@ export class OBJExport {
 }
 
 }
-declare module "babylonjs-serializers/stl/index" {
-export * from "babylonjs-serializers/stl/stlSerializer";
-
-}
-declare module "babylonjs-serializers/stl/stlSerializer" {
-import { Mesh } from "babylonjs/Meshes/mesh";
-import { InstancedMesh } from "babylonjs/Meshes/instancedMesh";
-/**
- * Class for generating STL data from a Babylon scene.
- */
-export class STLExport {
-    /**
-     * Exports the geometry of a Mesh array in .STL file format (ASCII)
-     * @param meshes list defines the mesh to serialize
-     * @param download triggers the automatic download of the file.
-     * @param fileName changes the downloads fileName.
-     * @param binary changes the STL to a binary type.
-     * @param isLittleEndian toggle for binary type exporter.
-     * @param doNotBakeTransform toggle if meshes transforms should be baked or not.
-     * @param supportInstancedMeshes toggle to export instanced Meshes. Enabling support for instanced meshes will override doNoBakeTransform as true
-     * @param exportIndividualMeshes toggle to export each mesh as an independent mesh. By default, all the meshes are combined into one mesh. This property has no effect when exporting in binary format
-     * @returns the STL as UTF8 string
-     */
-    static CreateSTL(meshes: (Mesh | InstancedMesh)[], download?: boolean, fileName?: string, binary?: boolean, isLittleEndian?: boolean, doNotBakeTransform?: boolean, supportInstancedMeshes?: boolean, exportIndividualMeshes?: boolean): any;
-}
-
-}
-declare module "babylonjs-serializers/legacy/legacy-glTF2Serializer" {
-export * from "babylonjs-serializers/glTF/glTFFileExporter";
-export * from "babylonjs-serializers/glTF/2.0/index";
-
-}
-declare module "babylonjs-serializers/legacy/legacy-objSerializer" {
-export * from "babylonjs-serializers/OBJ/index";
-
-}
-declare module "babylonjs-serializers/legacy/legacy-stlSerializer" {
-export * from "babylonjs-serializers/stl/index";
+declare module "babylonjs-serializers/OBJ/index" {
+export * from "babylonjs-serializers/OBJ/objSerializer";
 
 }
 declare module "babylonjs-serializers/legacy/legacy" {
@@ -1542,6 +1719,24 @@ import "babylonjs-serializers/index";
 export * from "babylonjs-serializers/legacy/legacy-glTF2Serializer";
 export * from "babylonjs-serializers/legacy/legacy-objSerializer";
 export * from "babylonjs-serializers/legacy/legacy-stlSerializer";
+export * from "babylonjs-serializers/legacy/legacy-usdzSerializer";
+
+}
+declare module "babylonjs-serializers/legacy/legacy-usdzSerializer" {
+export * from "babylonjs-serializers/USDZ/index";
+
+}
+declare module "babylonjs-serializers/legacy/legacy-stlSerializer" {
+export * from "babylonjs-serializers/stl/index";
+
+}
+declare module "babylonjs-serializers/legacy/legacy-objSerializer" {
+export * from "babylonjs-serializers/OBJ/index";
+
+}
+declare module "babylonjs-serializers/legacy/legacy-glTF2Serializer" {
+export * from "babylonjs-serializers/glTF/glTFFileExporter";
+export * from "babylonjs-serializers/glTF/2.0/index";
 
 }
 
@@ -1551,511 +1746,422 @@ declare module "babylonjs-serializers" {
 
 
 declare module BABYLON {
+
+
     /**
-     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
+     * Class for generating STL data from a Babylon scene.
      */
-    export class EXT_mesh_gpu_instancing implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "EXT_mesh_gpu_instancing";
-        /** Defines whether this extension is enabled */
+    export class STLExport {
+        /**
+         * Exports the geometry of a Mesh array in .STL file format (ASCII)
+         * @param meshes list defines the mesh to serialize
+         * @param download triggers the automatic download of the file.
+         * @param fileName changes the downloads fileName.
+         * @param binary changes the STL to a binary type.
+         * @param isLittleEndian toggle for binary type exporter.
+         * @param doNotBakeTransform toggle if meshes transforms should be baked or not.
+         * @param supportInstancedMeshes toggle to export instanced Meshes. Enabling support for instanced meshes will override doNoBakeTransform as true
+         * @param exportIndividualMeshes toggle to export each mesh as an independent mesh. By default, all the meshes are combined into one mesh. This property has no effect when exporting in binary format
+         * @returns the STL as UTF8 string
+         */
+        static CreateSTL(meshes: (Mesh | InstancedMesh)[], download?: boolean, fileName?: string, binary?: boolean, isLittleEndian?: boolean, doNotBakeTransform?: boolean, supportInstancedMeshes?: boolean, exportIndividualMeshes?: boolean): any;
+    }
+
+
+
+
+
+
+    /** @internal */
+    export var __IGLTFExporterExtension: number;
+    /**
+     * Interface for extending the exporter
+     * @internal
+     */
+    export interface IGLTFExporterExtension {
+        /**
+         * The name of this extension
+         */
+        readonly name: string;
+        /**
+         * Defines whether this extension is enabled
+         */
         enabled: boolean;
-        /** Defines whether this extension is required */
+        /**
+         * Defines whether this extension is required
+         */
         required: boolean;
-        private _exporter;
-        private _wasUsed;
-        constructor(exporter: _Exporter);
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
-        postExportNodeAsync(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: {
-            [key: number]: number;
-        }, binaryWriter: _BinaryWriter): Promise<Nullable<BABYLON.GLTF2.INode>>;
-        private _buildAccessor;
     }
 
 
 
 
     /**
-     * [Specification](https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_lights_punctual/README.md)
+     * @internal
      */
-    export class KHR_lights_punctual implements IGLTFExporterExtensionV2 {
-        /** The name of this extension. */
-        readonly name = "KHR_lights_punctual";
-        /** Defines whether this extension is enabled. */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        /** Reference to the glTF exporter */
-        private _exporter;
-        private _lights;
+    export class _GLTFUtilities {
         /**
-         * @internal
+         * Creates a buffer view based on the supplied arguments
+         * @param bufferIndex index value of the specified buffer
+         * @param byteOffset byte offset value
+         * @param byteLength byte length of the bufferView
+         * @param byteStride byte distance between conequential elements
+         * @param name name of the buffer view
+         * @returns bufferView for glTF
          */
+        static _CreateBufferView(bufferIndex: number, byteOffset: number, byteLength: number, byteStride?: number, name?: string): BABYLON.GLTF2.IBufferView;
+        /**
+         * Creates an accessor based on the supplied arguments
+         * @param bufferviewIndex The index of the bufferview referenced by this accessor
+         * @param name The name of the accessor
+         * @param type The type of the accessor
+         * @param componentType The datatype of components in the attribute
+         * @param count The number of attributes referenced by this accessor
+         * @param byteOffset The offset relative to the start of the bufferView in bytes
+         * @param min Minimum value of each component in this attribute
+         * @param max Maximum value of each component in this attribute
+         * @returns accessor for glTF
+         */
+        static _CreateAccessor(bufferviewIndex: number, name: string, type: BABYLON.GLTF2.AccessorType, componentType: BABYLON.GLTF2.AccessorComponentType, count: number, byteOffset: Nullable<number>, min: Nullable<number[]>, max: Nullable<number[]>): BABYLON.GLTF2.IAccessor;
+        /**
+         * Calculates the minimum and maximum values of an array of position floats
+         * @param positions Positions array of a mesh
+         * @param vertexStart Starting vertex offset to calculate min and max values
+         * @param vertexCount Number of vertices to check for min and max values
+         * @returns min number array and max number array
+         */
+        static _CalculateMinMaxPositions(positions: FloatArray, vertexStart: number, vertexCount: number): {
+            min: number[];
+            max: number[];
+        };
+        static _NormalizeTangentFromRef(tangent: Vector4 | Vector3): void;
+        static _GetDataAccessorElementCount(accessorType: BABYLON.GLTF2.AccessorType): 1 | 3 | 2 | 4 | 9 | 16;
+    }
+
+
+    /**
+     * Holds a collection of exporter options and parameters
+     */
+    export interface IExportOptions {
+        /**
+         * Function which indicates whether a babylon node should be exported or not
+         * @param node source Babylon node. It is used to check whether it should be exported to glTF or not
+         * @returns boolean, which indicates whether the node should be exported (true) or not (false)
+         */
+        shouldExportNode?(node: Node): boolean;
+        /**
+         * Function which indicates whether an animation on the scene should be exported or not
+         * @param animation source animation
+         * @returns boolean, which indicates whether the animation should be exported (true) or not (false)
+         */
+        shouldExportAnimation?(animation: Animation): boolean;
+        /**
+         * Function used to extract the part of node's metadata that will be exported into glTF node extras
+         * @param metadata source metadata to read from
+         * @returns the data to store to glTF node extras
+         */
+        metadataSelector?(metadata: any): any;
+        /**
+         * The sample rate to bake animation curves. Defaults to 1 / 60.
+         */
+        animationSampleRate?: number;
+        /**
+         * Begin serialization without waiting for the scene to be ready. Defaults to false.
+         */
+        exportWithoutWaitingForScene?: boolean;
+        /**
+         * Indicates if unused vertex uv attributes should be included in export. Defaults to false.
+         */
+        exportUnusedUVs?: boolean;
+        /**
+         * Remove no-op root nodes when possible. Defaults to true.
+         */
+        removeNoopRootNodes?: boolean;
+        /**
+         * Indicates if coordinate system swapping root nodes should be included in export. Defaults to false.
+         * @deprecated Please use removeNoopRootNodes instead
+         */
+        includeCoordinateSystemConversionNodes?: boolean;
+    }
+    /**
+     * Class for generating glTF data from a Babylon scene.
+     */
+    export class GLTF2Export {
+        /**
+         * Exports the geometry of the scene to .gltf file format asynchronously
+         * @param scene Babylon scene with scene hierarchy information
+         * @param filePrefix File prefix to use when generating the glTF file
+         * @param options Exporter options
+         * @returns Returns an object with a .gltf file and associates texture names
+         * as keys and their data and paths as values
+         */
+        static GLTFAsync(scene: Scene, filePrefix: string, options?: IExportOptions): Promise<GLTFData>;
+        private static _PreExportAsync;
+        private static _PostExportAsync;
+        /**
+         * Exports the geometry of the scene to .glb file format asychronously
+         * @param scene Babylon scene with scene hierarchy information
+         * @param filePrefix File prefix to use when generating glb file
+         * @param options Exporter options
+         * @returns Returns an object with a .glb filename as key and data as value
+         */
+        static GLBAsync(scene: Scene, filePrefix: string, options?: IExportOptions): Promise<GLTFData>;
+    }
+
+
+    /**
+     * Utility methods for working with glTF material conversion properties.  This class should only be used internally
+     * @internal
+     */
+    export class _GLTFMaterialExporter {
+        /**
+         * Represents the dielectric specular values for R, G and B
+         */
+        private static readonly _DielectricSpecular;
+        /**
+         * Allows the maximum specular power to be defined for material calculations
+         */
+        private static readonly _MaxSpecularPower;
+        /**
+         * Mapping to store textures
+         */
+        private _textureMap;
+        private _internalTextureToImage;
+        /**
+         * Numeric tolerance value
+         */
+        private static readonly _Epsilon;
+        /**
+         * Reference to the glTF Exporter
+         */
+        private _exporter;
         constructor(exporter: _Exporter);
-        /** @internal */
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
-        /** @internal */
-        onExporting(): void;
+        /**
+         * Specifies if two colors are approximately equal in value
+         * @param color1 first color to compare to
+         * @param color2 second color to compare to
+         * @param epsilon threshold value
+         * @returns boolean specifying if the colors are approximately equal in value
+         */
+        private static _FuzzyEquals;
+        /**
+         * Gets the materials from a Babylon scene and converts them to glTF materials
+         * @param exportMaterials
+         * @param mimeType texture mime type
+         * @param hasTextureCoords specifies if texture coordinates are present on the material
+         * @returns promise that resolves after all materials have been converted
+         */
+        _convertMaterialsToGLTFAsync(exportMaterials: Set<Material>, mimeType: BABYLON.GLTF2.ImageMimeType, hasTextureCoords: boolean): Promise<void>;
+        /**
+         * Makes a copy of the glTF material without the texture parameters
+         * @param originalMaterial original glTF material
+         * @returns glTF material without texture parameters
+         */
+        _stripTexturesFromMaterial(originalMaterial: BABYLON.GLTF2.IMaterial): BABYLON.GLTF2.IMaterial;
+        /**
+         * Specifies if the material has any texture parameters present
+         * @param material glTF Material
+         * @returns boolean specifying if texture parameters are present
+         */
+        _hasTexturesPresent(material: BABYLON.GLTF2.IMaterial): boolean;
+        _getTextureInfo(babylonTexture: Nullable<BaseTexture>): Nullable<BABYLON.GLTF2.ITextureInfo>;
+        /**
+         * Converts a Babylon StandardMaterial to a glTF Metallic Roughness Material
+         * @param babylonStandardMaterial
+         * @returns glTF Metallic Roughness Material representation
+         */
+        _convertToGLTFPBRMetallicRoughness(babylonStandardMaterial: StandardMaterial): BABYLON.GLTF2.IMaterialPbrMetallicRoughness;
+        /**
+         * Computes the metallic factor
+         * @param diffuse diffused value
+         * @param specular specular value
+         * @param oneMinusSpecularStrength one minus the specular strength
+         * @returns metallic value
+         */
+        static _SolveMetallic(diffuse: number, specular: number, oneMinusSpecularStrength: number): number;
+        /**
+         * Sets the glTF alpha mode to a glTF material from the Babylon Material
+         * @param glTFMaterial glTF material
+         * @param babylonMaterial Babylon material
+         */
+        private static _SetAlphaMode;
+        /**
+         * Converts a Babylon Standard Material to a glTF Material
+         * @param babylonStandardMaterial BJS Standard Material
+         * @param mimeType mime type to use for the textures
+         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
+         * @returns promise, resolved with the material
+         */
+        _convertStandardMaterialAsync(babylonStandardMaterial: StandardMaterial, mimeType: BABYLON.GLTF2.ImageMimeType, hasTextureCoords: boolean): Promise<BABYLON.GLTF2.IMaterial>;
+        private _finishMaterial;
+        /**
+         * Converts an image typed array buffer to a base64 image
+         * @param buffer typed array buffer
+         * @param width width of the image
+         * @param height height of the image
+         * @param mimeType mimetype of the image
+         * @returns base64 image string
+         */
+        private _getImageDataAsync;
+        /**
+         * Generates a white texture based on the specified width and height
+         * @param width width of the texture in pixels
+         * @param height height of the texture in pixels
+         * @param scene babylonjs scene
+         * @returns white texture
+         */
+        private _createWhiteTexture;
+        /**
+         * Resizes the two source textures to the same dimensions.  If a texture is null, a default white texture is generated.  If both textures are null, returns null
+         * @param texture1 first texture to resize
+         * @param texture2 second texture to resize
+         * @param scene babylonjs scene
+         * @returns resized textures or null
+         */
+        private _resizeTexturesToSameDimensions;
+        /**
+         * Converts an array of pixels to a Float32Array
+         * Throws an error if the pixel format is not supported
+         * @param pixels - array buffer containing pixel values
+         * @returns Float32 of pixels
+         */
+        private _convertPixelArrayToFloat32;
+        /**
+         * Convert Specular Glossiness Textures to Metallic Roughness
+         * See link below for info on the material conversions from PBR Metallic/Roughness and Specular/Glossiness
+         * @link https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Archived/KHR_materials_pbrSpecularGlossiness/examples/convert-between-workflows-bjs/js/babylon.pbrUtilities.js
+         * @param diffuseTexture texture used to store diffuse information
+         * @param specularGlossinessTexture texture used to store specular and glossiness information
+         * @param factors specular glossiness material factors
+         * @param mimeType the mime type to use for the texture
+         * @returns pbr metallic roughness interface or null
+         */
+        private _convertSpecularGlossinessTexturesToMetallicRoughnessAsync;
+        /**
+         * Converts specular glossiness material properties to metallic roughness
+         * @param specularGlossiness interface with specular glossiness material properties
+         * @returns interface with metallic roughness material properties
+         */
+        private _convertSpecularGlossinessToMetallicRoughness;
+        /**
+         * Calculates the surface reflectance, independent of lighting conditions
+         * @param color Color source to calculate brightness from
+         * @returns number representing the perceived brightness, or zero if color is undefined
+         */
+        private _getPerceivedBrightness;
+        /**
+         * Returns the maximum color component value
+         * @param color
+         * @returns maximum color component value, or zero if color is null or undefined
+         */
+        private _getMaxComponent;
+        /**
+         * Convert a PBRMaterial (Metallic/Roughness) to Metallic Roughness factors
+         * @param babylonPBRMaterial BJS PBR Metallic Roughness Material
+         * @param mimeType mime type to use for the textures
+         * @param glTFPbrMetallicRoughness glTF PBR Metallic Roughness interface
+         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
+         * @returns glTF PBR Metallic Roughness factors
+         */
+        private _convertMetalRoughFactorsToMetallicRoughnessAsync;
+        private _getTextureSampler;
+        private _getGLTFTextureWrapMode;
+        /**
+         * Convert a PBRMaterial (Specular/Glossiness) to Metallic Roughness factors
+         * @param babylonPBRMaterial BJS PBR Metallic Roughness Material
+         * @param mimeType mime type to use for the textures
+         * @param pbrMetallicRoughness glTF PBR Metallic Roughness interface
+         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
+         * @returns glTF PBR Metallic Roughness factors
+         */
+        private _convertSpecGlossFactorsToMetallicRoughnessAsync;
+        /**
+         * Converts a Babylon PBR Base Material to a glTF Material
+         * @param babylonPBRMaterial BJS PBR Base Material
+         * @param mimeType mime type to use for the textures
+         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
+         * @returns async glTF Material representation
+         */
+        _convertPBRMaterialAsync(babylonPBRMaterial: PBRBaseMaterial, mimeType: BABYLON.GLTF2.ImageMimeType, hasTextureCoords: boolean): Promise<BABYLON.GLTF2.IMaterial>;
+        private _setMetallicRoughnessPbrMaterial;
+        private _getPixelsFromTexture;
+        /**
+         * Extracts a texture from a Babylon texture into file data and glTF data
+         * @param babylonTexture Babylon texture to extract
+         * @param mimeType Mime Type of the babylonTexture
+         * @returns glTF texture info, or null if the texture format is not supported
+         */
+        _exportTextureAsync(babylonTexture: BaseTexture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BABYLON.GLTF2.ITextureInfo>>;
+        _exportTextureInfoAsync(babylonTexture: BaseTexture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BABYLON.GLTF2.ITextureInfo>>;
+        private _exportImage;
+        private _exportTextureInfo;
+        private _exportTextureSampler;
+    }
+
+
+    /** @internal */
+    export var __IGLTFExporterExtensionV2: number;
+    /**
+     * Interface for a glTF exporter extension
+     * @internal
+     */
+    export interface IGLTFExporterExtensionV2 extends IGLTFExporterExtension, IDisposable {
+        /**
+         * Define this method to modify the default behavior before exporting a texture
+         * @param context The context when loading the asset
+         * @param babylonTexture The Babylon.js texture
+         * @param mimeType The mime-type of the generated image
+         * @returns A promise that resolves with the exported texture
+         */
+        preExportTextureAsync?(context: string, babylonTexture: Nullable<Texture>, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<Texture>>;
+        /**
+         * Define this method to get notified when a texture info is created
+         * @param context The context when loading the asset
+         * @param textureInfo The glTF texture info
+         * @param babylonTexture The Babylon.js texture
+         */
+        postExportTexture?(context: string, textureInfo: BABYLON.GLTF2.ITextureInfo, babylonTexture: BaseTexture): void;
+        /**
+         * Define this method to modify the default behavior when exporting texture info
+         * @param context The context when loading the asset
+         * @param meshPrimitive glTF mesh primitive
+         * @param babylonSubMesh Babylon submesh
+         * @param binaryWriter glTF serializer binary writer instance
+         * @returns nullable BABYLON.GLTF2.IMeshPrimitive promise
+         */
+        postExportMeshPrimitiveAsync?(context: string, meshPrimitive: Nullable<BABYLON.GLTF2.IMeshPrimitive>, babylonSubMesh: SubMesh, binaryWriter: _BinaryWriter): Promise<BABYLON.GLTF2.IMeshPrimitive>;
         /**
          * Define this method to modify the default behavior when exporting a node
          * @param context The context when exporting the node
          * @param node glTF node
          * @param babylonNode BabylonJS node
-         * @param nodeMap Node mapping of unique id to glTF node index
          * @returns nullable BABYLON.GLTF2.INode promise
          */
-        postExportNodeAsync(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: {
+        postExportNodeAsync?(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: {
             [key: number]: number;
-        }): Promise<Nullable<BABYLON.GLTF2.INode>>;
-    }
-
-
-    /**
-     * @internal
-     */
-    export class KHR_materials_anisotropy implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_materials_anisotropy";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        private _exporter;
-        private _wasUsed;
-        constructor(exporter: _Exporter);
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
+        }, binaryWriter: _BinaryWriter): Promise<Nullable<BABYLON.GLTF2.INode>>;
+        /**
+         * Define this method to modify the default behavior when exporting a material
+         * @param material glTF material
+         * @param babylonMaterial BabylonJS material
+         * @returns nullable BABYLON.GLTF2.IMaterial promise
+         */
+        postExportMaterialAsync?(context: string, node: Nullable<BABYLON.GLTF2.IMaterial>, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+        /**
+         * Define this method to return additional textures to export from a material
+         * @param material glTF material
+         * @param babylonMaterial BabylonJS material
+         * @returns List of textures
+         */
         postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
-        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-    }
-
-
-    /**
-     * @internal
-     */
-    export class KHR_materials_clearcoat implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_materials_clearcoat";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
+        /** Gets a boolean indicating that this extension was used */
+        wasUsed: boolean;
+        /** Gets a boolean indicating that this extension is required for the file to work */
         required: boolean;
-        private _exporter;
-        private _wasUsed;
-        constructor(exporter: _Exporter);
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
-        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
-        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-    }
-
-
-    /**
-     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_emissive_strength/README.md)
-     */
-    export class KHR_materials_emissive_strength implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_materials_emissive_strength";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        private _wasUsed;
-        dispose(): void;
-        /** @interal */
-        get wasUsed(): boolean;
-        postExportMaterialAsync(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-    }
-
-
-    /**
-     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_ior/README.md)
-     */
-    export class KHR_materials_ior implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_materials_ior";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        private _wasUsed;
-        constructor();
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
-        private _isExtensionEnabled;
-        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-    }
-
-
-    /**
-     * @internal
-     */
-    export class KHR_materials_iridescence implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_materials_iridescence";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        private _exporter;
-        private _wasUsed;
-        constructor(exporter: _Exporter);
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
-        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
-        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-    }
-
-
-    /**
-     * @internal
-     */
-    export class KHR_materials_sheen implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_materials_sheen";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        private _wasUsed;
-        private _exporter;
-        constructor(exporter: _Exporter);
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
-        postExportMaterialAdditionalTextures(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
-        postExportMaterialAsync(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-    }
-
-
-    /**
-     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md)
-     */
-    export class KHR_materials_specular implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_materials_specular";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        private _exporter;
-        private _wasUsed;
-        constructor(exporter: _Exporter);
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
-        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
-        private _isExtensionEnabled;
-        private _hasTexturesExtension;
-        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-    }
-
-
-    /**
-     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_transmission/README.md)
-     */
-    export class KHR_materials_transmission implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_materials_transmission";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        private _exporter;
-        private _wasUsed;
-        constructor(exporter: _Exporter);
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
-        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
-        private _isExtensionEnabled;
-        private _hasTexturesExtension;
-        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-    }
-
-
-    /**
-     * @internal
-     */
-    export class KHR_materials_unlit implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_materials_unlit";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        private _wasUsed;
-        constructor();
-        /** @internal */
-        get wasUsed(): boolean;
-        dispose(): void;
-        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-    }
-
-
-    /**
-     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_volume/README.md)
-     */
-    export class KHR_materials_volume implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_materials_volume";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        private _exporter;
-        private _wasUsed;
-        constructor(exporter: _Exporter);
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
-        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
-        private _isExtensionEnabled;
-        private _hasTexturesExtension;
-        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-    }
-
-
-    /**
-     * @internal
-     */
-    export class KHR_texture_transform implements IGLTFExporterExtensionV2 {
-        /** Name of this extension */
-        readonly name = "KHR_texture_transform";
-        /** Defines whether this extension is enabled */
-        enabled: boolean;
-        /** Defines whether this extension is required */
-        required: boolean;
-        /** Reference to the glTF exporter */
-        private _wasUsed;
-        constructor();
-        dispose(): void;
-        /** @internal */
-        get wasUsed(): boolean;
-        postExportTexture?(context: string, textureInfo: BABYLON.GLTF2.ITextureInfo, babylonTexture: Texture): void;
-        preExportTextureAsync(context: string, babylonTexture: Texture): Promise<Nullable<Texture>>;
-    }
-
-
-    /**
-     * @internal
-     * Interface to store animation data.
-     */
-    export interface _IAnimationData {
         /**
-         * Keyframe data.
+         * Called after the exporter state changes to EXPORTING
          */
-        inputs: number[];
-        /**
-         * Value data.
-         */
-        outputs: number[][];
-        /**
-         * Animation interpolation data.
-         */
-        samplerInterpolation: BABYLON.GLTF2.AnimationSamplerInterpolation;
-        /**
-         * Minimum keyframe value.
-         */
-        inputsMin: number;
-        /**
-         * Maximum keyframe value.
-         */
-        inputsMax: number;
-    }
-    /**
-     * @internal
-     */
-    export interface _IAnimationInfo {
-        /**
-         * The target channel for the animation
-         */
-        animationChannelTargetPath: BABYLON.GLTF2.AnimationChannelTargetPath;
-        /**
-         * The glTF accessor type for the data.
-         */
-        dataAccessorType: BABYLON.GLTF2.AccessorType.VEC3 | BABYLON.GLTF2.AccessorType.VEC4 | BABYLON.GLTF2.AccessorType.SCALAR;
-        /**
-         * Specifies if quaternions should be used.
-         */
-        useQuaternion: boolean;
-    }
-    /**
-     * @internal
-     * Utility class for generating glTF animation data from BabylonJS.
-     */
-    export class _GLTFAnimation {
-        /**
-         * Determine if a node is transformable - ie has properties it should be part of animation of transformation.
-         * @param babylonNode the node to test
-         * @returns true if can be animated, false otherwise. False if the parameter is null or undefined.
-         */
-        private static _IsTransformable;
-        /**
-         * @ignore
-         *
-         * Creates glTF channel animation from BabylonJS animation.
-         * @param babylonTransformNode - BabylonJS mesh.
-         * @param animation - animation.
-         * @param animationChannelTargetPath - The target animation channel.
-         * @param useQuaternion - Specifies if quaternions are used.
-         * @returns nullable IAnimationData
-         */
-        static _CreateNodeAnimation(babylonTransformNode: Node, animation: Animation, animationChannelTargetPath: BABYLON.GLTF2.AnimationChannelTargetPath, useQuaternion: boolean, animationSampleRate: number): Nullable<_IAnimationData>;
-        private static _DeduceAnimationInfo;
-        /**
-         * @ignore
-         * Create node animations from the transform node animations
-         * @param babylonNode
-         * @param runtimeGLTFAnimation
-         * @param idleGLTFAnimations
-         * @param nodeMap
-         * @param nodes
-         * @param binaryWriter
-         * @param bufferViews
-         * @param accessors
-         * @param animationSampleRate
-         */
-        static _CreateNodeAnimationFromNodeAnimations(babylonNode: Node, runtimeGLTFAnimation: BABYLON.GLTF2.IAnimation, idleGLTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: {
-            [key: number]: number;
-        }, nodes: BABYLON.GLTF2.INode[], binaryWriter: _BinaryWriter, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
-        /**
-         * @ignore
-         * Create individual morph animations from the mesh's morph target animation tracks
-         * @param babylonNode
-         * @param runtimeGLTFAnimation
-         * @param idleGLTFAnimations
-         * @param nodeMap
-         * @param nodes
-         * @param binaryWriter
-         * @param bufferViews
-         * @param accessors
-         * @param animationSampleRate
-         */
-        static _CreateMorphTargetAnimationFromMorphTargetAnimations(babylonNode: Node, runtimeGLTFAnimation: BABYLON.GLTF2.IAnimation, idleGLTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: {
-            [key: number]: number;
-        }, nodes: BABYLON.GLTF2.INode[], binaryWriter: _BinaryWriter, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
-        /**
-         * @ignore
-         * Create node and morph animations from the animation groups
-         * @param babylonScene
-         * @param glTFAnimations
-         * @param nodeMap
-         * @param nodes
-         * @param binaryWriter
-         * @param bufferViews
-         * @param accessors
-         * @param animationSampleRate
-         */
-        static _CreateNodeAndMorphAnimationFromAnimationGroups(babylonScene: Scene, glTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: {
-            [key: number]: number;
-        }, binaryWriter: _BinaryWriter, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
-        private static _AddAnimation;
-        /**
-         * Create a baked animation
-         * @param babylonTransformNode BabylonJS mesh
-         * @param animation BabylonJS animation corresponding to the BabylonJS mesh
-         * @param animationChannelTargetPath animation target channel
-         * @param minFrame minimum animation frame
-         * @param maxFrame maximum animation frame
-         * @param fps frames per second of the animation
-         * @param sampleRate
-         * @param inputs input key frames of the animation
-         * @param outputs output key frame data of the animation
-         * @param minMaxFrames
-         * @param minMaxFrames.min
-         * @param minMaxFrames.max
-         * @param useQuaternion specifies if quaternions should be used
-         */
-        private static _CreateBakedAnimation;
-        private static _ConvertFactorToVector3OrQuaternion;
-        private static _SetInterpolatedValue;
-        /**
-         * Creates linear animation from the animation key frames
-         * @param babylonTransformNode BabylonJS mesh
-         * @param animation BabylonJS animation
-         * @param animationChannelTargetPath The target animation channel
-         * @param inputs Array to store the key frame times
-         * @param outputs Array to store the key frame data
-         * @param useQuaternion Specifies if quaternions are used in the animation
-         */
-        private static _CreateLinearOrStepAnimation;
-        /**
-         * Creates cubic spline animation from the animation key frames
-         * @param babylonTransformNode BabylonJS mesh
-         * @param animation BabylonJS animation
-         * @param animationChannelTargetPath The target animation channel
-         * @param frameDelta The difference between the last and first frame of the animation
-         * @param inputs Array to store the key frame times
-         * @param outputs Array to store the key frame data
-         * @param useQuaternion Specifies if quaternions are used in the animation
-         */
-        private static _CreateCubicSplineAnimation;
-        private static _GetBasePositionRotationOrScale;
-        /**
-         * Adds a key frame value
-         * @param keyFrame
-         * @param animation
-         * @param outputs
-         * @param animationChannelTargetPath
-         * @param babylonTransformNode
-         * @param useQuaternion
-         */
-        private static _AddKeyframeValue;
-        /**
-         * Determine the interpolation based on the key frames
-         * @param keyFrames
-         * @param animationChannelTargetPath
-         * @param useQuaternion
-         */
-        private static _DeduceInterpolation;
-        /**
-         * Adds an input tangent or output tangent to the output data
-         * If an input tangent or output tangent is missing, it uses the zero vector or zero quaternion
-         * @param babylonTransformNode
-         * @param tangentType Specifies which type of tangent to handle (inTangent or outTangent)
-         * @param outputs The animation data by keyframe
-         * @param animationChannelTargetPath The target animation channel
-         * @param interpolation The interpolation type
-         * @param keyFrame The key frame with the animation data
-         * @param frameDelta Time difference between two frames used to scale the tangent by the frame delta
-         * @param useQuaternion Specifies if quaternions are used
-         */
-        private static _AddSplineTangent;
-        /**
-         * Get the minimum and maximum key frames' frame values
-         * @param keyFrames animation key frames
-         * @returns the minimum and maximum key frame value
-         */
-        private static _CalculateMinMaxKeyFrames;
-    }
-
-
-    /**
-     * Class for holding and downloading glTF file data
-     */
-    export class GLTFData {
-        /**
-         * Object which contains the file name as the key and its data as the value
-         */
-        glTFFiles: {
-            [fileName: string]: string | Blob;
-        };
-        /**
-         * Initializes the glTF file object
-         */
-        constructor();
-        /**
-         * Downloads the glTF data as files based on their names and data
-         */
-        downloadFiles(): void;
+        onExporting?(): void;
     }
 
 
@@ -2252,20 +2358,7 @@ declare module BABYLON {
          * @param babylonTransformNode
          */
         _writeAttributeData(vertexBufferKind: string, attributeComponentKind: BABYLON.GLTF2.AccessorComponentType, meshAttributeArray: FloatArray, stride: number, binaryWriter: _BinaryWriter, babylonTransformNode: TransformNode): void;
-        /**
-         * Writes mesh attribute data to a data buffer
-         * Returns the bytelength of the data
-         * @param vertexBufferKind Indicates what kind of vertex data is being passed in
-         * @param attributeComponentKind
-         * @param meshPrimitive
-         * @param morphTarget
-         * @param meshAttributeArray Array containing the attribute data
-         * @param morphTargetAttributeArray
-         * @param stride Specifies the space between data
-         * @param binaryWriter The buffer to write the binary data to
-         * @param minMax
-         */
-        writeMorphTargetAttributeData(vertexBufferKind: string, attributeComponentKind: BABYLON.GLTF2.AccessorComponentType, meshPrimitive: SubMesh, meshAttributeArray: FloatArray, morphTargetAttributeArray: FloatArray, stride: number, binaryWriter: _BinaryWriter, minMax?: any): void;
+        private _createMorphTargetBufferViewKind;
         /**
          * Generates glTF json data
          * @param shouldUseGlb Indicates whether the json should be written for a glb file
@@ -2314,16 +2407,9 @@ declare module BABYLON {
          */
         private _createBufferViewKind;
         /**
-         * Creates a bufferview based on the vertices type for the Babylon mesh
-         * @param babylonSubMesh The Babylon submesh that the morph target is applied to
-         * @param meshPrimitive
-         * @param babylonMorphTarget the morph target to be exported
-         * @param binaryWriter The buffer to write the bufferview data to
-         */
-        private _setMorphTargetAttributes;
-        /**
          * The primitive mode of the Babylon mesh
          * @param babylonMesh The BabylonJS mesh
+         * @returns Unsigned integer of the primitive mode or null
          */
         private _getMeshPrimitiveMode;
         /**
@@ -2336,7 +2422,6 @@ declare module BABYLON {
          * Sets the vertex attribute accessor based of the glTF mesh primitive
          * @param meshPrimitive glTF mesh primitive
          * @param attributeKind vertex attribute
-         * @returns boolean specifying if uv coordinates are present
          */
         private _setAttributeKind;
         /**
@@ -2344,19 +2429,19 @@ declare module BABYLON {
          * @param mesh glTF Mesh object to store the primitive attribute information
          * @param babylonTransformNode Babylon mesh to get the primitive attribute data from
          * @param binaryWriter Buffer to write the attribute data to
+         * @returns promise that resolves when done setting the primitive attributes
          */
         private _setPrimitiveAttributesAsync;
         /**
          * Creates a glTF scene based on the array of meshes
-         * Returns the the total byte offset
-         * @param babylonScene Babylon scene to get the mesh data from
+         * Returns the total byte offset
          * @param binaryWriter Buffer to write binary data to
+         * @returns a promise that resolves when done
          */
         private _createSceneAsync;
         /**
          * Getting the nodes and materials that would be exported.
          * @param nodes Babylon transform nodes
-         * @returns Array of nodes which would be exported.
          * @returns Set of materials which would be exported.
          */
         private _getExportNodes;
@@ -2376,7 +2461,6 @@ declare module BABYLON {
         private _createNodeAsync;
         /**
          * Creates a glTF skin from a Babylon skeleton
-         * @param babylonScene Babylon Scene
          * @param nodeMap Babylon transform nodes
          * @param binaryWriter Buffer to write binary data to
          * @returns Node mapping of unique id to index
@@ -2408,7 +2492,8 @@ declare module BABYLON {
         constructor(byteLength: number);
         /**
          * Resize the array buffer to the specified byte length
-         * @param byteLength
+         * @param byteLength The new byte length
+         * @returns The resized array buffer
          */
         private _resizeBuffer;
         /**
@@ -2436,6 +2521,7 @@ declare module BABYLON {
         /**
          * Gets an UInt32 in the array buffer
          * @param byteOffset If defined, specifies where to set the value as an offset.
+         * @returns entry
          */
         getUInt32(byteOffset: number): number;
         getVector3Float32FromRef(vector3: Vector3, byteOffset: number): void;
@@ -2469,397 +2555,697 @@ declare module BABYLON {
     }
 
 
-    /** @internal */
-    export var __IGLTFExporterExtensionV2: number;
     /**
-     * Interface for a glTF exporter extension
+     * Class for holding and downloading glTF file data
+     */
+    export class GLTFData {
+        /**
+         * Object which contains the file name as the key and its data as the value
+         */
+        glTFFiles: {
+            [fileName: string]: string | Blob;
+        };
+        /**
+         * Initializes the glTF file object
+         */
+        constructor();
+        /**
+         * Downloads the glTF data as files based on their names and data
+         */
+        downloadFiles(): void;
+    }
+
+
+    /**
+     * @internal
+     * Interface to store animation data.
+     */
+    export interface _IAnimationData {
+        /**
+         * Keyframe data.
+         */
+        inputs: number[];
+        /**
+         * Value data.
+         */
+        outputs: number[][];
+        /**
+         * Animation interpolation data.
+         */
+        samplerInterpolation: BABYLON.GLTF2.AnimationSamplerInterpolation;
+        /**
+         * Minimum keyframe value.
+         */
+        inputsMin: number;
+        /**
+         * Maximum keyframe value.
+         */
+        inputsMax: number;
+    }
+    /**
      * @internal
      */
-    export interface IGLTFExporterExtensionV2 extends IGLTFExporterExtension, IDisposable {
+    export interface _IAnimationInfo {
         /**
-         * Define this method to modify the default behavior before exporting a texture
-         * @param context The context when loading the asset
-         * @param babylonTexture The Babylon.js texture
-         * @param mimeType The mime-type of the generated image
-         * @returns A promise that resolves with the exported texture
+         * The target channel for the animation
          */
-        preExportTextureAsync?(context: string, babylonTexture: Nullable<Texture>, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<Texture>>;
+        animationChannelTargetPath: BABYLON.GLTF2.AnimationChannelTargetPath;
         /**
-         * Define this method to get notified when a texture info is created
-         * @param context The context when loading the asset
-         * @param textureInfo The glTF texture info
-         * @param babylonTexture The Babylon.js texture
+         * The glTF accessor type for the data.
          */
-        postExportTexture?(context: string, textureInfo: BABYLON.GLTF2.ITextureInfo, babylonTexture: BaseTexture): void;
+        dataAccessorType: BABYLON.GLTF2.AccessorType.VEC3 | BABYLON.GLTF2.AccessorType.VEC4 | BABYLON.GLTF2.AccessorType.SCALAR;
         /**
-         * Define this method to modify the default behavior when exporting texture info
-         * @param context The context when loading the asset
-         * @param meshPrimitive glTF mesh primitive
-         * @param babylonSubMesh Babylon submesh
-         * @param binaryWriter glTF serializer binary writer instance
-         * @returns nullable BABYLON.GLTF2.IMeshPrimitive promise
+         * Specifies if quaternions should be used.
          */
-        postExportMeshPrimitiveAsync?(context: string, meshPrimitive: Nullable<BABYLON.GLTF2.IMeshPrimitive>, babylonSubMesh: SubMesh, binaryWriter: _BinaryWriter): Promise<BABYLON.GLTF2.IMeshPrimitive>;
+        useQuaternion: boolean;
+    }
+    /**
+     * @internal
+     * Utility class for generating glTF animation data from BabylonJS.
+     */
+    export class _GLTFAnimation {
+        /**
+         * Determine if a node is transformable - ie has properties it should be part of animation of transformation.
+         * @param babylonNode the node to test
+         * @returns true if can be animated, false otherwise. False if the parameter is null or undefined.
+         */
+        private static _IsTransformable;
+        /**
+         * @ignore
+         *
+         * Creates glTF channel animation from BabylonJS animation.
+         * @param babylonTransformNode - BabylonJS mesh.
+         * @param animation - animation.
+         * @param animationChannelTargetPath - The target animation channel.
+         * @param useQuaternion - Specifies if quaternions are used.
+         * @returns nullable IAnimationData
+         */
+        static _CreateNodeAnimation(babylonTransformNode: Node, animation: Animation, animationChannelTargetPath: BABYLON.GLTF2.AnimationChannelTargetPath, useQuaternion: boolean, animationSampleRate: number): Nullable<_IAnimationData>;
+        private static _DeduceAnimationInfo;
+        /**
+         * @ignore
+         * Create node animations from the transform node animations
+         * @param babylonNode
+         * @param runtimeGLTFAnimation
+         * @param idleGLTFAnimations
+         * @param nodeMap
+         * @param nodes
+         * @param binaryWriter
+         * @param bufferViews
+         * @param accessors
+         * @param animationSampleRate
+         */
+        static _CreateNodeAnimationFromNodeAnimations(babylonNode: Node, runtimeGLTFAnimation: BABYLON.GLTF2.IAnimation, idleGLTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: {
+            [key: number]: number;
+        }, nodes: BABYLON.GLTF2.INode[], binaryWriter: _BinaryWriter, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
+        /**
+         * @ignore
+         * Create individual morph animations from the mesh's morph target animation tracks
+         * @param babylonNode
+         * @param runtimeGLTFAnimation
+         * @param idleGLTFAnimations
+         * @param nodeMap
+         * @param nodes
+         * @param binaryWriter
+         * @param bufferViews
+         * @param accessors
+         * @param animationSampleRate
+         */
+        static _CreateMorphTargetAnimationFromMorphTargetAnimations(babylonNode: Node, runtimeGLTFAnimation: BABYLON.GLTF2.IAnimation, idleGLTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: {
+            [key: number]: number;
+        }, nodes: BABYLON.GLTF2.INode[], binaryWriter: _BinaryWriter, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
+        /**
+         * @internal
+         * Create node and morph animations from the animation groups
+         * @param babylonScene
+         * @param glTFAnimations
+         * @param nodeMap
+         * @param nodes
+         * @param binaryWriter
+         * @param bufferViews
+         * @param accessors
+         * @param animationSampleRate
+         */
+        static _CreateNodeAndMorphAnimationFromAnimationGroups(babylonScene: Scene, glTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: {
+            [key: number]: number;
+        }, binaryWriter: _BinaryWriter, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
+        private static _AddAnimation;
+        /**
+         * Create a baked animation
+         * @param babylonTransformNode BabylonJS mesh
+         * @param animation BabylonJS animation corresponding to the BabylonJS mesh
+         * @param animationChannelTargetPath animation target channel
+         * @param minFrame minimum animation frame
+         * @param maxFrame maximum animation frame
+         * @param fps frames per second of the animation
+         * @param sampleRate
+         * @param inputs input key frames of the animation
+         * @param outputs output key frame data of the animation
+         * @param minMaxFrames
+         * @param minMaxFrames.min
+         * @param minMaxFrames.max
+         * @param useQuaternion specifies if quaternions should be used
+         */
+        private static _CreateBakedAnimation;
+        private static _ConvertFactorToVector3OrQuaternion;
+        private static _SetInterpolatedValue;
+        /**
+         * Creates linear animation from the animation key frames
+         * @param babylonTransformNode BabylonJS mesh
+         * @param animation BabylonJS animation
+         * @param animationChannelTargetPath The target animation channel
+         * @param inputs Array to store the key frame times
+         * @param outputs Array to store the key frame data
+         * @param useQuaternion Specifies if quaternions are used in the animation
+         */
+        private static _CreateLinearOrStepAnimation;
+        /**
+         * Creates cubic spline animation from the animation key frames
+         * @param babylonTransformNode BabylonJS mesh
+         * @param animation BabylonJS animation
+         * @param animationChannelTargetPath The target animation channel
+         * @param inputs Array to store the key frame times
+         * @param outputs Array to store the key frame data
+         * @param useQuaternion Specifies if quaternions are used in the animation
+         */
+        private static _CreateCubicSplineAnimation;
+        private static _GetBasePositionRotationOrScale;
+        /**
+         * Adds a key frame value
+         * @param keyFrame
+         * @param animation
+         * @param outputs
+         * @param animationChannelTargetPath
+         * @param babylonTransformNode
+         * @param useQuaternion
+         */
+        private static _AddKeyframeValue;
+        /**
+         * @internal
+         * Determine the interpolation based on the key frames
+         * @param keyFrames
+         * @param animationChannelTargetPath
+         * @param useQuaternion
+         */
+        private static _DeduceInterpolation;
+        /**
+         * Adds an input tangent or output tangent to the output data
+         * If an input tangent or output tangent is missing, it uses the zero vector or zero quaternion
+         * @param tangentType Specifies which type of tangent to handle (inTangent or outTangent)
+         * @param outputs The animation data by keyframe
+         * @param animationChannelTargetPath The target animation channel
+         * @param interpolation The interpolation type
+         * @param keyFrame The key frame with the animation data
+         * @param useQuaternion Specifies if quaternions are used
+         */
+        private static _AddSplineTangent;
+        /**
+         * Get the minimum and maximum key frames' frame values
+         * @param keyFrames animation key frames
+         * @returns the minimum and maximum key frame value
+         */
+        private static _CalculateMinMaxKeyFrames;
+    }
+
+
+
+
+    /**
+     * @internal
+     */
+    export class KHR_texture_transform implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_texture_transform";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        /** Reference to the glTF exporter */
+        private _wasUsed;
+        constructor();
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        postExportTexture?(context: string, textureInfo: BABYLON.GLTF2.ITextureInfo, babylonTexture: Texture): void;
+        preExportTextureAsync(context: string, babylonTexture: Texture): Promise<Nullable<Texture>>;
+    }
+
+
+    /**
+     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_volume/README.md)
+     */
+    export class KHR_materials_volume implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_volume";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _exporter;
+        private _wasUsed;
+        constructor(exporter: _Exporter);
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        /**
+         * After exporting a material, deal with additional textures
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns array of additional textures to export
+         */
+        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
+        private _isExtensionEnabled;
+        private _hasTexturesExtension;
+        /**
+         * After exporting a material
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns promise that resolves with the updated node
+         */
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * @internal
+     */
+    export class KHR_materials_unlit implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_unlit";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _wasUsed;
+        constructor();
+        /** @internal */
+        get wasUsed(): boolean;
+        dispose(): void;
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_transmission/README.md)
+     */
+    export class KHR_materials_transmission implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_transmission";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _exporter;
+        private _wasUsed;
+        constructor(exporter: _Exporter);
+        /** Dispose */
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        /**
+         * After exporting a material, deal with additional textures
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns array of additional textures to export
+         */
+        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
+        private _isExtensionEnabled;
+        private _hasTexturesExtension;
+        /**
+         * After exporting a material
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns true if successful
+         */
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md)
+     */
+    export class KHR_materials_specular implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_specular";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _exporter;
+        private _wasUsed;
+        constructor(exporter: _Exporter);
+        /** Dispose */
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        /**
+         * After exporting a material, deal with the additional textures
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns array of additional textures to export
+         */
+        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
+        private _isExtensionEnabled;
+        private _hasTexturesExtension;
+        /**
+         * After exporting a material
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns promise, resolves with the material
+         */
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * @internal
+     */
+    export class KHR_materials_sheen implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_sheen";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _wasUsed;
+        private _exporter;
+        constructor(exporter: _Exporter);
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        postExportMaterialAdditionalTextures(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
+        postExportMaterialAsync(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * @internal
+     */
+    export class KHR_materials_iridescence implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_iridescence";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _exporter;
+        private _wasUsed;
+        constructor(exporter: _Exporter);
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_ior/README.md)
+     */
+    export class KHR_materials_ior implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_ior";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _wasUsed;
+        constructor();
+        /** Dispose */
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        private _isExtensionEnabled;
+        /**
+         * After exporting a material
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns promise, resolves with the material
+         */
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_emissive_strength/README.md)
+     */
+    export class KHR_materials_emissive_strength implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_emissive_strength";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _wasUsed;
+        /** Dispose */
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        /**
+         * After exporting a material
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns promise, resolves with the material
+         */
+        postExportMaterialAsync(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * [Specification](https://github.com/KhronosGroup/glTF/blob/87bd64a7f5e23c84b6aef2e6082069583ed0ddb4/extensions/2.0/Khronos/KHR_materials_dispersion/README.md)
+     * @experimental
+     */
+    export class KHR_materials_dispersion implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_dispersion";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _wasUsed;
+        /** Constructor */
+        constructor();
+        /** Dispose */
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        private _isExtensionEnabled;
+        /**
+         * After exporting a material
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns promise, resolves with the material
+         */
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * [Proposed Specification](https://github.com/KhronosGroup/glTF/pull/1825)
+     * !!! Experimental Extension Subject to Changes !!!
+     */
+    export class KHR_materials_diffuse_transmission implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_diffuse_transmission";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _exporter;
+        private _wasUsed;
+        constructor(exporter: _Exporter);
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        /**
+         * After exporting a material, deal with additional textures
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns array of additional textures to export
+         */
+        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
+        private _isExtensionEnabled;
+        private _hasTexturesExtension;
+        /**
+         * After exporting a material
+         * @param context GLTF context of the material
+         * @param node exported GLTF node
+         * @param babylonMaterial corresponding babylon material
+         * @returns promise that resolves with the updated node
+         */
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * @internal
+     */
+    export class KHR_materials_clearcoat implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_clearcoat";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _exporter;
+        private _wasUsed;
+        constructor(exporter: _Exporter);
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * @internal
+     */
+    export class KHR_materials_anisotropy implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_materials_anisotropy";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _exporter;
+        private _wasUsed;
+        constructor(exporter: _Exporter);
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
+     * [Specification](https://github.com/KhronosGroup/glTF/blob/master/extensions/2.0/Khronos/KHR_lights_punctual/README.md)
+     */
+    export class KHR_lights_punctual implements IGLTFExporterExtensionV2 {
+        /** The name of this extension. */
+        readonly name = "KHR_lights_punctual";
+        /** Defines whether this extension is enabled. */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        /** Reference to the glTF exporter */
+        private _exporter;
+        private _lights;
+        /**
+         * @internal
+         */
+        constructor(exporter: _Exporter);
+        /** @internal */
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        /** @internal */
+        onExporting(): void;
         /**
          * Define this method to modify the default behavior when exporting a node
          * @param context The context when exporting the node
          * @param node glTF node
          * @param babylonNode BabylonJS node
+         * @param nodeMap Node mapping of unique id to glTF node index
          * @returns nullable BABYLON.GLTF2.INode promise
          */
-        postExportNodeAsync?(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: {
+        postExportNodeAsync(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: {
+            [key: number]: number;
+        }): Promise<Nullable<BABYLON.GLTF2.INode>>;
+    }
+
+
+    /**
+     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Vendor/EXT_mesh_gpu_instancing/README.md)
+     */
+    export class EXT_mesh_gpu_instancing implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "EXT_mesh_gpu_instancing";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _exporter;
+        private _wasUsed;
+        constructor(exporter: _Exporter);
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        /**
+         * After node is exported
+         * @param context the GLTF context when loading the asset
+         * @param node the node exported
+         * @param babylonNode the corresponding babylon node
+         * @param nodeMap map from babylon node id to node index
+         * @param binaryWriter binary writer
+         * @returns nullable promise, resolves with the node
+         */
+        postExportNodeAsync(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: {
             [key: number]: number;
         }, binaryWriter: _BinaryWriter): Promise<Nullable<BABYLON.GLTF2.INode>>;
-        /**
-         * Define this method to modify the default behavior when exporting a material
-         * @param material glTF material
-         * @param babylonMaterial BabylonJS material
-         * @returns nullable BABYLON.GLTF2.IMaterial promise
-         */
-        postExportMaterialAsync?(context: string, node: Nullable<BABYLON.GLTF2.IMaterial>, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
-        /**
-         * Define this method to return additional textures to export from a material
-         * @param material glTF material
-         * @param babylonMaterial BabylonJS material
-         * @returns List of textures
-         */
-        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
-        /** Gets a boolean indicating that this extension was used */
-        wasUsed: boolean;
-        /** Gets a boolean indicating that this extension is required for the file to work */
-        required: boolean;
-        /**
-         * Called after the exporter state changes to EXPORTING
-         */
-        onExporting?(): void;
+        private _buildAccessor;
     }
 
 
     /**
-     * Utility methods for working with glTF material conversion properties.  This class should only be used internally
-     * @internal
+     * Options for the USDZ export
      */
-    export class _GLTFMaterialExporter {
+    export interface IUSDZExportOptions {
         /**
-         * Represents the dielectric specular values for R, G and B
+         * URL to load the fflate library from
          */
-        private static readonly _DielectricSpecular;
+        fflateUrl?: string;
         /**
-         * Allows the maximum specular power to be defined for material calculations
+         * Include anchoring properties in the USDZ file
          */
-        private static readonly _MaxSpecularPower;
+        includeAnchoringProperties?: boolean;
         /**
-         * Mapping to store textures
+         * Anchoring type (plane by default)
          */
-        private _textureMap;
-        private _internalTextureToImage;
+        anchoringType?: string;
         /**
-         * Numeric tolerance value
+         * Plane anchoring alignment (horizontal by default)
          */
-        private static readonly _Epsilon;
+        planeAnchoringAlignment?: string;
         /**
-         * Reference to the glTF Exporter
+         * Model file name (model.usda by default)
          */
-        private _exporter;
-        constructor(exporter: _Exporter);
+        modelFileName?: string;
         /**
-         * Specifies if two colors are approximately equal in value
-         * @param color1 first color to compare to
-         * @param color2 second color to compare to
-         * @param epsilon threshold value
+         * Precision to use for number (5 by default)
          */
-        private static _FuzzyEquals;
+        precision?: number;
         /**
-         * Gets the materials from a Babylon scene and converts them to glTF materials
-         * @param exportMaterials
-         * @param mimeType texture mime type
-         * @param hasTextureCoords specifies if texture coordinates are present on the material
+         * Export the camera (false by default)
          */
-        _convertMaterialsToGLTFAsync(exportMaterials: Set<Material>, mimeType: BABYLON.GLTF2.ImageMimeType, hasTextureCoords: boolean): Promise<void>;
+        exportCamera?: boolean;
         /**
-         * Makes a copy of the glTF material without the texture parameters
-         * @param originalMaterial original glTF material
-         * @returns glTF material without texture parameters
+         * Camera sensor width (35 by default)
          */
-        _stripTexturesFromMaterial(originalMaterial: BABYLON.GLTF2.IMaterial): BABYLON.GLTF2.IMaterial;
-        /**
-         * Specifies if the material has any texture parameters present
-         * @param material glTF Material
-         * @returns boolean specifying if texture parameters are present
-         */
-        _hasTexturesPresent(material: BABYLON.GLTF2.IMaterial): boolean;
-        _getTextureInfo(babylonTexture: Nullable<BaseTexture>): Nullable<BABYLON.GLTF2.ITextureInfo>;
-        /**
-         * Converts a Babylon StandardMaterial to a glTF Metallic Roughness Material
-         * @param babylonStandardMaterial
-         * @returns glTF Metallic Roughness Material representation
-         */
-        _convertToGLTFPBRMetallicRoughness(babylonStandardMaterial: StandardMaterial): BABYLON.GLTF2.IMaterialPbrMetallicRoughness;
-        /**
-         * Computes the metallic factor
-         * @param diffuse diffused value
-         * @param specular specular value
-         * @param oneMinusSpecularStrength one minus the specular strength
-         * @returns metallic value
-         */
-        static _SolveMetallic(diffuse: number, specular: number, oneMinusSpecularStrength: number): number;
-        /**
-         * Sets the glTF alpha mode to a glTF material from the Babylon Material
-         * @param glTFMaterial glTF material
-         * @param babylonMaterial Babylon material
-         */
-        private static _SetAlphaMode;
-        /**
-         * Converts a Babylon Standard Material to a glTF Material
-         * @param babylonStandardMaterial BJS Standard Material
-         * @param mimeType mime type to use for the textures
-         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
-         */
-        _convertStandardMaterialAsync(babylonStandardMaterial: StandardMaterial, mimeType: BABYLON.GLTF2.ImageMimeType, hasTextureCoords: boolean): Promise<BABYLON.GLTF2.IMaterial>;
-        private _finishMaterial;
-        /**
-         * Converts an image typed array buffer to a base64 image
-         * @param buffer typed array buffer
-         * @param width width of the image
-         * @param height height of the image
-         * @param mimeType mimetype of the image
-         * @returns base64 image string
-         */
-        private _getImageDataAsync;
-        /**
-         * Generates a white texture based on the specified width and height
-         * @param width width of the texture in pixels
-         * @param height height of the texture in pixels
-         * @param scene babylonjs scene
-         * @returns white texture
-         */
-        private _createWhiteTexture;
-        /**
-         * Resizes the two source textures to the same dimensions.  If a texture is null, a default white texture is generated.  If both textures are null, returns null
-         * @param texture1 first texture to resize
-         * @param texture2 second texture to resize
-         * @param scene babylonjs scene
-         * @returns resized textures or null
-         */
-        private _resizeTexturesToSameDimensions;
-        /**
-         * Converts an array of pixels to a Float32Array
-         * Throws an error if the pixel format is not supported
-         * @param pixels - array buffer containing pixel values
-         * @returns Float32 of pixels
-         */
-        private _convertPixelArrayToFloat32;
-        /**
-         * Convert Specular Glossiness Textures to Metallic Roughness
-         * See link below for info on the material conversions from PBR Metallic/Roughness and Specular/Glossiness
-         * @link https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Archived/KHR_materials_pbrSpecularGlossiness/examples/convert-between-workflows-bjs/js/babylon.pbrUtilities.js
-         * @param diffuseTexture texture used to store diffuse information
-         * @param specularGlossinessTexture texture used to store specular and glossiness information
-         * @param factors specular glossiness material factors
-         * @param mimeType the mime type to use for the texture
-         * @returns pbr metallic roughness interface or null
-         */
-        private _convertSpecularGlossinessTexturesToMetallicRoughnessAsync;
-        /**
-         * Converts specular glossiness material properties to metallic roughness
-         * @param specularGlossiness interface with specular glossiness material properties
-         * @returns interface with metallic roughness material properties
-         */
-        private _convertSpecularGlossinessToMetallicRoughness;
-        /**
-         * Calculates the surface reflectance, independent of lighting conditions
-         * @param color Color source to calculate brightness from
-         * @returns number representing the perceived brightness, or zero if color is undefined
-         */
-        private _getPerceivedBrightness;
-        /**
-         * Returns the maximum color component value
-         * @param color
-         * @returns maximum color component value, or zero if color is null or undefined
-         */
-        private _getMaxComponent;
-        /**
-         * Convert a PBRMaterial (Metallic/Roughness) to Metallic Roughness factors
-         * @param babylonPBRMaterial BJS PBR Metallic Roughness Material
-         * @param mimeType mime type to use for the textures
-         * @param glTFPbrMetallicRoughness glTF PBR Metallic Roughness interface
-         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
-         * @returns glTF PBR Metallic Roughness factors
-         */
-        private _convertMetalRoughFactorsToMetallicRoughnessAsync;
-        private _getTextureSampler;
-        private _getGLTFTextureWrapMode;
-        /**
-         * Convert a PBRMaterial (Specular/Glossiness) to Metallic Roughness factors
-         * @param babylonPBRMaterial BJS PBR Metallic Roughness Material
-         * @param mimeType mime type to use for the textures
-         * @param glTFPbrMetallicRoughness glTF PBR Metallic Roughness interface
-         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
-         * @returns glTF PBR Metallic Roughness factors
-         */
-        private _convertSpecGlossFactorsToMetallicRoughnessAsync;
-        /**
-         * Converts a Babylon PBR Base Material to a glTF Material
-         * @param babylonPBRMaterial BJS PBR Base Material
-         * @param mimeType mime type to use for the textures
-         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
-         */
-        _convertPBRMaterialAsync(babylonPBRMaterial: PBRBaseMaterial, mimeType: BABYLON.GLTF2.ImageMimeType, hasTextureCoords: boolean): Promise<BABYLON.GLTF2.IMaterial>;
-        private _setMetallicRoughnessPbrMaterial;
-        private _getPixelsFromTexture;
-        /**
-         * Extracts a texture from a Babylon texture into file data and glTF data
-         * @param babylonTexture Babylon texture to extract
-         * @param mimeType Mime Type of the babylonTexture
-         * @returns glTF texture info, or null if the texture format is not supported
-         */
-        _exportTextureAsync(babylonTexture: BaseTexture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BABYLON.GLTF2.ITextureInfo>>;
-        _exportTextureInfoAsync(babylonTexture: BaseTexture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BABYLON.GLTF2.ITextureInfo>>;
-        private _exportImage;
-        private _exportTextureInfo;
-        private _exportTextureSampler;
-    }
-
-
-    /**
-     * Holds a collection of exporter options and parameters
-     */
-    export interface IExportOptions {
-        /**
-         * Function which indicates whether a babylon node should be exported or not
-         * @param node source Babylon node. It is used to check whether it should be exported to glTF or not
-         * @returns boolean, which indicates whether the node should be exported (true) or not (false)
-         */
-        shouldExportNode?(node: Node): boolean;
-        /**
-         * Function which indicates whether an animation on the scene should be exported or not
-         * @param animation source animation
-         * @returns boolean, which indicates whether the animation should be exported (true) or not (false)
-         */
-        shouldExportAnimation?(animation: Animation): boolean;
-        /**
-         * Function used to extract the part of node's metadata that will be exported into glTF node extras
-         * @param metadata source metadata to read from
-         * @returns the data to store to glTF node extras
-         */
-        metadataSelector?(metadata: any): any;
-        /**
-         * The sample rate to bake animation curves. Defaults to 1 / 60.
-         */
-        animationSampleRate?: number;
-        /**
-         * Begin serialization without waiting for the scene to be ready. Defaults to false.
-         */
-        exportWithoutWaitingForScene?: boolean;
-        /**
-         * Indicates if unused vertex uv attributes should be included in export. Defaults to false.
-         */
-        exportUnusedUVs?: boolean;
-        /**
-         * Remove no-op root nodes when possible. Defaults to true.
-         */
-        removeNoopRootNodes?: boolean;
-        /**
-         * Indicates if coordinate system swapping root nodes should be included in export. Defaults to false.
-         * @deprecated Please use removeNoopRootNodes instead
-         */
-        includeCoordinateSystemConversionNodes?: boolean;
+        cameraSensorWidth?: number;
     }
     /**
-     * Class for generating glTF data from a Babylon scene.
+     *
+     * @param scene scene to export
+     * @param options options to configure the export
+     * @param meshPredicate predicate to filter the meshes to export
+     * @returns a uint8 array containing the USDZ file
+     * #H2G5XW#3 - Simple sphere
+     * #H2G5XW#4 - Red sphere
+     * #5N3RWK#4 - Boombox
      */
-    export class GLTF2Export {
-        /**
-         * Exports the geometry of the scene to .gltf file format asynchronously
-         * @param scene Babylon scene with scene hierarchy information
-         * @param filePrefix File prefix to use when generating the glTF file
-         * @param options Exporter options
-         * @returns Returns an object with a .gltf file and associates texture names
-         * as keys and their data and paths as values
-         */
-        static GLTFAsync(scene: Scene, filePrefix: string, options?: IExportOptions): Promise<GLTFData>;
-        private static _PreExportAsync;
-        private static _PostExportAsync;
-        /**
-         * Exports the geometry of the scene to .glb file format asychronously
-         * @param scene Babylon scene with scene hierarchy information
-         * @param filePrefix File prefix to use when generating glb file
-         * @param options Exporter options
-         * @returns Returns an object with a .glb filename as key and data as value
-         */
-        static GLBAsync(scene: Scene, filePrefix: string, options?: IExportOptions): Promise<GLTFData>;
-    }
-
-
-    /**
-     * @internal
-     */
-    export class _GLTFUtilities {
-        /**
-         * Creates a buffer view based on the supplied arguments
-         * @param bufferIndex index value of the specified buffer
-         * @param byteOffset byte offset value
-         * @param byteLength byte length of the bufferView
-         * @param byteStride byte distance between conequential elements
-         * @param name name of the buffer view
-         * @returns bufferView for glTF
-         */
-        static _CreateBufferView(bufferIndex: number, byteOffset: number, byteLength: number, byteStride?: number, name?: string): BABYLON.GLTF2.IBufferView;
-        /**
-         * Creates an accessor based on the supplied arguments
-         * @param bufferviewIndex The index of the bufferview referenced by this accessor
-         * @param name The name of the accessor
-         * @param type The type of the accessor
-         * @param componentType The datatype of components in the attribute
-         * @param count The number of attributes referenced by this accessor
-         * @param byteOffset The offset relative to the start of the bufferView in bytes
-         * @param min Minimum value of each component in this attribute
-         * @param max Maximum value of each component in this attribute
-         * @returns accessor for glTF
-         */
-        static _CreateAccessor(bufferviewIndex: number, name: string, type: BABYLON.GLTF2.AccessorType, componentType: BABYLON.GLTF2.AccessorComponentType, count: number, byteOffset: Nullable<number>, min: Nullable<number[]>, max: Nullable<number[]>): BABYLON.GLTF2.IAccessor;
-        /**
-         * Calculates the minimum and maximum values of an array of position floats
-         * @param positions Positions array of a mesh
-         * @param vertexStart Starting vertex offset to calculate min and max values
-         * @param vertexCount Number of vertices to check for min and max values
-         * @returns min number array and max number array
-         */
-        static _CalculateMinMaxPositions(positions: FloatArray, vertexStart: number, vertexCount: number): {
-            min: number[];
-            max: number[];
-        };
-        static _NormalizeTangentFromRef(tangent: Vector4): void;
-        static _GetDataAccessorElementCount(accessorType: BABYLON.GLTF2.AccessorType): 1 | 3 | 2 | 4 | 9 | 16;
-    }
-
-
-
-
-    /** @internal */
-    export var __IGLTFExporterExtension: number;
-    /**
-     * Interface for extending the exporter
-     * @internal
-     */
-    export interface IGLTFExporterExtension {
-        /**
-         * The name of this extension
-         */
-        readonly name: string;
-        /**
-         * Defines whether this extension is enabled
-         */
-        enabled: boolean;
-        /**
-         * Defines whether this extension is required
-         */
-        required: boolean;
-    }
-
-
-
-
+    export function USDZExportAsync(scene: Scene, options: Partial<IUSDZExportOptions>, meshPredicate?: (m: Mesh) => boolean): Promise<Uint8Array>;
 
 
 
@@ -2870,13 +3256,13 @@ declare module BABYLON {
     export class OBJExport {
         /**
          * Exports the geometry of a Mesh array in .OBJ file format (text)
-         * @param mesh defines the list of meshes to serialize
+         * @param meshes defines the list of meshes to serialize
          * @param materials defines if materials should be exported
          * @param matlibname defines the name of the associated mtl file
          * @param globalposition defines if the exported positions are globals or local to the exported mesh
          * @returns the OBJ content
          */
-        static OBJ(mesh: Mesh[], materials?: boolean, matlibname?: string, globalposition?: boolean): string;
+        static OBJ(meshes: Mesh[], materials?: boolean, matlibname?: string, globalposition?: boolean): string;
         /**
          * Exports the material(s) of a mesh in .MTL file format (text)
          * @param mesh defines the mesh to extract the material from
@@ -2888,24 +3274,6 @@ declare module BABYLON {
 
 
 
-    /**
-     * Class for generating STL data from a Babylon scene.
-     */
-    export class STLExport {
-        /**
-         * Exports the geometry of a Mesh array in .STL file format (ASCII)
-         * @param meshes list defines the mesh to serialize
-         * @param download triggers the automatic download of the file.
-         * @param fileName changes the downloads fileName.
-         * @param binary changes the STL to a binary type.
-         * @param isLittleEndian toggle for binary type exporter.
-         * @param doNotBakeTransform toggle if meshes transforms should be baked or not.
-         * @param supportInstancedMeshes toggle to export instanced Meshes. Enabling support for instanced meshes will override doNoBakeTransform as true
-         * @param exportIndividualMeshes toggle to export each mesh as an independent mesh. By default, all the meshes are combined into one mesh. This property has no effect when exporting in binary format
-         * @returns the STL as UTF8 string
-         */
-        static CreateSTL(meshes: (Mesh | InstancedMesh)[], download?: boolean, fileName?: string, binary?: boolean, isLittleEndian?: boolean, doNotBakeTransform?: boolean, supportInstancedMeshes?: boolean, exportIndividualMeshes?: boolean): any;
-    }
 
 
 
