@@ -1090,6 +1090,8 @@ declare module BABYLON.GLTF2 {
         /** @internal */
         properties: Array<BABYLON.GLTF2.AnimationPropertyInfo>;
     }
+    /** @internal */
+    export function LoadBoundingInfoFromPositionAccessor(accessor: BABYLON.GLTF2.Loader.IAccessor): Nullable<BoundingInfo>;
     /**
      * The glTF 2.0 loader
      */

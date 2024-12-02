@@ -1112,6 +1112,7 @@ import { IGLTFLoader, IGLTFLoaderData } from "babylonjs-loaders/glTF/glTFFileLoa
 import { GLTFFileLoader } from "babylonjs-loaders/glTF/glTFFileLoader";
 import { IDataBuffer } from "babylonjs/Misc/dataReader";
 import { Light } from "babylonjs/Lights/light";
+import { BoundingInfo } from "babylonjs/Culling/boundingInfo";
 import { AssetContainer } from "babylonjs/assetContainer";
 import { AnimationPropertyInfo } from "babylonjs-loaders/glTF/2.0/glTFLoaderAnimation";
 import { IObjectInfo } from "babylonjs/ObjectModel/objectModelInterfaces";
@@ -1153,6 +1154,8 @@ export interface IAnimationTargetInfo {
     /** @internal */
     properties: Array<AnimationPropertyInfo>;
 }
+/** @internal */
+export function LoadBoundingInfoFromPositionAccessor(accessor: IAccessor): Nullable<BoundingInfo>;
 /**
  * The glTF 2.0 loader
  */
@@ -5919,6 +5922,8 @@ declare module BABYLON.GLTF2 {
         /** @internal */
         properties: Array<BABYLON.GLTF2.AnimationPropertyInfo>;
     }
+    /** @internal */
+    export function LoadBoundingInfoFromPositionAccessor(accessor: BABYLON.GLTF2.Loader.IAccessor): Nullable<BoundingInfo>;
     /**
      * The glTF 2.0 loader
      */

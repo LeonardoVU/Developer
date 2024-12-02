@@ -1174,8 +1174,10 @@ declare module "babylonjs-materials/grid/grid.vertex" {
 import "babylonjs/Shaders/ShadersInclude/instancesDeclaration";
 import "babylonjs/Shaders/ShadersInclude/logDepthDeclaration";
 import "babylonjs/Shaders/ShadersInclude/fogVertexDeclaration";
+import "babylonjs/Shaders/ShadersInclude/clipPlaneVertexDeclaration";
 import "babylonjs/Shaders/ShadersInclude/instancesVertex";
 import "babylonjs/Shaders/ShadersInclude/fogVertex";
+import "babylonjs/Shaders/ShadersInclude/clipPlaneVertex";
 import "babylonjs/Shaders/ShadersInclude/logDepthVertex";
 /** @internal */
 export const gridVertexShader: {
@@ -1185,8 +1187,10 @@ export const gridVertexShader: {
 
 }
 declare module "babylonjs-materials/grid/grid.fragment" {
+import "babylonjs/Shaders/ShadersInclude/clipPlaneFragmentDeclaration";
 import "babylonjs/Shaders/ShadersInclude/logDepthDeclaration";
 import "babylonjs/Shaders/ShadersInclude/fogFragmentDeclaration";
+import "babylonjs/Shaders/ShadersInclude/clipPlaneFragment";
 import "babylonjs/Shaders/ShadersInclude/fogFragment";
 import "babylonjs/Shaders/ShadersInclude/logDepthFragment";
 import "babylonjs/Shaders/ShadersInclude/imageProcessingCompatibility";

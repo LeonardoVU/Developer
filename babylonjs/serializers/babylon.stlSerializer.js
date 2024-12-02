@@ -307,7 +307,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_babylonjs_Maths_math_vector__;
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./src/stl.ts ***!

@@ -1893,6 +1893,7 @@ import { NodeLink } from "babylonjs-node-editor/nodeGraphSystem/nodeLink";
 import { FramePortData } from "babylonjs-node-editor/nodeGraphSystem/types/framePortData";
 export const IsFramePortData: (variableToCheck: any) => variableToCheck is FramePortData;
 export const RefreshNode: (node: GraphNode, visitedNodes?: Set<GraphNode>, visitedLinks?: Set<NodeLink>, canvas?: GraphCanvasComponent) => void;
+export const BuildFloatUI: (container: HTMLDivElement, document: Document, displayName: string, isInteger: boolean, source: any, propertyName: string, onChange: () => void, min?: number, max?: number, visualPropertiesRefresh?: Array<() => void>) => void;
 
 }
 declare module "babylonjs-node-editor/nodeGraphSystem/stateManager" {
@@ -2008,7 +2009,7 @@ import { StateManager } from "babylonjs-node-editor/nodeGraphSystem/stateManager
 import { ISelectionChangedOptions } from "babylonjs-node-editor/nodeGraphSystem/interfaces/selectionChangedOptions";
 import { FrameNodePort } from "babylonjs-node-editor/nodeGraphSystem/frameNodePort";
 import { IDisplayManager } from "babylonjs-node-editor/nodeGraphSystem/interfaces/displayManager";
-import { IPortData } from "babylonjs-node-editor/nodeGraphSystem/interfaces/portData";
+import { type IPortData } from "babylonjs-node-editor/nodeGraphSystem/interfaces/portData";
 export class NodePort {
     portData: IPortData;
     node: GraphNode;
@@ -2021,6 +2022,7 @@ export class NodePort {
     protected _onCandidateLinkMovedObserver: Nullable<Observer<Nullable<Vector2>>>;
     protected _onSelectionChangedObserver: Nullable<Observer<Nullable<ISelectionChangedOptions>>>;
     protected _exposedOnFrame: boolean;
+    protected _portUIcontainer?: HTMLDivElement;
     delegatedPort: Nullable<FrameNodePort>;
     get element(): HTMLDivElement;
     get container(): HTMLElement;
@@ -2034,7 +2036,7 @@ export class NodePort {
     set exposedPortPosition(value: number);
     private _isConnectedToNodeOutsideOfFrame;
     refresh(): void;
-    constructor(portContainer: HTMLElement, portData: IPortData, node: GraphNode, stateManager: StateManager);
+    constructor(portContainer: HTMLElement, portData: IPortData, node: GraphNode, stateManager: StateManager, portUIcontainer?: HTMLDivElement);
     dispose(): void;
     static CreatePortElement(portData: IPortData, node: GraphNode, root: HTMLElement, displayManager: Nullable<IDisplayManager>, stateManager: StateManager): NodePort;
 }
@@ -2057,6 +2059,7 @@ export class NodeLink {
     private _onSelectionChangedObserver;
     private _isVisible;
     private _isTargetCandidate;
+    private _gradient;
     onDisposedObservable: Observable<NodeLink>;
     get isTargetCandidate(): boolean;
     set isTargetCandidate(value: boolean);
@@ -2092,6 +2095,7 @@ import { NodeLink } from "babylonjs-node-editor/nodeGraphSystem/nodeLink";
 import { StateManager } from "babylonjs-node-editor/nodeGraphSystem/stateManager";
 import { INodeData } from "babylonjs-node-editor/nodeGraphSystem/interfaces/nodeData";
 import { IPortData } from "babylonjs-node-editor/nodeGraphSystem/interfaces/portData";
+import { IEditablePropertyOption } from "babylonjs/Decorators/nodeDecorator";
 export class GraphNode {
     content: INodeData;
     private _visual;
@@ -2169,7 +2173,7 @@ export class GraphNode {
     private _onUp;
     private _onMove;
     renderProperties(): Nullable<JSX.Element>;
-    private _forceRebuild;
+    _forceRebuild(source: any, propertyName: string, notifiers?: IEditablePropertyOption["notifiers"]): void;
     private _isCollapsed;
     /**
      * Collapse the node
@@ -2560,6 +2564,32 @@ export enum PortDataDirection {
     /** Output */
     Output = 1
 }
+export enum PortDirectValueTypes {
+    Float = 0,
+    Int = 1
+}
+export interface IPortDirectValueDefinition {
+    /**
+     * Gets the source object
+     */
+    source: any;
+    /**
+     * Gets the property name used to store the value
+     */
+    propertyName: string;
+    /**
+     * Gets or sets the min value accepted for this point if nothing is connected
+     */
+    valueMin: Nullable<any>;
+    /**
+     * Gets or sets the max value accepted for this point if nothing is connected
+     */
+    valueMax: Nullable<any>;
+    /**
+     * Gets or sets the type of the value
+     */
+    valueType: PortDirectValueTypes;
+}
 export interface IPortData {
     data: any;
     name: string;
@@ -2573,6 +2603,7 @@ export interface IPortData {
     needDualDirectionValidation: boolean;
     hasEndpoints: boolean;
     endpoints: Nullable<IPortData[]>;
+    directValueDefinition?: IPortDirectValueDefinition;
     updateDisplayName: (newName: string) => void;
     canConnectTo: (port: IPortData) => boolean;
     connectTo: (port: IPortData) => void;
@@ -6260,6 +6291,7 @@ declare module BABYLON.NodeEditor {
 declare module BABYLON.NodeEditor.SharedUIComponents {
         export const IsFramePortData: (variableToCheck: any) => variableToCheck is BABYLON.NodeEditor.SharedUIComponents.FramePortData;
     export const RefreshNode: (node: BABYLON.NodeEditor.SharedUIComponents.GraphNode, visitedNodes?: Set<BABYLON.NodeEditor.SharedUIComponents.GraphNode>, visitedLinks?: Set<BABYLON.NodeEditor.SharedUIComponents.NodeLink>, canvas?: BABYLON.NodeEditor.SharedUIComponents.GraphCanvasComponent) => void;
+    export const BuildFloatUI: (container: HTMLDivElement, document: Document, displayName: string, isInteger: boolean, source: any, propertyName: string, onChange: () => void, min?: number, max?: number, visualPropertiesRefresh?: Array<() => void>) => void;
 
 
 
@@ -6374,7 +6406,7 @@ declare module BABYLON.NodeEditor {
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
         export class NodePort {
-        portData: BABYLON.NodeEditor.SharedUIComponents.IPortData;
+        portData: IPortData;
         node: BABYLON.NodeEditor.SharedUIComponents.GraphNode;
         protected _element: HTMLDivElement;
         protected _portContainer: HTMLElement;
@@ -6385,6 +6417,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         protected _onCandidateLinkMovedObserver: BABYLON.Nullable<BABYLON.Observer<BABYLON.Nullable<BABYLON.Vector2>>>;
         protected _onSelectionChangedObserver: BABYLON.Nullable<BABYLON.Observer<BABYLON.Nullable<BABYLON.NodeEditor.SharedUIComponents.ISelectionChangedOptions>>>;
         protected _exposedOnFrame: boolean;
+        protected _portUIcontainer?: HTMLDivElement;
         delegatedPort: BABYLON.Nullable<BABYLON.NodeEditor.SharedUIComponents.FrameNodePort>;
         get element(): HTMLDivElement;
         get container(): HTMLElement;
@@ -6398,9 +6431,9 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         set exposedPortPosition(value: number);
         private _isConnectedToNodeOutsideOfFrame;
         refresh(): void;
-        constructor(portContainer: HTMLElement, portData: BABYLON.NodeEditor.SharedUIComponents.IPortData, node: BABYLON.NodeEditor.SharedUIComponents.GraphNode, stateManager: BABYLON.NodeEditor.SharedUIComponents.StateManager);
+        constructor(portContainer: HTMLElement, portData: IPortData, node: BABYLON.NodeEditor.SharedUIComponents.GraphNode, stateManager: BABYLON.NodeEditor.SharedUIComponents.StateManager, portUIcontainer?: HTMLDivElement);
         dispose(): void;
-        static CreatePortElement(portData: BABYLON.NodeEditor.SharedUIComponents.IPortData, node: BABYLON.NodeEditor.SharedUIComponents.GraphNode, root: HTMLElement, displayManager: BABYLON.Nullable<BABYLON.NodeEditor.SharedUIComponents.IDisplayManager>, stateManager: BABYLON.NodeEditor.SharedUIComponents.StateManager): NodePort;
+        static CreatePortElement(portData: IPortData, node: BABYLON.NodeEditor.SharedUIComponents.GraphNode, root: HTMLElement, displayManager: BABYLON.Nullable<BABYLON.NodeEditor.SharedUIComponents.IDisplayManager>, stateManager: BABYLON.NodeEditor.SharedUIComponents.StateManager): NodePort;
     }
 
 
@@ -6422,6 +6455,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         private _onSelectionChangedObserver;
         private _isVisible;
         private _isTargetCandidate;
+        private _gradient;
         onDisposedObservable: BABYLON.Observable<NodeLink>;
         get isTargetCandidate(): boolean;
         set isTargetCandidate(value: boolean);
@@ -6538,7 +6572,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         private _onUp;
         private _onMove;
         renderProperties(): BABYLON.Nullable<JSX.Element>;
-        private _forceRebuild;
+        _forceRebuild(source: any, propertyName: string, notifiers?: BABYLON.IEditablePropertyOption["notifiers"]): void;
         private _isCollapsed;
         /**
          * Collapse the node
@@ -6943,6 +6977,32 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         /** Output */
         Output = 1
     }
+    export enum PortDirectValueTypes {
+        Float = 0,
+        Int = 1
+    }
+    export interface IPortDirectValueDefinition {
+        /**
+         * Gets the source object
+         */
+        source: any;
+        /**
+         * Gets the property name used to store the value
+         */
+        propertyName: string;
+        /**
+         * Gets or sets the min value accepted for this point if nothing is connected
+         */
+        valueMin: BABYLON.Nullable<any>;
+        /**
+         * Gets or sets the max value accepted for this point if nothing is connected
+         */
+        valueMax: BABYLON.Nullable<any>;
+        /**
+         * Gets or sets the type of the value
+         */
+        valueType: PortDirectValueTypes;
+    }
     export interface IPortData {
         data: any;
         name: string;
@@ -6956,6 +7016,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         needDualDirectionValidation: boolean;
         hasEndpoints: boolean;
         endpoints: BABYLON.Nullable<IPortData[]>;
+        directValueDefinition?: IPortDirectValueDefinition;
         updateDisplayName: (newName: string) => void;
         canConnectTo: (port: IPortData) => boolean;
         connectTo: (port: IPortData) => void;

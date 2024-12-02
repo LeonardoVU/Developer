@@ -378,7 +378,7 @@ import { Nullable } from "babylonjs/types";
 import { GraphNode } from "babylonjs-node-geometry-editor/nodeGraphSystem/graphNode";
 import { INodeContainer } from "babylonjs-node-geometry-editor/nodeGraphSystem/interfaces/nodeContainer";
 import { IPortData } from "babylonjs-node-geometry-editor/nodeGraphSystem/interfaces/portData";
-import { PortDataDirection } from "babylonjs-node-geometry-editor/nodeGraphSystem/interfaces/portData";
+import { PortDataDirection, PortDirectValueTypes } from "babylonjs-node-geometry-editor/nodeGraphSystem/interfaces/portData";
 export class ConnectionPointPortData implements IPortData {
     private _connectedPort;
     private _nodeContainer;
@@ -392,6 +392,13 @@ export class ConnectionPointPortData implements IPortData {
     get isConnected(): boolean;
     get connectedPort(): Nullable<IPortData>;
     set connectedPort(value: Nullable<IPortData>);
+    get directValueDefinition(): {
+        source: NodeGeometryConnectionPoint;
+        propertyName: string;
+        valueMin: any;
+        valueMax: any;
+        valueType: PortDirectValueTypes;
+    } | undefined;
     get direction(): PortDataDirection;
     get ownerData(): NodeGeometryBlock;
     get needDualDirectionValidation(): boolean;
@@ -1560,6 +1567,7 @@ import { NodeLink } from "babylonjs-node-geometry-editor/nodeGraphSystem/nodeLin
 import { FramePortData } from "babylonjs-node-geometry-editor/nodeGraphSystem/types/framePortData";
 export const IsFramePortData: (variableToCheck: any) => variableToCheck is FramePortData;
 export const RefreshNode: (node: GraphNode, visitedNodes?: Set<GraphNode>, visitedLinks?: Set<NodeLink>, canvas?: GraphCanvasComponent) => void;
+export const BuildFloatUI: (container: HTMLDivElement, document: Document, displayName: string, isInteger: boolean, source: any, propertyName: string, onChange: () => void, min?: number, max?: number, visualPropertiesRefresh?: Array<() => void>) => void;
 
 }
 declare module "babylonjs-node-geometry-editor/nodeGraphSystem/stateManager" {
@@ -1675,7 +1683,7 @@ import { StateManager } from "babylonjs-node-geometry-editor/nodeGraphSystem/sta
 import { ISelectionChangedOptions } from "babylonjs-node-geometry-editor/nodeGraphSystem/interfaces/selectionChangedOptions";
 import { FrameNodePort } from "babylonjs-node-geometry-editor/nodeGraphSystem/frameNodePort";
 import { IDisplayManager } from "babylonjs-node-geometry-editor/nodeGraphSystem/interfaces/displayManager";
-import { IPortData } from "babylonjs-node-geometry-editor/nodeGraphSystem/interfaces/portData";
+import { type IPortData } from "babylonjs-node-geometry-editor/nodeGraphSystem/interfaces/portData";
 export class NodePort {
     portData: IPortData;
     node: GraphNode;
@@ -1688,6 +1696,7 @@ export class NodePort {
     protected _onCandidateLinkMovedObserver: Nullable<Observer<Nullable<Vector2>>>;
     protected _onSelectionChangedObserver: Nullable<Observer<Nullable<ISelectionChangedOptions>>>;
     protected _exposedOnFrame: boolean;
+    protected _portUIcontainer?: HTMLDivElement;
     delegatedPort: Nullable<FrameNodePort>;
     get element(): HTMLDivElement;
     get container(): HTMLElement;
@@ -1701,7 +1710,7 @@ export class NodePort {
     set exposedPortPosition(value: number);
     private _isConnectedToNodeOutsideOfFrame;
     refresh(): void;
-    constructor(portContainer: HTMLElement, portData: IPortData, node: GraphNode, stateManager: StateManager);
+    constructor(portContainer: HTMLElement, portData: IPortData, node: GraphNode, stateManager: StateManager, portUIcontainer?: HTMLDivElement);
     dispose(): void;
     static CreatePortElement(portData: IPortData, node: GraphNode, root: HTMLElement, displayManager: Nullable<IDisplayManager>, stateManager: StateManager): NodePort;
 }
@@ -1724,6 +1733,7 @@ export class NodeLink {
     private _onSelectionChangedObserver;
     private _isVisible;
     private _isTargetCandidate;
+    private _gradient;
     onDisposedObservable: Observable<NodeLink>;
     get isTargetCandidate(): boolean;
     set isTargetCandidate(value: boolean);
@@ -1759,6 +1769,7 @@ import { NodeLink } from "babylonjs-node-geometry-editor/nodeGraphSystem/nodeLin
 import { StateManager } from "babylonjs-node-geometry-editor/nodeGraphSystem/stateManager";
 import { INodeData } from "babylonjs-node-geometry-editor/nodeGraphSystem/interfaces/nodeData";
 import { IPortData } from "babylonjs-node-geometry-editor/nodeGraphSystem/interfaces/portData";
+import { IEditablePropertyOption } from "babylonjs/Decorators/nodeDecorator";
 export class GraphNode {
     content: INodeData;
     private _visual;
@@ -1836,7 +1847,7 @@ export class GraphNode {
     private _onUp;
     private _onMove;
     renderProperties(): Nullable<JSX.Element>;
-    private _forceRebuild;
+    _forceRebuild(source: any, propertyName: string, notifiers?: IEditablePropertyOption["notifiers"]): void;
     private _isCollapsed;
     /**
      * Collapse the node
@@ -2227,6 +2238,32 @@ export enum PortDataDirection {
     /** Output */
     Output = 1
 }
+export enum PortDirectValueTypes {
+    Float = 0,
+    Int = 1
+}
+export interface IPortDirectValueDefinition {
+    /**
+     * Gets the source object
+     */
+    source: any;
+    /**
+     * Gets the property name used to store the value
+     */
+    propertyName: string;
+    /**
+     * Gets or sets the min value accepted for this point if nothing is connected
+     */
+    valueMin: Nullable<any>;
+    /**
+     * Gets or sets the max value accepted for this point if nothing is connected
+     */
+    valueMax: Nullable<any>;
+    /**
+     * Gets or sets the type of the value
+     */
+    valueType: PortDirectValueTypes;
+}
 export interface IPortData {
     data: any;
     name: string;
@@ -2240,6 +2277,7 @@ export interface IPortData {
     needDualDirectionValidation: boolean;
     hasEndpoints: boolean;
     endpoints: Nullable<IPortData[]>;
+    directValueDefinition?: IPortDirectValueDefinition;
     updateDisplayName: (newName: string) => void;
     canConnectTo: (port: IPortData) => boolean;
     connectTo: (port: IPortData) => void;
@@ -4604,6 +4642,13 @@ declare module BABYLON.NodeGeometryEditor {
         get isConnected(): boolean;
         get connectedPort(): BABYLON.Nullable<BABYLON.NodeGeometryEditor.SharedUIComponents.IPortData>;
         set connectedPort(value: BABYLON.Nullable<BABYLON.NodeGeometryEditor.SharedUIComponents.IPortData>);
+        get directValueDefinition(): {
+            source: NodeGeometryConnectionPoint;
+            propertyName: string;
+            valueMin: any;
+            valueMax: any;
+            valueType: BABYLON.NodeGeometryEditor.SharedUIComponents.PortDirectValueTypes;
+        } | undefined;
         get direction(): BABYLON.NodeGeometryEditor.SharedUIComponents.PortDataDirection;
         get ownerData(): BABYLON.NodeGeometryBlock;
         get needDualDirectionValidation(): boolean;
@@ -5691,6 +5736,7 @@ declare module BABYLON.NodeGeometryEditor {
 declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
         export const IsFramePortData: (variableToCheck: any) => variableToCheck is BABYLON.NodeGeometryEditor.SharedUIComponents.FramePortData;
     export const RefreshNode: (node: BABYLON.NodeGeometryEditor.SharedUIComponents.GraphNode, visitedNodes?: Set<BABYLON.NodeGeometryEditor.SharedUIComponents.GraphNode>, visitedLinks?: Set<BABYLON.NodeGeometryEditor.SharedUIComponents.NodeLink>, canvas?: BABYLON.NodeGeometryEditor.SharedUIComponents.GraphCanvasComponent) => void;
+    export const BuildFloatUI: (container: HTMLDivElement, document: Document, displayName: string, isInteger: boolean, source: any, propertyName: string, onChange: () => void, min?: number, max?: number, visualPropertiesRefresh?: Array<() => void>) => void;
 
 
 
@@ -5805,7 +5851,7 @@ declare module BABYLON.NodeGeometryEditor {
 }
 declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
         export class NodePort {
-        portData: BABYLON.NodeGeometryEditor.SharedUIComponents.IPortData;
+        portData: IPortData;
         node: BABYLON.NodeGeometryEditor.SharedUIComponents.GraphNode;
         protected _element: HTMLDivElement;
         protected _portContainer: HTMLElement;
@@ -5816,6 +5862,7 @@ declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
         protected _onCandidateLinkMovedObserver: BABYLON.Nullable<BABYLON.Observer<BABYLON.Nullable<BABYLON.Vector2>>>;
         protected _onSelectionChangedObserver: BABYLON.Nullable<BABYLON.Observer<BABYLON.Nullable<BABYLON.NodeGeometryEditor.SharedUIComponents.ISelectionChangedOptions>>>;
         protected _exposedOnFrame: boolean;
+        protected _portUIcontainer?: HTMLDivElement;
         delegatedPort: BABYLON.Nullable<BABYLON.NodeGeometryEditor.SharedUIComponents.FrameNodePort>;
         get element(): HTMLDivElement;
         get container(): HTMLElement;
@@ -5829,9 +5876,9 @@ declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
         set exposedPortPosition(value: number);
         private _isConnectedToNodeOutsideOfFrame;
         refresh(): void;
-        constructor(portContainer: HTMLElement, portData: BABYLON.NodeGeometryEditor.SharedUIComponents.IPortData, node: BABYLON.NodeGeometryEditor.SharedUIComponents.GraphNode, stateManager: BABYLON.NodeGeometryEditor.SharedUIComponents.StateManager);
+        constructor(portContainer: HTMLElement, portData: IPortData, node: BABYLON.NodeGeometryEditor.SharedUIComponents.GraphNode, stateManager: BABYLON.NodeGeometryEditor.SharedUIComponents.StateManager, portUIcontainer?: HTMLDivElement);
         dispose(): void;
-        static CreatePortElement(portData: BABYLON.NodeGeometryEditor.SharedUIComponents.IPortData, node: BABYLON.NodeGeometryEditor.SharedUIComponents.GraphNode, root: HTMLElement, displayManager: BABYLON.Nullable<BABYLON.NodeGeometryEditor.SharedUIComponents.IDisplayManager>, stateManager: BABYLON.NodeGeometryEditor.SharedUIComponents.StateManager): NodePort;
+        static CreatePortElement(portData: IPortData, node: BABYLON.NodeGeometryEditor.SharedUIComponents.GraphNode, root: HTMLElement, displayManager: BABYLON.Nullable<BABYLON.NodeGeometryEditor.SharedUIComponents.IDisplayManager>, stateManager: BABYLON.NodeGeometryEditor.SharedUIComponents.StateManager): NodePort;
     }
 
 
@@ -5853,6 +5900,7 @@ declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
         private _onSelectionChangedObserver;
         private _isVisible;
         private _isTargetCandidate;
+        private _gradient;
         onDisposedObservable: BABYLON.Observable<NodeLink>;
         get isTargetCandidate(): boolean;
         set isTargetCandidate(value: boolean);
@@ -5969,7 +6017,7 @@ declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
         private _onUp;
         private _onMove;
         renderProperties(): BABYLON.Nullable<JSX.Element>;
-        private _forceRebuild;
+        _forceRebuild(source: any, propertyName: string, notifiers?: BABYLON.IEditablePropertyOption["notifiers"]): void;
         private _isCollapsed;
         /**
          * Collapse the node
@@ -6374,6 +6422,32 @@ declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
         /** Output */
         Output = 1
     }
+    export enum PortDirectValueTypes {
+        Float = 0,
+        Int = 1
+    }
+    export interface IPortDirectValueDefinition {
+        /**
+         * Gets the source object
+         */
+        source: any;
+        /**
+         * Gets the property name used to store the value
+         */
+        propertyName: string;
+        /**
+         * Gets or sets the min value accepted for this point if nothing is connected
+         */
+        valueMin: BABYLON.Nullable<any>;
+        /**
+         * Gets or sets the max value accepted for this point if nothing is connected
+         */
+        valueMax: BABYLON.Nullable<any>;
+        /**
+         * Gets or sets the type of the value
+         */
+        valueType: PortDirectValueTypes;
+    }
     export interface IPortData {
         data: any;
         name: string;
@@ -6387,6 +6461,7 @@ declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
         needDualDirectionValidation: boolean;
         hasEndpoints: boolean;
         endpoints: BABYLON.Nullable<IPortData[]>;
+        directValueDefinition?: IPortDirectValueDefinition;
         updateDisplayName: (newName: string) => void;
         canConnectTo: (port: IPortData) => boolean;
         connectTo: (port: IPortData) => void;
