@@ -769,7 +769,7 @@ const createScene = function () {
                 break;
             case BABYLON.PointerEventTypes.POINTERWHEEL:
                 if (panel.isVertical) {
-                    text0.text = "POINTER WHEEL";
+                   // text0.text = "POINTER WHEEL";
                     // console.log(scene);
                 }
                 //text0.text = "POINTER WHEEL";
