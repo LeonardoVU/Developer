@@ -429,7 +429,7 @@ if (/mobile/i.test(ua)) {
 }
 //}
 
-console.log(ua, cz);
+//console.log(ua, cz);
 
 
 var strt = [];
