@@ -411,8 +411,26 @@ var e = mn;
 var en = [];
 var mstxt = [];
 var enlen = 0;
-var cz = 1.5;
+var dvc = 10;
+var cz = dvc;
 var ca = 3 * PI / 2;
+
+//function getDeviceType() {
+const ua = navigator.userAgent;
+if (/mobile/i.test(ua)) {
+    dvc = 1.5;
+    //return 'Mobile';
+} else if (/tablet/i.test(ua)) {
+    dvc = 1.5;
+    //return 'Tablet';
+} else {
+    dvc = 10;
+    //return 'Desktop';
+}
+//}
+
+console.log(ua, cz);
+
 
 var strt = [];
 var crrt = [];
@@ -566,12 +584,12 @@ const createScene = function () {
         if (this.outerWidth > this.outerHeight) {
             panel.isVertical = false;
             whr = this.outerWidth / this.outerHeight;
-            cz = 1.5;
+            cz = dvc;
             anchor.position.y = 5;
         } else {
             panel.isVertical = true;
             whr = this.outerHeight / this.outerWidth;
-            cz = 1.5;
+            cz = dvc;
             anchor.position.x = 0;
 
         }
