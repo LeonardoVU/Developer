@@ -413,7 +413,7 @@ if (/mobile/i.test(ua)) {
     dvc = 1.5;
     //return 'Tablet';
 } else {
-    dvc = 10;
+    dvc = 5;
     //return 'Desktop';
 }
 
