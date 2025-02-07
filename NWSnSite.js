@@ -407,10 +407,10 @@ var esc = 0.75;
 
 var ua = navigator.userAgent;
 if (/mobile/i.test(ua)) {
-    dvc = 3;
+    dvc = 2.5;
     //return 'Mobile';
 } else if (/tablet/i.test(ua)) {
-    dvc = 3;
+    dvc = 2.5;
     //return 'Tablet';
 } else {
     dvc = 10;
@@ -795,10 +795,10 @@ const createScene = async function () {
         //camera.alpha -= 0.01;
         var ua = navigator.userAgent;
         if (/mobile/i.test(ua)) {
-            dvc = 3;
+            dvc = 2.5;
             //return 'Mobile';
         } else if (/tablet/i.test(ua)) {
-            dvc = 3;
+            dvc = 2.5;
             //return 'Tablet';
         } else {
             dvc = 10;
