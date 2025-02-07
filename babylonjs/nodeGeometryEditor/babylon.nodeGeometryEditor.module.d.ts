@@ -156,6 +156,7 @@ export class GlobalState {
     onIsLoadingChanged: Observable<boolean>;
     onPreviewBackgroundChanged: Observable<void>;
     onFrame: Observable<void>;
+    onAxis: Observable<void>;
     onAnimationCommandActivated: Observable<void>;
     onImportFrameObservable: Observable<any>;
     onPopupClosedObservable: Observable<void>;
@@ -855,7 +856,10 @@ interface IPreviewMeshControlComponent {
     globalState: GlobalState;
     togglePreviewAreaComponent: () => void;
 }
-export class PreviewMeshControlComponent extends React.Component<IPreviewMeshControlComponent> {
+interface IPreviewMeshControlComponentState {
+    center: boolean;
+}
+export class PreviewMeshControlComponent extends React.Component<IPreviewMeshControlComponent, IPreviewMeshControlComponentState> {
     private _colorInputRef;
     private _onResetRequiredObserver;
     private _onRefreshPreviewMeshControlComponentRequiredObserver;
@@ -866,6 +870,7 @@ export class PreviewMeshControlComponent extends React.Component<IPreviewMeshCon
     changeBackground(value: string): void;
     changeBackgroundClick(): void;
     frame(): void;
+    axis(): void;
 
 }
 export {};
@@ -878,6 +883,7 @@ export class PreviewManager {
     private _nodeGeometry;
     private _onBuildObserver;
     private _onFrameObserver;
+    private _onAxisObserver;
     private _onExportToGLBObserver;
     private _onAnimationCommandActivatedObserver;
     private _onUpdateRequiredObserver;
@@ -987,7 +993,7 @@ declare module "babylonjs-node-geometry-editor/styleHelper" {
  * @param source document to copy styles from
  * @param target document or shadow root to copy styles to
  */
-export function CopyStyles(source: Document, target: Document): void;
+export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
 
 }
 declare module "babylonjs-node-geometry-editor/stringTools" {
@@ -1623,6 +1629,7 @@ export class StateManager {
     isElbowConnectionAllowed: (nodeA: FrameNodePort | NodePort, nodeB: FrameNodePort | NodePort) => boolean;
     isDebugConnectionAllowed: (nodeA: FrameNodePort | NodePort, nodeB: FrameNodePort | NodePort) => boolean;
     applyNodePortDesign: (data: IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+    getPortColor: (portData: IPortData) => string;
     storeEditorData: (serializationObject: any, frame?: Nullable<GraphFrame>) => void;
     getEditorDataMap: () => {
         [key: number]: number;
@@ -1632,6 +1639,8 @@ export class StateManager {
         data: INodeData;
         name: string;
     }>;
+    private _isRebuildQueued;
+    queueRebuildCommand(): void;
 }
 
 }
@@ -2336,6 +2345,9 @@ export interface INodeData {
     outputs: IPortData[];
     invisibleEndpoints?: Nullable<any[]>;
     isConnectedToOutput?: () => boolean;
+    isActive?: boolean;
+    setIsActive?: (value: boolean) => void;
+    canBeActivated?: boolean;
 }
 
 }
@@ -4518,6 +4530,7 @@ declare module BABYLON.NodeGeometryEditor {
         onIsLoadingChanged: BABYLON.Observable<boolean>;
         onPreviewBackgroundChanged: BABYLON.Observable<void>;
         onFrame: BABYLON.Observable<void>;
+        onAxis: BABYLON.Observable<void>;
         onAnimationCommandActivated: BABYLON.Observable<void>;
         onImportFrameObservable: BABYLON.Observable<any>;
         onPopupClosedObservable: BABYLON.Observable<void>;
@@ -4985,7 +4998,10 @@ declare module BABYLON.NodeGeometryEditor {
         globalState: GlobalState;
         togglePreviewAreaComponent: () => void;
     }
-    export class PreviewMeshControlComponent extends React.Component<IPreviewMeshControlComponent> {
+    interface IPreviewMeshControlComponentState {
+        center: boolean;
+    }
+    export class PreviewMeshControlComponent extends React.Component<IPreviewMeshControlComponent, IPreviewMeshControlComponentState> {
         private _colorInputRef;
         private _onResetRequiredObserver;
         private _onRefreshPreviewMeshControlComponentRequiredObserver;
@@ -4996,6 +5012,7 @@ declare module BABYLON.NodeGeometryEditor {
         changeBackground(value: string): void;
         changeBackgroundClick(): void;
         frame(): void;
+        axis(): void;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5004,6 +5021,7 @@ declare module BABYLON.NodeGeometryEditor {
         private _nodeGeometry;
         private _onBuildObserver;
         private _onFrameObserver;
+        private _onAxisObserver;
         private _onExportToGLBObserver;
         private _onAnimationCommandActivatedObserver;
         private _onUpdateRequiredObserver;
@@ -5101,7 +5119,7 @@ declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
      * @param source document to copy styles from
      * @param target document or shadow root to copy styles to
      */
-    export function CopyStyles(source: Document, target: Document): void;
+    export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
 
 
 
@@ -5785,6 +5803,7 @@ declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
         isElbowConnectionAllowed: (nodeA: BABYLON.NodeGeometryEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeGeometryEditor.SharedUIComponents.NodePort, nodeB: BABYLON.NodeGeometryEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeGeometryEditor.SharedUIComponents.NodePort) => boolean;
         isDebugConnectionAllowed: (nodeA: BABYLON.NodeGeometryEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeGeometryEditor.SharedUIComponents.NodePort, nodeB: BABYLON.NodeGeometryEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeGeometryEditor.SharedUIComponents.NodePort) => boolean;
         applyNodePortDesign: (data: BABYLON.NodeGeometryEditor.SharedUIComponents.IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+        getPortColor: (portData: BABYLON.NodeGeometryEditor.SharedUIComponents.IPortData) => string;
         storeEditorData: (serializationObject: any, frame?: BABYLON.Nullable<BABYLON.NodeGeometryEditor.SharedUIComponents.GraphFrame>) => void;
         getEditorDataMap: () => {
             [key: number]: number;
@@ -5794,6 +5813,8 @@ declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
             data: BABYLON.NodeGeometryEditor.SharedUIComponents.INodeData;
             name: string;
         }>;
+        private _isRebuildQueued;
+        queueRebuildCommand(): void;
     }
 
 
@@ -6530,6 +6551,9 @@ declare module BABYLON.NodeGeometryEditor.SharedUIComponents {
         outputs: BABYLON.NodeGeometryEditor.SharedUIComponents.IPortData[];
         invisibleEndpoints?: BABYLON.Nullable<any[]>;
         isConnectedToOutput?: () => boolean;
+        isActive?: boolean;
+        setIsActive?: (value: boolean) => void;
+        canBeActivated?: boolean;
     }
 
 

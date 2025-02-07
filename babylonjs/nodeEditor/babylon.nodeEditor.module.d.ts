@@ -137,6 +137,8 @@ import { Nullable } from "babylonjs/types";
 import { LockObject } from "babylonjs-node-editor/tabs/propertyGrids/lockObject";
 import { StateManager } from "babylonjs-node-editor/nodeGraphSystem/stateManager";
 import { FilesInput } from "babylonjs/Misc/filesInput";
+import { RenderTargetTexture } from "babylonjs/Materials/Textures/renderTargetTexture";
+import { NodeMaterialDebugBlock } from "babylonjs/Materials/Node/Blocks/debugBlock";
 export class GlobalState {
     hostElement: HTMLElement;
     hostDocument: Document;
@@ -180,6 +182,11 @@ export class GlobalState {
     pointerOverCanvas: boolean;
     filesInput: FilesInput;
     onRefreshPreviewMeshControlComponentRequiredObservable: Observable<void>;
+    previewTexture: Nullable<RenderTargetTexture>;
+    pickingTexture: Nullable<RenderTargetTexture>;
+    onPreviewSceneAfterRenderObservable: Observable<void>;
+    onPreviewUpdatedObservable: Observable<NodeMaterial>;
+    debugBlocksToRefresh: NodeMaterialDebugBlock[];
     /** Gets the mode */
     get mode(): NodeMaterialModes;
     /** Sets the mode */
@@ -313,8 +320,10 @@ import { ColorConverterBlock } from "babylonjs/Materials/Node/Blocks/colorConver
 import { LoopBlock } from "babylonjs/Materials/Node/Blocks/loopBlock";
 import { StorageReadBlock } from "babylonjs/Materials/Node/Blocks/storageReadBlock";
 import { StorageWriteBlock } from "babylonjs/Materials/Node/Blocks/storageWriteBlock";
+import { MatrixSplitterBlock } from "babylonjs/Materials/Node/Blocks/matrixSplitterBlock";
+import { NodeMaterialDebugBlock } from "babylonjs/Materials/Node/Blocks/debugBlock";
 export class BlockTools {
-    static GetBlockFromString(data: string, scene: Scene, nodeMaterial: NodeMaterial): StorageWriteBlock | StorageReadBlock | LoopBlock | ColorConverterBlock | NodeMaterialTeleportInBlock | NodeMaterialTeleportOutBlock | HeightToNormalBlock | ElbowBlock | TwirlBlock | VoronoiNoiseBlock | ScreenSpaceBlock | CloudBlock | MatrixBuilderBlock | DesaturateBlock | RefractBlock | ReflectBlock | DerivativeBlock | Rotate2dBlock | NormalBlendBlock | WorleyNoise3DBlock | SimplexPerlin3DBlock | BonesBlock | InstancesBlock | MorphTargetsBlock | DiscardBlock | PrePassTextureBlock | ImageProcessingBlock | ColorMergerBlock | VectorMergerBlock | ColorSplitterBlock | VectorSplitterBlock | TextureBlock | ReflectionTextureBlock | LightBlock | FogBlock | VertexOutputBlock | FragmentOutputBlock | PrePassOutputBlock | AddBlock | ClampBlock | ScaleBlock | CrossBlock | DotBlock | PowBlock | MultiplyBlock | TransformBlock | TrigonometryBlock | RemapBlock | NormalizeBlock | FresnelBlock | LerpBlock | NLerpBlock | DivideBlock | SubtractBlock | ModBlock | StepBlock | SmoothStepBlock | OneMinusBlock | ReciprocalBlock | ViewDirectionBlock | LightInformationBlock | MaxBlock | MinBlock | LengthBlock | DistanceBlock | NegateBlock | PerturbNormalBlock | TBNBlock | RandomNumberBlock | ReplaceColorBlock | PosterizeBlock | ArcTan2Block | GradientBlock | FrontFacingBlock | MeshAttributeExistsBlock | WaveBlock | InputBlock | PBRMetallicRoughnessBlock | SheenBlock | AnisotropyBlock | ReflectionBlock | ClearCoatBlock | RefractionBlock | SubSurfaceBlock | CurrentScreenBlock | ParticleTextureBlock | ParticleRampGradientBlock | ParticleBlendMultiplyBlock | FragCoordBlock | ScreenSizeBlock | SceneDepthBlock | ConditionalBlock | ImageSourceBlock | ClipPlanesBlock | FragDepthBlock | ShadowMapBlock | TriPlanarBlock | MatrixTransposeBlock | MatrixDeterminantBlock | CurveBlock | GaussianSplattingBlock | GaussianBlock | SplatReaderBlock | null;
+    static GetBlockFromString(data: string, scene: Scene, nodeMaterial: NodeMaterial): NodeMaterialDebugBlock | MatrixSplitterBlock | StorageWriteBlock | StorageReadBlock | LoopBlock | ColorConverterBlock | NodeMaterialTeleportInBlock | NodeMaterialTeleportOutBlock | HeightToNormalBlock | ElbowBlock | TwirlBlock | VoronoiNoiseBlock | ScreenSpaceBlock | CloudBlock | MatrixBuilderBlock | DesaturateBlock | RefractBlock | ReflectBlock | DerivativeBlock | Rotate2dBlock | NormalBlendBlock | WorleyNoise3DBlock | SimplexPerlin3DBlock | BonesBlock | InstancesBlock | MorphTargetsBlock | DiscardBlock | PrePassTextureBlock | ImageProcessingBlock | ColorMergerBlock | VectorMergerBlock | ColorSplitterBlock | VectorSplitterBlock | TextureBlock | ReflectionTextureBlock | LightBlock | FogBlock | VertexOutputBlock | FragmentOutputBlock | PrePassOutputBlock | AddBlock | ClampBlock | ScaleBlock | CrossBlock | DotBlock | PowBlock | MultiplyBlock | TransformBlock | TrigonometryBlock | RemapBlock | NormalizeBlock | FresnelBlock | LerpBlock | NLerpBlock | DivideBlock | SubtractBlock | ModBlock | StepBlock | SmoothStepBlock | OneMinusBlock | ReciprocalBlock | ViewDirectionBlock | LightInformationBlock | MaxBlock | MinBlock | LengthBlock | DistanceBlock | NegateBlock | PerturbNormalBlock | TBNBlock | RandomNumberBlock | ReplaceColorBlock | PosterizeBlock | ArcTan2Block | GradientBlock | FrontFacingBlock | MeshAttributeExistsBlock | WaveBlock | InputBlock | PBRMetallicRoughnessBlock | SheenBlock | AnisotropyBlock | ReflectionBlock | ClearCoatBlock | RefractionBlock | SubSurfaceBlock | CurrentScreenBlock | ParticleTextureBlock | ParticleRampGradientBlock | ParticleBlendMultiplyBlock | FragCoordBlock | ScreenSizeBlock | SceneDepthBlock | ConditionalBlock | ImageSourceBlock | ClipPlanesBlock | FragDepthBlock | ShadowMapBlock | TriPlanarBlock | MatrixTransposeBlock | MatrixDeterminantBlock | CurveBlock | GaussianSplattingBlock | GaussianBlock | SplatReaderBlock | null;
     static GetColorFromConnectionNodeType(type: NodeMaterialBlockConnectionPointTypes): string;
     static GetConnectionNodeTypeFromString(type: string): NodeMaterialBlockConnectionPointTypes.Float | NodeMaterialBlockConnectionPointTypes.Vector2 | NodeMaterialBlockConnectionPointTypes.Vector3 | NodeMaterialBlockConnectionPointTypes.Vector4 | NodeMaterialBlockConnectionPointTypes.Color3 | NodeMaterialBlockConnectionPointTypes.Color4 | NodeMaterialBlockConnectionPointTypes.Matrix | NodeMaterialBlockConnectionPointTypes.AutoDetect;
     static GetStringFromConnectionNodeType(type: NodeMaterialBlockConnectionPointTypes): "" | "Float" | "Vector2" | "Vector3" | "Vector4" | "Matrix" | "Color3" | "Color4";
@@ -484,6 +493,9 @@ export class BlockNodeData implements INodeData {
     prepareHeaderIcon(iconDiv: HTMLDivElement, img: HTMLImageElement): void;
     get invisibleEndpoints(): NodeMaterialTeleportOutBlock[] | null;
     constructor(data: NodeMaterialBlock, nodeContainer: INodeContainer);
+    get canBeActivated(): boolean;
+    get isActive(): any;
+    setIsActive(value: boolean): void;
 }
 
 }
@@ -719,6 +731,15 @@ export class FrameNodePortPropertyTabComponent extends React.Component<IFrameNod
 }
 
 }
+declare module "babylonjs-node-editor/graphSystem/properties/debugNodePropertyTabComponent" {
+import * as React from "react";
+import { IPropertyComponentProps } from "babylonjs-node-editor/nodeGraphSystem/interfaces/propertyComponentProps";
+export class DebugNodePropertyTabComponent extends React.Component<IPropertyComponentProps> {
+    refreshAll(): void;
+
+}
+
+}
 declare module "babylonjs-node-editor/graphSystem/properties/colorMergerPropertyComponent" {
 import * as React from "react";
 import { IPropertyComponentProps } from "babylonjs-node-editor/nodeGraphSystem/interfaces/propertyComponentProps";
@@ -914,6 +935,25 @@ export class DiscardDisplayManager implements IDisplayManager {
     getHeaderText(nodeData: INodeData): string;
     getBackgroundColor(): string;
     updatePreviewContent(nodeData: INodeData, contentArea: HTMLDivElement): void;
+}
+
+}
+declare module "babylonjs-node-editor/graphSystem/display/debugDisplayManager" {
+import { IDisplayManager, VisualContentDescription } from "babylonjs-node-editor/nodeGraphSystem/interfaces/displayManager";
+import { INodeData } from "babylonjs-node-editor/nodeGraphSystem/interfaces/nodeData";
+import { Nullable } from "babylonjs/types";
+import { StateManager } from "babylonjs-node-editor/nodeGraphSystem/stateManager";
+export class DebugDisplayManager implements IDisplayManager {
+    private _previewCanvas;
+    private _previewImage;
+    private _onPreviewSceneAfterRenderObserver;
+    getHeaderClass(): string;
+    shouldDisplayPortLabels(): boolean;
+    getHeaderText(nodeData: INodeData): string;
+    getBackgroundColor(): string;
+    onSelectionChanged?(data: INodeData, selectedData: Nullable<INodeData>, manager: StateManager): void;
+    updatePreviewContent(nodeData: INodeData, contentArea: HTMLDivElement): void;
+    updateFullVisualContent(data: INodeData, visualContent: VisualContentDescription): void;
 }
 
 }
@@ -1244,6 +1284,7 @@ export class PreviewAreaComponent extends React.Component<IPreviewAreaComponentP
 }> {
     private _onIsLoadingChangedObserver;
     private _onResetRequiredObserver;
+    private _consoleRef;
     constructor(props: IPreviewAreaComponentProps);
     componentWillUnmount(): void;
     changeBackFaceCulling(value: boolean): void;
@@ -1251,6 +1292,8 @@ export class PreviewAreaComponent extends React.Component<IPreviewAreaComponentP
     _onPointerOverCanvas: () => void;
     _onPointerOutCanvas: () => void;
     changeParticleSystemBlendMode(newOne: number): void;
+    processPointerMove(e: React.PointerEvent<HTMLCanvasElement>): Promise<void>;
+    onKeyUp(e: React.KeyboardEvent<HTMLCanvasElement>): void;
 
 }
 export {};
@@ -1313,7 +1356,7 @@ declare module "babylonjs-node-editor/styleHelper" {
  * @param source document to copy styles from
  * @param target document or shadow root to copy styles to
  */
-export function CopyStyles(source: Document, target: Document): void;
+export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
 
 }
 declare module "babylonjs-node-editor/stringTools" {
@@ -1949,6 +1992,7 @@ export class StateManager {
     isElbowConnectionAllowed: (nodeA: FrameNodePort | NodePort, nodeB: FrameNodePort | NodePort) => boolean;
     isDebugConnectionAllowed: (nodeA: FrameNodePort | NodePort, nodeB: FrameNodePort | NodePort) => boolean;
     applyNodePortDesign: (data: IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+    getPortColor: (portData: IPortData) => string;
     storeEditorData: (serializationObject: any, frame?: Nullable<GraphFrame>) => void;
     getEditorDataMap: () => {
         [key: number]: number;
@@ -1958,6 +2002,8 @@ export class StateManager {
         data: INodeData;
         name: string;
     }>;
+    private _isRebuildQueued;
+    queueRebuildCommand(): void;
 }
 
 }
@@ -2662,6 +2708,9 @@ export interface INodeData {
     outputs: IPortData[];
     invisibleEndpoints?: Nullable<any[]>;
     isConnectedToOutput?: () => boolean;
+    isActive?: boolean;
+    setIsActive?: (value: boolean) => void;
+    canBeActivated?: boolean;
 }
 
 }
@@ -4868,6 +4917,11 @@ declare module BABYLON.NodeEditor {
         pointerOverCanvas: boolean;
         filesInput: BABYLON.FilesInput;
         onRefreshPreviewMeshControlComponentRequiredObservable: BABYLON.Observable<void>;
+        previewTexture: BABYLON.Nullable<BABYLON.RenderTargetTexture>;
+        pickingTexture: BABYLON.Nullable<BABYLON.RenderTargetTexture>;
+        onPreviewSceneAfterRenderObservable: BABYLON.Observable<void>;
+        onPreviewUpdatedObservable: BABYLON.Observable<BABYLON.NodeMaterial>;
+        debugBlocksToRefresh: BABYLON.NodeMaterialDebugBlock[];
         /** Gets the mode */
         get mode(): BABYLON.NodeMaterialModes;
         /** Sets the mode */
@@ -4895,7 +4949,7 @@ declare module BABYLON.NodeEditor {
 
 
     export class BlockTools {
-        static GetBlockFromString(data: string, scene: BABYLON.Scene, nodeMaterial: BABYLON.NodeMaterial): BABYLON.StorageWriteBlock | BABYLON.StorageReadBlock | BABYLON.LoopBlock | BABYLON.ColorConverterBlock | BABYLON.NodeMaterialTeleportInBlock | BABYLON.NodeMaterialTeleportOutBlock | BABYLON.HeightToNormalBlock | BABYLON.ElbowBlock | BABYLON.TwirlBlock | BABYLON.VoronoiNoiseBlock | BABYLON.ScreenSpaceBlock | BABYLON.CloudBlock | BABYLON.MatrixBuilderBlock | BABYLON.DesaturateBlock | BABYLON.RefractBlock | BABYLON.ReflectBlock | BABYLON.DerivativeBlock | BABYLON.Rotate2dBlock | BABYLON.NormalBlendBlock | BABYLON.WorleyNoise3DBlock | BABYLON.SimplexPerlin3DBlock | BABYLON.BonesBlock | BABYLON.InstancesBlock | BABYLON.MorphTargetsBlock | BABYLON.DiscardBlock | BABYLON.PrePassTextureBlock | BABYLON.ImageProcessingBlock | BABYLON.ColorMergerBlock | BABYLON.VectorMergerBlock | BABYLON.ColorSplitterBlock | BABYLON.VectorSplitterBlock | BABYLON.TextureBlock | BABYLON.ReflectionTextureBlock | BABYLON.LightBlock | BABYLON.FogBlock | BABYLON.VertexOutputBlock | BABYLON.FragmentOutputBlock | BABYLON.PrePassOutputBlock | BABYLON.AddBlock | BABYLON.ClampBlock | BABYLON.ScaleBlock | BABYLON.CrossBlock | BABYLON.DotBlock | BABYLON.PowBlock | BABYLON.MultiplyBlock | BABYLON.TransformBlock | BABYLON.TrigonometryBlock | BABYLON.RemapBlock | BABYLON.NormalizeBlock | BABYLON.FresnelBlock | BABYLON.LerpBlock | BABYLON.NLerpBlock | BABYLON.DivideBlock | BABYLON.SubtractBlock | BABYLON.ModBlock | BABYLON.StepBlock | BABYLON.SmoothStepBlock | BABYLON.OneMinusBlock | BABYLON.ReciprocalBlock | BABYLON.ViewDirectionBlock | BABYLON.LightInformationBlock | BABYLON.MaxBlock | BABYLON.MinBlock | BABYLON.LengthBlock | BABYLON.DistanceBlock | BABYLON.NegateBlock | BABYLON.PerturbNormalBlock | BABYLON.TBNBlock | BABYLON.RandomNumberBlock | BABYLON.ReplaceColorBlock | BABYLON.PosterizeBlock | BABYLON.ArcTan2Block | BABYLON.GradientBlock | BABYLON.FrontFacingBlock | BABYLON.MeshAttributeExistsBlock | BABYLON.WaveBlock | BABYLON.InputBlock | BABYLON.PBRMetallicRoughnessBlock | BABYLON.SheenBlock | BABYLON.AnisotropyBlock | BABYLON.ReflectionBlock | BABYLON.ClearCoatBlock | BABYLON.RefractionBlock | BABYLON.SubSurfaceBlock | BABYLON.CurrentScreenBlock | BABYLON.ParticleTextureBlock | BABYLON.ParticleRampGradientBlock | BABYLON.ParticleBlendMultiplyBlock | BABYLON.FragCoordBlock | BABYLON.ScreenSizeBlock | BABYLON.SceneDepthBlock | BABYLON.ConditionalBlock | BABYLON.ImageSourceBlock | BABYLON.ClipPlanesBlock | BABYLON.FragDepthBlock | BABYLON.ShadowMapBlock | BABYLON.TriPlanarBlock | BABYLON.MatrixTransposeBlock | BABYLON.MatrixDeterminantBlock | BABYLON.CurveBlock | BABYLON.GaussianSplattingBlock | BABYLON.GaussianBlock | BABYLON.SplatReaderBlock | null;
+        static GetBlockFromString(data: string, scene: BABYLON.Scene, nodeMaterial: BABYLON.NodeMaterial): BABYLON.NodeMaterialDebugBlock | BABYLON.MatrixSplitterBlock | BABYLON.StorageWriteBlock | BABYLON.StorageReadBlock | BABYLON.LoopBlock | BABYLON.ColorConverterBlock | BABYLON.NodeMaterialTeleportInBlock | BABYLON.NodeMaterialTeleportOutBlock | BABYLON.HeightToNormalBlock | BABYLON.ElbowBlock | BABYLON.TwirlBlock | BABYLON.VoronoiNoiseBlock | BABYLON.ScreenSpaceBlock | BABYLON.CloudBlock | BABYLON.MatrixBuilderBlock | BABYLON.DesaturateBlock | BABYLON.RefractBlock | BABYLON.ReflectBlock | BABYLON.DerivativeBlock | BABYLON.Rotate2dBlock | BABYLON.NormalBlendBlock | BABYLON.WorleyNoise3DBlock | BABYLON.SimplexPerlin3DBlock | BABYLON.BonesBlock | BABYLON.InstancesBlock | BABYLON.MorphTargetsBlock | BABYLON.DiscardBlock | BABYLON.PrePassTextureBlock | BABYLON.ImageProcessingBlock | BABYLON.ColorMergerBlock | BABYLON.VectorMergerBlock | BABYLON.ColorSplitterBlock | BABYLON.VectorSplitterBlock | BABYLON.TextureBlock | BABYLON.ReflectionTextureBlock | BABYLON.LightBlock | BABYLON.FogBlock | BABYLON.VertexOutputBlock | BABYLON.FragmentOutputBlock | BABYLON.PrePassOutputBlock | BABYLON.AddBlock | BABYLON.ClampBlock | BABYLON.ScaleBlock | BABYLON.CrossBlock | BABYLON.DotBlock | BABYLON.PowBlock | BABYLON.MultiplyBlock | BABYLON.TransformBlock | BABYLON.TrigonometryBlock | BABYLON.RemapBlock | BABYLON.NormalizeBlock | BABYLON.FresnelBlock | BABYLON.LerpBlock | BABYLON.NLerpBlock | BABYLON.DivideBlock | BABYLON.SubtractBlock | BABYLON.ModBlock | BABYLON.StepBlock | BABYLON.SmoothStepBlock | BABYLON.OneMinusBlock | BABYLON.ReciprocalBlock | BABYLON.ViewDirectionBlock | BABYLON.LightInformationBlock | BABYLON.MaxBlock | BABYLON.MinBlock | BABYLON.LengthBlock | BABYLON.DistanceBlock | BABYLON.NegateBlock | BABYLON.PerturbNormalBlock | BABYLON.TBNBlock | BABYLON.RandomNumberBlock | BABYLON.ReplaceColorBlock | BABYLON.PosterizeBlock | BABYLON.ArcTan2Block | BABYLON.GradientBlock | BABYLON.FrontFacingBlock | BABYLON.MeshAttributeExistsBlock | BABYLON.WaveBlock | BABYLON.InputBlock | BABYLON.PBRMetallicRoughnessBlock | BABYLON.SheenBlock | BABYLON.AnisotropyBlock | BABYLON.ReflectionBlock | BABYLON.ClearCoatBlock | BABYLON.RefractionBlock | BABYLON.SubSurfaceBlock | BABYLON.CurrentScreenBlock | BABYLON.ParticleTextureBlock | BABYLON.ParticleRampGradientBlock | BABYLON.ParticleBlendMultiplyBlock | BABYLON.FragCoordBlock | BABYLON.ScreenSizeBlock | BABYLON.SceneDepthBlock | BABYLON.ConditionalBlock | BABYLON.ImageSourceBlock | BABYLON.ClipPlanesBlock | BABYLON.FragDepthBlock | BABYLON.ShadowMapBlock | BABYLON.TriPlanarBlock | BABYLON.MatrixTransposeBlock | BABYLON.MatrixDeterminantBlock | BABYLON.CurveBlock | BABYLON.GaussianSplattingBlock | BABYLON.GaussianBlock | BABYLON.SplatReaderBlock | null;
         static GetColorFromConnectionNodeType(type: BABYLON.NodeMaterialBlockConnectionPointTypes): string;
         static GetConnectionNodeTypeFromString(type: string): BABYLON.NodeMaterialBlockConnectionPointTypes.Float | BABYLON.NodeMaterialBlockConnectionPointTypes.Vector2 | BABYLON.NodeMaterialBlockConnectionPointTypes.Vector3 | BABYLON.NodeMaterialBlockConnectionPointTypes.Vector4 | BABYLON.NodeMaterialBlockConnectionPointTypes.Color3 | BABYLON.NodeMaterialBlockConnectionPointTypes.Color4 | BABYLON.NodeMaterialBlockConnectionPointTypes.Matrix | BABYLON.NodeMaterialBlockConnectionPointTypes.AutoDetect;
         static GetStringFromConnectionNodeType(type: BABYLON.NodeMaterialBlockConnectionPointTypes): "" | "Float" | "Vector2" | "Vector3" | "Vector4" | "Matrix" | "Color3" | "Color4";
@@ -5025,6 +5079,9 @@ declare module BABYLON.NodeEditor {
         prepareHeaderIcon(iconDiv: HTMLDivElement, img: HTMLImageElement): void;
         get invisibleEndpoints(): BABYLON.NodeMaterialTeleportOutBlock[] | null;
         constructor(data: BABYLON.NodeMaterialBlock, nodeContainer: BABYLON.NodeEditor.SharedUIComponents.INodeContainer);
+        get canBeActivated(): boolean;
+        get isActive(): any;
+        setIsActive(value: boolean): void;
     }
 
 
@@ -5203,6 +5260,12 @@ declare module BABYLON.NodeEditor {
     }
 
 
+    export class DebugNodePropertyTabComponent extends React.Component<BABYLON.NodeEditor.SharedUIComponents.IPropertyComponentProps> {
+        refreshAll(): void;
+        render(): import("react/jsx-runtime").JSX.Element;
+    }
+
+
     export class ColorMergerPropertyTabComponent extends React.Component<BABYLON.NodeEditor.SharedUIComponents.IPropertyComponentProps> {
         constructor(props: BABYLON.NodeEditor.SharedUIComponents.IPropertyComponentProps);
         render(): import("react/jsx-runtime").JSX.Element;
@@ -5348,6 +5411,20 @@ declare module BABYLON.NodeEditor {
         getHeaderText(nodeData: BABYLON.NodeEditor.SharedUIComponents.INodeData): string;
         getBackgroundColor(): string;
         updatePreviewContent(nodeData: BABYLON.NodeEditor.SharedUIComponents.INodeData, contentArea: HTMLDivElement): void;
+    }
+
+
+    export class DebugDisplayManager implements BABYLON.NodeEditor.SharedUIComponents.IDisplayManager {
+        private _previewCanvas;
+        private _previewImage;
+        private _onPreviewSceneAfterRenderObserver;
+        getHeaderClass(): string;
+        shouldDisplayPortLabels(): boolean;
+        getHeaderText(nodeData: BABYLON.NodeEditor.SharedUIComponents.INodeData): string;
+        getBackgroundColor(): string;
+        onSelectionChanged?(data: BABYLON.NodeEditor.SharedUIComponents.INodeData, selectedData: BABYLON.Nullable<BABYLON.NodeEditor.SharedUIComponents.INodeData>, manager: BABYLON.NodeEditor.SharedUIComponents.StateManager): void;
+        updatePreviewContent(nodeData: BABYLON.NodeEditor.SharedUIComponents.INodeData, contentArea: HTMLDivElement): void;
+        updateFullVisualContent(data: BABYLON.NodeEditor.SharedUIComponents.INodeData, visualContent: BABYLON.NodeEditor.SharedUIComponents.VisualContentDescription): void;
     }
 
 
@@ -5596,6 +5673,7 @@ declare module BABYLON.NodeEditor {
     }> {
         private _onIsLoadingChangedObserver;
         private _onResetRequiredObserver;
+        private _consoleRef;
         constructor(props: IPreviewAreaComponentProps);
         componentWillUnmount(): void;
         changeBackFaceCulling(value: boolean): void;
@@ -5603,6 +5681,8 @@ declare module BABYLON.NodeEditor {
         _onPointerOverCanvas: () => void;
         _onPointerOutCanvas: () => void;
         changeParticleSystemBlendMode(newOne: number): void;
+        processPointerMove(e: React.PointerEvent<HTMLCanvasElement>): Promise<void>;
+        onKeyUp(e: React.KeyboardEvent<HTMLCanvasElement>): void;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5656,7 +5736,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
      * @param source document to copy styles from
      * @param target document or shadow root to copy styles to
      */
-    export function CopyStyles(source: Document, target: Document): void;
+    export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
 
 
 
@@ -6340,6 +6420,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         isElbowConnectionAllowed: (nodeA: BABYLON.NodeEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeEditor.SharedUIComponents.NodePort, nodeB: BABYLON.NodeEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeEditor.SharedUIComponents.NodePort) => boolean;
         isDebugConnectionAllowed: (nodeA: BABYLON.NodeEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeEditor.SharedUIComponents.NodePort, nodeB: BABYLON.NodeEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeEditor.SharedUIComponents.NodePort) => boolean;
         applyNodePortDesign: (data: BABYLON.NodeEditor.SharedUIComponents.IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+        getPortColor: (portData: BABYLON.NodeEditor.SharedUIComponents.IPortData) => string;
         storeEditorData: (serializationObject: any, frame?: BABYLON.Nullable<BABYLON.NodeEditor.SharedUIComponents.GraphFrame>) => void;
         getEditorDataMap: () => {
             [key: number]: number;
@@ -6349,6 +6430,8 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
             data: BABYLON.NodeEditor.SharedUIComponents.INodeData;
             name: string;
         }>;
+        private _isRebuildQueued;
+        queueRebuildCommand(): void;
     }
 
 
@@ -7085,6 +7168,9 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         outputs: BABYLON.NodeEditor.SharedUIComponents.IPortData[];
         invisibleEndpoints?: BABYLON.Nullable<any[]>;
         isConnectedToOutput?: () => boolean;
+        isActive?: boolean;
+        setIsActive?: (value: boolean) => void;
+        canBeActivated?: boolean;
     }
 
 

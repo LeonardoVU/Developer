@@ -1505,7 +1505,7 @@ declare module "babylonjs-gui-editor/styleHelper" {
  * @param source document to copy styles from
  * @param target document or shadow root to copy styles to
  */
-export function CopyStyles(source: Document, target: Document): void;
+export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
 
 }
 declare module "babylonjs-gui-editor/stringTools" {
@@ -2141,6 +2141,7 @@ export class StateManager {
     isElbowConnectionAllowed: (nodeA: FrameNodePort | NodePort, nodeB: FrameNodePort | NodePort) => boolean;
     isDebugConnectionAllowed: (nodeA: FrameNodePort | NodePort, nodeB: FrameNodePort | NodePort) => boolean;
     applyNodePortDesign: (data: IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+    getPortColor: (portData: IPortData) => string;
     storeEditorData: (serializationObject: any, frame?: Nullable<GraphFrame>) => void;
     getEditorDataMap: () => {
         [key: number]: number;
@@ -2150,6 +2151,8 @@ export class StateManager {
         data: INodeData;
         name: string;
     }>;
+    private _isRebuildQueued;
+    queueRebuildCommand(): void;
 }
 
 }
@@ -2854,6 +2857,9 @@ export interface INodeData {
     outputs: IPortData[];
     invisibleEndpoints?: Nullable<any[]>;
     isConnectedToOutput?: () => boolean;
+    isActive?: boolean;
+    setIsActive?: (value: boolean) => void;
+    canBeActivated?: boolean;
 }
 
 }
@@ -6100,7 +6106,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param source document to copy styles from
      * @param target document or shadow root to copy styles to
      */
-    export function CopyStyles(source: Document, target: Document): void;
+    export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
 
 
 
@@ -6784,6 +6790,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         isElbowConnectionAllowed: (nodeA: BABYLON.GuiEditor.SharedUIComponents.FrameNodePort | BABYLON.GuiEditor.SharedUIComponents.NodePort, nodeB: BABYLON.GuiEditor.SharedUIComponents.FrameNodePort | BABYLON.GuiEditor.SharedUIComponents.NodePort) => boolean;
         isDebugConnectionAllowed: (nodeA: BABYLON.GuiEditor.SharedUIComponents.FrameNodePort | BABYLON.GuiEditor.SharedUIComponents.NodePort, nodeB: BABYLON.GuiEditor.SharedUIComponents.FrameNodePort | BABYLON.GuiEditor.SharedUIComponents.NodePort) => boolean;
         applyNodePortDesign: (data: BABYLON.GuiEditor.SharedUIComponents.IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+        getPortColor: (portData: BABYLON.GuiEditor.SharedUIComponents.IPortData) => string;
         storeEditorData: (serializationObject: any, frame?: Nullable<BABYLON.GuiEditor.SharedUIComponents.GraphFrame>) => void;
         getEditorDataMap: () => {
             [key: number]: number;
@@ -6793,6 +6800,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
             data: BABYLON.GuiEditor.SharedUIComponents.INodeData;
             name: string;
         }>;
+        private _isRebuildQueued;
+        queueRebuildCommand(): void;
     }
 
 
@@ -7529,6 +7538,9 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         outputs: BABYLON.GuiEditor.SharedUIComponents.IPortData[];
         invisibleEndpoints?: Nullable<any[]>;
         isConnectedToOutput?: () => boolean;
+        isActive?: boolean;
+        setIsActive?: (value: boolean) => void;
+        canBeActivated?: boolean;
     }
 
 

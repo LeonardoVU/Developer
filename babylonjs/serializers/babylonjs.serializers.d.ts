@@ -50,49 +50,66 @@ declare module BABYLON {
 
 
 
+    export function GetAccessorElementCount(accessorType: BABYLON.GLTF2.AccessorType): number;
+    export function FloatsNeed16BitInteger(floatArray: FloatArray): boolean;
+    export function IsStandardVertexAttribute(type: string): boolean;
+    export function GetAccessorType(kind: string, hasVertexColorAlpha: boolean): BABYLON.GLTF2.AccessorType;
+    export function GetAttributeType(kind: string): string;
+    export function GetPrimitiveMode(fillMode: number): BABYLON.GLTF2.MeshPrimitiveMode;
+    export function IsTriangleFillMode(fillMode: number): boolean;
+    export function NormalizeTangent(tangent: Vector4 | Vector3): void;
+    export function ConvertToRightHandedPosition(value: Vector3): Vector3;
+    export function ConvertToRightHandedRotation(value: Quaternion): Quaternion;
+    export function ConvertToRightHandedNode(value: BABYLON.GLTF2.INode): void;
     /**
+     * Rotation by 180 as glTF has a different convention than Babylon.
+     * @param rotation Target camera rotation.
+     * @returns Ref to camera rotation.
+     */
+    export function ConvertCameraRotationToGLTF(rotation: Quaternion): Quaternion;
+    export function RotateNode180Y(node: BABYLON.GLTF2.INode): void;
+    /**
+     * Collapses GLTF parent and node into a single node. This is useful for removing nodes that were added by the GLTF importer.
+     * @param node Target parent node.
+     * @param parentNode Original GLTF node (Light or Camera).
+     */
+    export function CollapseParentNode(node: BABYLON.GLTF2.INode, parentNode: BABYLON.GLTF2.INode): void;
+    /**
+     * Sometimes the GLTF Importer can add extra transform nodes (for lights and cameras). This checks if a parent node was added by the GLTF Importer. If so, it should be removed during serialization.
+     * @param babylonNode Original GLTF node (Light or Camera).
+     * @param parentBabylonNode Target parent node.
+     * @returns True if the parent node was added by the GLTF importer.
+     */
+    export function IsParentAddedByImporter(babylonNode: Node, parentBabylonNode: Node): boolean;
+    export function IsNoopNode(node: Node, useRightHandedSystem: boolean): boolean;
+    /**
+     * Converts an IndicesArray into either Uint32Array or Uint16Array, only copying if the data is number[].
+     * @param indices input array to be converted
+     * @param start starting index to copy from
+     * @param count number of indices to copy
+     * @returns a Uint32Array or Uint16Array
      * @internal
      */
-    export class _GLTFUtilities {
-        /**
-         * Creates a buffer view based on the supplied arguments
-         * @param bufferIndex index value of the specified buffer
-         * @param byteOffset byte offset value
-         * @param byteLength byte length of the bufferView
-         * @param byteStride byte distance between conequential elements
-         * @param name name of the buffer view
-         * @returns bufferView for glTF
-         */
-        static _CreateBufferView(bufferIndex: number, byteOffset: number, byteLength: number, byteStride?: number, name?: string): BABYLON.GLTF2.IBufferView;
-        /**
-         * Creates an accessor based on the supplied arguments
-         * @param bufferviewIndex The index of the bufferview referenced by this accessor
-         * @param name The name of the accessor
-         * @param type The type of the accessor
-         * @param componentType The datatype of components in the attribute
-         * @param count The number of attributes referenced by this accessor
-         * @param byteOffset The offset relative to the start of the bufferView in bytes
-         * @param min Minimum value of each component in this attribute
-         * @param max Maximum value of each component in this attribute
-         * @returns accessor for glTF
-         */
-        static _CreateAccessor(bufferviewIndex: number, name: string, type: BABYLON.GLTF2.AccessorType, componentType: BABYLON.GLTF2.AccessorComponentType, count: number, byteOffset: Nullable<number>, min: Nullable<number[]>, max: Nullable<number[]>): BABYLON.GLTF2.IAccessor;
-        /**
-         * Calculates the minimum and maximum values of an array of position floats
-         * @param positions Positions array of a mesh
-         * @param vertexStart Starting vertex offset to calculate min and max values
-         * @param vertexCount Number of vertices to check for min and max values
-         * @returns min number array and max number array
-         */
-        static _CalculateMinMaxPositions(positions: FloatArray, vertexStart: number, vertexCount: number): {
-            min: number[];
-            max: number[];
-        };
-        static _NormalizeTangentFromRef(tangent: Vector4 | Vector3): void;
-        static _GetDataAccessorElementCount(accessorType: BABYLON.GLTF2.AccessorType): 1 | 3 | 2 | 4 | 9 | 16;
-    }
+    export function IndicesArrayToTypedArray(indices: IndicesArray, start: number, count: number, is32Bits: boolean): Uint32Array | Uint16Array;
+    export function DataArrayToUint8Array(data: DataArray): Uint8Array;
+    export function GetMinMax(data: DataArray, vertexBuffer: VertexBuffer, start: number, count: number): {
+        min: number[];
+        max: number[];
+    };
+    /**
+     * Removes, in-place, object properties which have the same value as the default value.
+     * Useful for avoiding unnecessary properties in the glTF JSON.
+     * @param object the object to omit default values from
+     * @param defaultValues a partial object with default values
+     * @returns object with default values omitted
+     */
+    export function OmitDefaultValues<T extends Object>(object: T, defaultValues: Partial<T>): T;
 
 
+    /**
+     * Mesh compression methods.
+     */
+    export type MeshCompressionMethod = "None" | "Draco";
     /**
      * Holds a collection of exporter options and parameters
      */
@@ -136,135 +153,73 @@ declare module BABYLON {
          * @deprecated Please use removeNoopRootNodes instead
          */
         includeCoordinateSystemConversionNodes?: boolean;
+        /**
+         * Indicates what compression method to apply to mesh data.
+         */
+        meshCompressionMethod?: MeshCompressionMethod;
     }
     /**
      * Class for generating glTF data from a Babylon scene.
      */
     export class GLTF2Export {
         /**
-         * Exports the geometry of the scene to .gltf file format asynchronously
-         * @param scene Babylon scene with scene hierarchy information
-         * @param filePrefix File prefix to use when generating the glTF file
+         * Exports the scene to .gltf file format
+         * @param scene Babylon scene
+         * @param fileName Name to use for the .gltf file
          * @param options Exporter options
-         * @returns Returns an object with a .gltf file and associates texture names
-         * as keys and their data and paths as values
+         * @returns Returns the exported data
          */
-        static GLTFAsync(scene: Scene, filePrefix: string, options?: IExportOptions): Promise<GLTFData>;
-        private static _PreExportAsync;
-        private static _PostExportAsync;
+        static GLTFAsync(scene: Scene, fileName: string, options?: IExportOptions): Promise<GLTFData>;
         /**
-         * Exports the geometry of the scene to .glb file format asychronously
-         * @param scene Babylon scene with scene hierarchy information
-         * @param filePrefix File prefix to use when generating glb file
+         * Exports the scene to .glb file format
+         * @param scene Babylon scene
+         * @param fileName Name to use for the .glb file
          * @param options Exporter options
-         * @returns Returns an object with a .glb filename as key and data as value
+         * @returns Returns the exported data
          */
-        static GLBAsync(scene: Scene, filePrefix: string, options?: IExportOptions): Promise<GLTFData>;
+        static GLBAsync(scene: Scene, fileName: string, options?: IExportOptions): Promise<GLTFData>;
     }
 
 
     /**
-     * Utility methods for working with glTF material conversion properties.  This class should only be used internally
+     * Interface to store morph target information.
      * @internal
      */
-    export class _GLTFMaterialExporter {
-        /**
-         * Represents the dielectric specular values for R, G and B
-         */
-        private static readonly _DielectricSpecular;
-        /**
-         * Allows the maximum specular power to be defined for material calculations
-         */
-        private static readonly _MaxSpecularPower;
-        /**
-         * Mapping to store textures
-         */
+    export interface IMorphTargetData {
+        attributes: Record<string, number>;
+        influence: number;
+        name: string;
+    }
+    export function BuildMorphTargetBuffers(morphTarget: MorphTarget, mesh: Mesh, bufferManager: BufferManager, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], convertToRightHanded: boolean): IMorphTargetData;
+
+
+    /**
+     * Computes the metallic factor from specular glossiness values.
+     * @param diffuse diffused value
+     * @param specular specular value
+     * @param oneMinusSpecularStrength one minus the specular strength
+     * @returns metallic value
+     * @internal
+     */
+    export function _SolveMetallic(diffuse: number, specular: number, oneMinusSpecularStrength: number): number;
+    /**
+     * Computes the metallic/roughness factors from a Standard Material.
+     * @internal
+     */
+    export function _ConvertToGLTFPBRMetallicRoughness(babylonStandardMaterial: StandardMaterial): BABYLON.GLTF2.IMaterialPbrMetallicRoughness;
+    /**
+     * Utility methods for working with glTF material conversion properties.
+     * @internal
+     */
+    export class GLTFMaterialExporter {
+        private readonly _exporter;
         private _textureMap;
         private _internalTextureToImage;
-        /**
-         * Numeric tolerance value
-         */
-        private static readonly _Epsilon;
-        /**
-         * Reference to the glTF Exporter
-         */
-        private _exporter;
-        constructor(exporter: _Exporter);
-        /**
-         * Specifies if two colors are approximately equal in value
-         * @param color1 first color to compare to
-         * @param color2 second color to compare to
-         * @param epsilon threshold value
-         * @returns boolean specifying if the colors are approximately equal in value
-         */
-        private static _FuzzyEquals;
-        /**
-         * Gets the materials from a Babylon scene and converts them to glTF materials
-         * @param exportMaterials
-         * @param mimeType texture mime type
-         * @param hasTextureCoords specifies if texture coordinates are present on the material
-         * @returns promise that resolves after all materials have been converted
-         */
-        _convertMaterialsToGLTFAsync(exportMaterials: Set<Material>, mimeType: BABYLON.GLTF2.ImageMimeType, hasTextureCoords: boolean): Promise<void>;
-        /**
-         * Makes a copy of the glTF material without the texture parameters
-         * @param originalMaterial original glTF material
-         * @returns glTF material without texture parameters
-         */
-        _stripTexturesFromMaterial(originalMaterial: BABYLON.GLTF2.IMaterial): BABYLON.GLTF2.IMaterial;
-        /**
-         * Specifies if the material has any texture parameters present
-         * @param material glTF Material
-         * @returns boolean specifying if texture parameters are present
-         */
-        _hasTexturesPresent(material: BABYLON.GLTF2.IMaterial): boolean;
-        _getTextureInfo(babylonTexture: Nullable<BaseTexture>): Nullable<BABYLON.GLTF2.ITextureInfo>;
-        /**
-         * Converts a Babylon StandardMaterial to a glTF Metallic Roughness Material
-         * @param babylonStandardMaterial
-         * @returns glTF Metallic Roughness Material representation
-         */
-        _convertToGLTFPBRMetallicRoughness(babylonStandardMaterial: StandardMaterial): BABYLON.GLTF2.IMaterialPbrMetallicRoughness;
-        /**
-         * Computes the metallic factor
-         * @param diffuse diffused value
-         * @param specular specular value
-         * @param oneMinusSpecularStrength one minus the specular strength
-         * @returns metallic value
-         */
-        static _SolveMetallic(diffuse: number, specular: number, oneMinusSpecularStrength: number): number;
-        /**
-         * Sets the glTF alpha mode to a glTF material from the Babylon Material
-         * @param glTFMaterial glTF material
-         * @param babylonMaterial Babylon material
-         */
-        private static _SetAlphaMode;
-        /**
-         * Converts a Babylon Standard Material to a glTF Material
-         * @param babylonStandardMaterial BJS Standard Material
-         * @param mimeType mime type to use for the textures
-         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
-         * @returns promise, resolved with the material
-         */
-        _convertStandardMaterialAsync(babylonStandardMaterial: StandardMaterial, mimeType: BABYLON.GLTF2.ImageMimeType, hasTextureCoords: boolean): Promise<BABYLON.GLTF2.IMaterial>;
-        private _finishMaterial;
-        /**
-         * Converts an image typed array buffer to a base64 image
-         * @param buffer typed array buffer
-         * @param width width of the image
-         * @param height height of the image
-         * @param mimeType mimetype of the image
-         * @returns base64 image string
-         */
+        constructor(_exporter: GLTFExporter);
+        getTextureInfo(babylonTexture: Nullable<BaseTexture>): Nullable<BABYLON.GLTF2.ITextureInfo>;
+        exportStandardMaterialAsync(babylonStandardMaterial: StandardMaterial, mimeType: BABYLON.GLTF2.ImageMimeType, hasUVs: boolean): Promise<number>;
+        private _finishMaterialAsync;
         private _getImageDataAsync;
-        /**
-         * Generates a white texture based on the specified width and height
-         * @param width width of the texture in pixels
-         * @param height height of the texture in pixels
-         * @param scene babylonjs scene
-         * @returns white texture
-         */
-        private _createWhiteTexture;
         /**
          * Resizes the two source textures to the same dimensions.  If a texture is null, a default white texture is generated.  If both textures are null, returns null
          * @param texture1 first texture to resize
@@ -274,16 +229,9 @@ declare module BABYLON {
          */
         private _resizeTexturesToSameDimensions;
         /**
-         * Converts an array of pixels to a Float32Array
-         * Throws an error if the pixel format is not supported
-         * @param pixels - array buffer containing pixel values
-         * @returns Float32 of pixels
-         */
-        private _convertPixelArrayToFloat32;
-        /**
          * Convert Specular Glossiness Textures to Metallic Roughness
          * See link below for info on the material conversions from PBR Metallic/Roughness and Specular/Glossiness
-         * @link https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Archived/KHR_materials_pbrSpecularGlossiness/examples/convert-between-workflows-bjs/js/babylon.pbrUtilities.js
+         * @see https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Archived/KHR_materials_pbrSpecularGlossiness/examples/convert-between-workflows-bjs/js/babylon.pbrUtilities.js
          * @param diffuseTexture texture used to store diffuse information
          * @param specularGlossinessTexture texture used to store specular and glossiness information
          * @param factors specular glossiness material factors
@@ -314,7 +262,7 @@ declare module BABYLON {
          * @param babylonPBRMaterial BJS PBR Metallic Roughness Material
          * @param mimeType mime type to use for the textures
          * @param glTFPbrMetallicRoughness glTF PBR Metallic Roughness interface
-         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
+         * @param hasUVs specifies if texture coordinates are present on the submesh to determine if textures should be applied
          * @returns glTF PBR Metallic Roughness factors
          */
         private _convertMetalRoughFactorsToMetallicRoughnessAsync;
@@ -325,28 +273,15 @@ declare module BABYLON {
          * @param babylonPBRMaterial BJS PBR Metallic Roughness Material
          * @param mimeType mime type to use for the textures
          * @param pbrMetallicRoughness glTF PBR Metallic Roughness interface
-         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
+         * @param hasUVs specifies if texture coordinates are present on the submesh to determine if textures should be applied
          * @returns glTF PBR Metallic Roughness factors
          */
         private _convertSpecGlossFactorsToMetallicRoughnessAsync;
-        /**
-         * Converts a Babylon PBR Base Material to a glTF Material
-         * @param babylonPBRMaterial BJS PBR Base Material
-         * @param mimeType mime type to use for the textures
-         * @param hasTextureCoords specifies if texture coordinates are present on the submesh to determine if textures should be applied
-         * @returns async glTF Material representation
-         */
-        _convertPBRMaterialAsync(babylonPBRMaterial: PBRBaseMaterial, mimeType: BABYLON.GLTF2.ImageMimeType, hasTextureCoords: boolean): Promise<BABYLON.GLTF2.IMaterial>;
-        private _setMetallicRoughnessPbrMaterial;
+        exportPBRMaterialAsync(babylonPBRMaterial: PBRBaseMaterial, mimeType: BABYLON.GLTF2.ImageMimeType, hasUVs: boolean): Promise<number>;
+        private _setMetallicRoughnessPbrMaterialAsync;
         private _getPixelsFromTexture;
-        /**
-         * Extracts a texture from a Babylon texture into file data and glTF data
-         * @param babylonTexture Babylon texture to extract
-         * @param mimeType Mime Type of the babylonTexture
-         * @returns glTF texture info, or null if the texture format is not supported
-         */
-        _exportTextureAsync(babylonTexture: BaseTexture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BABYLON.GLTF2.ITextureInfo>>;
-        _exportTextureInfoAsync(babylonTexture: BaseTexture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BABYLON.GLTF2.ITextureInfo>>;
+        exportTextureAsync(babylonTexture: BaseTexture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BABYLON.GLTF2.ITextureInfo>>;
+        private _exportTextureInfoAsync;
         private _exportImage;
         private _exportTextureInfo;
         private _exportTextureSampler;
@@ -367,7 +302,7 @@ declare module BABYLON {
          * @param mimeType The mime-type of the generated image
          * @returns A promise that resolves with the exported texture
          */
-        preExportTextureAsync?(context: string, babylonTexture: Nullable<Texture>, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<Texture>>;
+        preExportTextureAsync?(context: string, babylonTexture: Texture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<Texture>>;
         /**
          * Define this method to get notified when a texture info is created
          * @param context The context when loading the asset
@@ -376,31 +311,30 @@ declare module BABYLON {
          */
         postExportTexture?(context: string, textureInfo: BABYLON.GLTF2.ITextureInfo, babylonTexture: BaseTexture): void;
         /**
-         * Define this method to modify the default behavior when exporting texture info
-         * @param context The context when loading the asset
-         * @param meshPrimitive glTF mesh primitive
-         * @param babylonSubMesh Babylon submesh
-         * @param binaryWriter glTF serializer binary writer instance
-         * @returns nullable BABYLON.GLTF2.IMeshPrimitive promise
+         * Define this method to get notified when a primitive is created
+         * @param primitive glTF mesh primitive
+         * @param bufferManager Buffer manager
+         * @param accessors List of glTF accessors
          */
-        postExportMeshPrimitiveAsync?(context: string, meshPrimitive: Nullable<BABYLON.GLTF2.IMeshPrimitive>, babylonSubMesh: SubMesh, binaryWriter: _BinaryWriter): Promise<BABYLON.GLTF2.IMeshPrimitive>;
+        postExportMeshPrimitive?(primitive: BABYLON.GLTF2.IMeshPrimitive, bufferManager: BufferManager, accessors: BABYLON.GLTF2.IAccessor[]): void;
         /**
          * Define this method to modify the default behavior when exporting a node
          * @param context The context when exporting the node
          * @param node glTF node
          * @param babylonNode BabylonJS node
+         * @param nodeMap Current node mapping of babylon node to glTF node index. Useful for combining nodes together.
+         * @param convertToRightHanded Flag indicating whether to convert values to right-handed
+         * @param bufferManager Buffer manager
          * @returns nullable BABYLON.GLTF2.INode promise
          */
-        postExportNodeAsync?(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: {
-            [key: number]: number;
-        }, binaryWriter: _BinaryWriter): Promise<Nullable<BABYLON.GLTF2.INode>>;
+        postExportNodeAsync?(context: string, node: BABYLON.GLTF2.INode, babylonNode: Node, nodeMap: Map<Node, number>, convertToRightHanded: boolean, bufferManager: BufferManager): Promise<Nullable<BABYLON.GLTF2.INode>>;
         /**
          * Define this method to modify the default behavior when exporting a material
          * @param material glTF material
          * @param babylonMaterial BabylonJS material
          * @returns nullable BABYLON.GLTF2.IMaterial promise
          */
-        postExportMaterialAsync?(context: string, node: Nullable<BABYLON.GLTF2.IMaterial>, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
         /**
          * Define this method to return additional textures to export from a material
          * @param material glTF material
@@ -408,6 +342,11 @@ declare module BABYLON {
          * @returns List of textures
          */
         postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
+        /**
+         * Define this method to modify the glTF buffer data before it is finalized and written
+         * @param bufferManager Buffer manager
+         */
+        preGenerateBinaryAsync?(bufferManager: BufferManager): Promise<void>;
         /** Gets a boolean indicating that this extension was used */
         wasUsed: boolean;
         /** Gets a boolean indicating that this extension is required for the file to work */
@@ -419,219 +358,66 @@ declare module BABYLON {
     }
 
 
-    /**
-     * Converts Babylon Scene into glTF 2.0.
-     * @internal
-     */
-    export class _Exporter {
-        /**
-         * Stores the glTF to export
-         */
-        _glTF: BABYLON.GLTF2.IGLTF;
-        /**
-         * Stores all generated buffer views, which represents views into the main glTF buffer data
-         */
-        _bufferViews: BABYLON.GLTF2.IBufferView[];
-        /**
-         * Stores all the generated accessors, which is used for accessing the data within the buffer views in glTF
-         */
-        _accessors: BABYLON.GLTF2.IAccessor[];
-        /**
-         * Stores all the generated nodes, which contains transform and/or mesh information per node
-         */
-        _nodes: BABYLON.GLTF2.INode[];
-        /**
-         * Stores all the generated glTF scenes, which stores multiple node hierarchies
-         */
-        private _scenes;
-        /**
-         * Stores all the generated glTF cameras
-         */
-        private _cameras;
-        /**
-         * Stores all the generated mesh information, each containing a set of primitives to render in glTF
-         */
-        private _meshes;
-        /**
-         * Stores all the generated material information, which represents the appearance of each primitive
-         */
-        _materials: BABYLON.GLTF2.IMaterial[];
-        _materialMap: {
-            [materialID: number]: number;
-        };
-        /**
-         * Stores all the generated texture information, which is referenced by glTF materials
-         */
-        _textures: BABYLON.GLTF2.ITexture[];
-        /**
-         * Stores all the generated image information, which is referenced by glTF textures
-         */
-        _images: BABYLON.GLTF2.IImage[];
-        /**
-         * Stores all the texture samplers
-         */
-        _samplers: BABYLON.GLTF2.ISampler[];
-        /**
-         * Stores all the generated glTF skins
-         */
-        _skins: BABYLON.GLTF2.ISkin[];
-        /**
-         * Stores all the generated animation samplers, which is referenced by glTF animations
-         */
-        /**
-         * Stores the animations for glTF models
-         */
-        private _animations;
-        /**
-         * Stores the total amount of bytes stored in the glTF buffer
-         */
-        private _totalByteLength;
-        /**
-         * Stores a reference to the Babylon scene containing the source geometry and material information
-         */
-        _babylonScene: Scene;
-        /**
-         * Stores a map of the image data, where the key is the file name and the value
-         * is the image data
-         */
-        _imageData: {
+    /** @internal */
+    export class GLTFExporter {
+        readonly _glTF: BABYLON.GLTF2.IGLTF;
+        readonly _animations: BABYLON.GLTF2.IAnimation[];
+        readonly _accessors: BABYLON.GLTF2.IAccessor[];
+        readonly _bufferViews: BABYLON.GLTF2.IBufferView[];
+        readonly _cameras: BABYLON.GLTF2.ICamera[];
+        readonly _images: BABYLON.GLTF2.IImage[];
+        readonly _materials: BABYLON.GLTF2.IMaterial[];
+        readonly _meshes: BABYLON.GLTF2.IMesh[];
+        readonly _nodes: BABYLON.GLTF2.INode[];
+        readonly _samplers: BABYLON.GLTF2.ISampler[];
+        readonly _scenes: BABYLON.GLTF2.IScene[];
+        readonly _skins: BABYLON.GLTF2.ISkin[];
+        readonly _textures: BABYLON.GLTF2.ITexture[];
+        readonly _babylonScene: Scene;
+        readonly _imageData: {
             [fileName: string]: {
                 data: ArrayBuffer;
                 mimeType: BABYLON.GLTF2.ImageMimeType;
             };
         };
-        private _orderedImageData;
-        /**
-         * Stores a map of the unique id of a node to its index in the node array
-         */
-        private _nodeMap;
         /**
          * Baked animation sample rate
          */
         private _animationSampleRate;
-        private _options;
-        private _localEngine;
-        _glTFMaterialExporter: _GLTFMaterialExporter;
-        private _extensions;
-        private static _ExtensionNames;
-        private static _ExtensionFactories;
+        private readonly _options;
+        _shouldUseGlb: boolean;
+        readonly _materialExporter: GLTFMaterialExporter;
+        private readonly _extensions;
+        readonly _bufferManager: BufferManager;
+        private readonly _shouldExportNodeMap;
+        private readonly _nodeMap;
+        readonly _materialMap: Map<Material, number>;
+        private readonly _camerasMap;
+        private readonly _nodesCameraMap;
+        private readonly _skinMap;
+        private readonly _nodesSkinMap;
+        readonly _materialNeedsUVsSet: Set<Material>;
+        private static readonly _ExtensionNames;
+        private static readonly _ExtensionFactories;
         private _applyExtension;
         private _applyExtensions;
-        _extensionsPreExportTextureAsync(context: string, babylonTexture: Nullable<Texture>, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BaseTexture>>;
-        _extensionsPostExportMeshPrimitiveAsync(context: string, meshPrimitive: BABYLON.GLTF2.IMeshPrimitive, babylonSubMesh: SubMesh, binaryWriter: _BinaryWriter): Promise<Nullable<BABYLON.GLTF2.IMeshPrimitive>>;
-        _extensionsPostExportNodeAsync(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: {
-            [key: number]: number;
-        }, binaryWriter: _BinaryWriter): Promise<Nullable<BABYLON.GLTF2.INode>>;
-        _extensionsPostExportMaterialAsync(context: string, material: Nullable<BABYLON.GLTF2.IMaterial>, babylonMaterial: Material): Promise<Nullable<BABYLON.GLTF2.IMaterial>>;
+        _extensionsPreExportTextureAsync(context: string, babylonTexture: Texture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BaseTexture>>;
+        _extensionsPostExportNodeAsync(context: string, node: BABYLON.GLTF2.INode, babylonNode: Node, nodeMap: Map<Node, number>, convertToRightHanded: boolean): Promise<Nullable<BABYLON.GLTF2.INode>>;
+        _extensionsPostExportMaterialAsync(context: string, material: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<Nullable<BABYLON.GLTF2.IMaterial>>;
         _extensionsPostExportMaterialAdditionalTextures(context: string, material: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
         _extensionsPostExportTextures(context: string, textureInfo: BABYLON.GLTF2.ITextureInfo, babylonTexture: BaseTexture): void;
+        _extensionsPostExportMeshPrimitive(primitive: BABYLON.GLTF2.IMeshPrimitive): void;
+        _extensionsPreGenerateBinaryAsync(): Promise<void>;
         private _forEachExtensions;
         private _extensionsOnExporting;
-        /**
-         * Load glTF serializer extensions
-         */
         private _loadExtensions;
-        /**
-         * Creates a glTF Exporter instance, which can accept optional exporter options
-         * @param babylonScene Babylon scene object
-         * @param options Options to modify the behavior of the exporter
-         */
         constructor(babylonScene?: Nullable<Scene>, options?: IExportOptions);
         dispose(): void;
-        get options(): IExportOptions;
-        /**
-         * Registers a glTF exporter extension
-         * @param name Name of the extension to export
-         * @param factory The factory function that creates the exporter extension
-         */
-        static RegisterExtension(name: string, factory: (exporter: _Exporter) => IGLTFExporterExtensionV2): void;
-        /**
-         * Un-registers an exporter extension
-         * @param name The name fo the exporter extension
-         * @returns A boolean indicating whether the extension has been un-registered
-         */
+        get options(): Required<IExportOptions>;
+        static RegisterExtension(name: string, factory: (exporter: GLTFExporter) => IGLTFExporterExtensionV2): void;
         static UnregisterExtension(name: string): boolean;
-        private _reorderIndicesBasedOnPrimitiveMode;
-        /**
-         * Reorders the vertex attribute data based on the primitive mode.  This is necessary when indices are not available and the winding order is
-         * clock-wise during export to glTF
-         * @param submesh BabylonJS submesh
-         * @param primitiveMode Primitive mode of the mesh
-         * @param vertexBufferKind The type of vertex attribute
-         * @param meshAttributeArray The vertex attribute data
-         * @param byteOffset The offset to the binary data
-         * @param binaryWriter The binary data for the glTF file
-         */
-        private _reorderVertexAttributeDataBasedOnPrimitiveMode;
-        /**
-         * Reorders the vertex attributes in the correct triangle mode order .  This is necessary when indices are not available and the winding order is
-         * clock-wise during export to glTF
-         * @param submesh BabylonJS submesh
-         * @param vertexBufferKind The type of vertex attribute
-         * @param meshAttributeArray The vertex attribute data
-         * @param byteOffset The offset to the binary data
-         * @param binaryWriter The binary data for the glTF file
-         */
-        private _reorderTriangleFillMode;
-        /**
-         * Reorders the vertex attributes in the correct triangle strip order.  This is necessary when indices are not available and the winding order is
-         * clock-wise during export to glTF
-         * @param submesh BabylonJS submesh
-         * @param vertexBufferKind The type of vertex attribute
-         * @param meshAttributeArray The vertex attribute data
-         * @param byteOffset The offset to the binary data
-         * @param binaryWriter The binary data for the glTF file
-         */
-        private _reorderTriangleStripDrawMode;
-        /**
-         * Reorders the vertex attributes in the correct triangle fan order.  This is necessary when indices are not available and the winding order is
-         * clock-wise during export to glTF
-         * @param submesh BabylonJS submesh
-         * @param vertexBufferKind The type of vertex attribute
-         * @param meshAttributeArray The vertex attribute data
-         * @param byteOffset The offset to the binary data
-         * @param binaryWriter The binary data for the glTF file
-         */
-        private _reorderTriangleFanMode;
-        /**
-         * Writes the vertex attribute data to binary
-         * @param vertices The vertices to write to the binary writer
-         * @param byteOffset The offset into the binary writer to overwrite binary data
-         * @param vertexAttributeKind The vertex attribute type
-         * @param binaryWriter The writer containing the binary data
-         */
-        private _writeVertexAttributeData;
-        /**
-         * Writes mesh attribute data to a data buffer
-         * Returns the bytelength of the data
-         * @param vertexBufferKind Indicates what kind of vertex data is being passed in
-         * @param attributeComponentKind
-         * @param meshAttributeArray Array containing the attribute data
-         * @param stride Specifies the space between data
-         * @param binaryWriter The buffer to write the binary data to
-         * @param babylonTransformNode
-         */
-        _writeAttributeData(vertexBufferKind: string, attributeComponentKind: BABYLON.GLTF2.AccessorComponentType, meshAttributeArray: FloatArray, stride: number, binaryWriter: _BinaryWriter, babylonTransformNode: TransformNode): void;
-        private _createMorphTargetBufferViewKind;
-        /**
-         * Generates glTF json data
-         * @param shouldUseGlb Indicates whether the json should be written for a glb file
-         * @param glTFPrefix Text to use when prefixing a glTF file
-         * @param prettyPrint Indicates whether the json file should be pretty printed (true) or not (false)
-         * @returns json data as string
-         */
         private _generateJSON;
-        /**
-         * Generates data for .gltf and .bin files based on the glTF prefix string
-         * @param glTFPrefix Text to use when prefixing a glTF file
-         * @param dispose Dispose the exporter
-         * @returns GLTFData with glTF file data
-         */
-        _generateGLTFAsync(glTFPrefix: string, dispose?: boolean): Promise<GLTFData>;
-        /**
-         * Creates a binary buffer for glTF
-         * @returns array buffer for binary data
-         */
+        generateGLTFAsync(glTFPrefix: string): Promise<GLTFData>;
         private _generateBinaryAsync;
         /**
          * Pads the number to a multiple of 4
@@ -639,173 +425,33 @@ declare module BABYLON {
          * @returns padded number
          */
         private _getPadding;
-        /**
-         * @internal
-         */
-        _generateGLBAsync(glTFPrefix: string, dispose?: boolean): Promise<GLTFData>;
-        /**
-         * Sets the TRS for each node
-         * @param node glTF Node for storing the transformation data
-         * @param babylonTransformNode Babylon mesh used as the source for the transformation data
-         */
+        generateGLBAsync(glTFPrefix: string): Promise<GLTFData>;
         private _setNodeTransformation;
         private _setCameraTransformation;
-        private _getVertexBufferFromMesh;
+        private _listAvailableCameras;
+        private _exportAndAssignCameras;
+        private _listAvailableSkeletons;
+        private _exportAndAssignSkeletons;
+        private _exportSceneAsync;
+        private _shouldExportNode;
+        private _exportNodesAsync;
+        private _collectBuffers;
+        private _exportBuffers;
         /**
-         * Creates a bufferview based on the vertices type for the Babylon mesh
-         * @param kind Indicates the type of vertices data
-         * @param attributeComponentKind Indicates the numerical type used to store the data
-         * @param babylonTransformNode The Babylon mesh to get the vertices data from
-         * @param binaryWriter The buffer to write the bufferview data to
-         * @param byteStride
+         * Processes a node to be exported to the glTF file
+         * @returns A promise that resolves once the node has been exported
+         * @internal
          */
-        private _createBufferViewKind;
+        private _exportNodeAsync;
         /**
-         * The primitive mode of the Babylon mesh
-         * @param babylonMesh The BabylonJS mesh
-         * @returns Unsigned integer of the primitive mode or null
-         */
-        private _getMeshPrimitiveMode;
-        /**
-         * Sets the primitive mode of the glTF mesh primitive
-         * @param meshPrimitive glTF mesh primitive
-         * @param primitiveMode The primitive mode
-         */
-        private _setPrimitiveMode;
-        /**
-         * Sets the vertex attribute accessor based of the glTF mesh primitive
-         * @param meshPrimitive glTF mesh primitive
-         * @param attributeKind vertex attribute
-         */
-        private _setAttributeKind;
-        /**
-         * Sets data for the primitive attributes of each submesh
-         * @param mesh glTF Mesh object to store the primitive attribute information
-         * @param babylonTransformNode Babylon mesh to get the primitive attribute data from
-         * @param binaryWriter Buffer to write the attribute data to
-         * @returns promise that resolves when done setting the primitive attributes
-         */
-        private _setPrimitiveAttributesAsync;
-        /**
-         * Creates a glTF scene based on the array of meshes
-         * Returns the total byte offset
-         * @param binaryWriter Buffer to write binary data to
-         * @returns a promise that resolves when done
-         */
-        private _createSceneAsync;
-        /**
-         * Getting the nodes and materials that would be exported.
-         * @param nodes Babylon transform nodes
-         * @returns Set of materials which would be exported.
-         */
-        private _getExportNodes;
-        /**
-         * Creates a mapping of Node unique id to node index and handles animations
-         * @param nodes Babylon transform nodes
-         * @param binaryWriter Buffer to write binary data to
-         * @returns Node mapping of unique id to index
-         */
-        private _createNodeMapAndAnimationsAsync;
-        /**
-         * Creates a glTF node from a Babylon mesh
-         * @param babylonNode Source Babylon mesh
-         * @param binaryWriter Buffer for storing geometry data
-         * @returns glTF node
+         * Creates a glTF node from a Babylon.js node. If skipped, returns null.
+         * @internal
          */
         private _createNodeAsync;
-        /**
-         * Creates a glTF skin from a Babylon skeleton
-         * @param nodeMap Babylon transform nodes
-         * @param binaryWriter Buffer to write binary data to
-         * @returns Node mapping of unique id to index
-         */
-        private _createSkinsAsync;
-    }
-    /**
-     * @internal
-     *
-     * Stores glTF binary data.  If the array buffer byte length is exceeded, it doubles in size dynamically
-     */
-    export class _BinaryWriter {
-        /**
-         * Array buffer which stores all binary data
-         */
-        private _arrayBuffer;
-        /**
-         * View of the array buffer
-         */
-        private _dataView;
-        /**
-         * byte offset of data in array buffer
-         */
-        private _byteOffset;
-        /**
-         * Initialize binary writer with an initial byte length
-         * @param byteLength Initial byte length of the array buffer
-         */
-        constructor(byteLength: number);
-        /**
-         * Resize the array buffer to the specified byte length
-         * @param byteLength The new byte length
-         * @returns The resized array buffer
-         */
-        private _resizeBuffer;
-        /**
-         * Get an array buffer with the length of the byte offset
-         * @returns ArrayBuffer resized to the byte offset
-         */
-        getArrayBuffer(): ArrayBuffer;
-        /**
-         * Get the byte offset of the array buffer
-         * @returns byte offset
-         */
-        getByteOffset(): number;
-        /**
-         * Stores an UInt8 in the array buffer
-         * @param entry
-         * @param byteOffset If defined, specifies where to set the value as an offset.
-         */
-        setUInt8(entry: number, byteOffset?: number): void;
-        /**
-         * Stores an UInt16 in the array buffer
-         * @param entry
-         * @param byteOffset If defined, specifies where to set the value as an offset.
-         */
-        setUInt16(entry: number, byteOffset?: number): void;
-        /**
-         * Gets an UInt32 in the array buffer
-         * @param byteOffset If defined, specifies where to set the value as an offset.
-         * @returns entry
-         */
-        getUInt32(byteOffset: number): number;
-        getVector3Float32FromRef(vector3: Vector3, byteOffset: number): void;
-        setVector3Float32FromRef(vector3: Vector3, byteOffset: number): void;
-        getVector4Float32FromRef(vector4: Vector4, byteOffset: number): void;
-        setVector4Float32FromRef(vector4: Vector4, byteOffset: number): void;
-        /**
-         * Stores a Float32 in the array buffer
-         * @param entry
-         * @param byteOffset
-         */
-        setFloat32(entry: number, byteOffset?: number): void;
-        /**
-         * Stores an UInt32 in the array buffer
-         * @param entry
-         * @param byteOffset If defined, specifies where to set the value as an offset.
-         */
-        setUInt32(entry: number, byteOffset?: number): void;
-        /**
-         * Stores an Int16 in the array buffer
-         * @param entry
-         * @param byteOffset If defined, specifies where to set the value as an offset.
-         */
-        setInt16(entry: number, byteOffset?: number): void;
-        /**
-         * Stores a byte in the array buffer
-         * @param entry
-         * @param byteOffset If defined, specifies where to set the value as an offset.
-         */
-        setByte(entry: number, byteOffset?: number): void;
+        private _exportIndices;
+        private _exportVertexBuffer;
+        private _exportMaterialAsync;
+        private _exportMeshAsync;
     }
 
 
@@ -816,13 +462,15 @@ declare module BABYLON {
         /**
          * Object which contains the file name as the key and its data as the value
          */
-        glTFFiles: {
+        readonly files: {
             [fileName: string]: string | Blob;
         };
         /**
-         * Initializes the glTF file object
+         * @deprecated Use files instead
          */
-        constructor();
+        get glTFFiles(): {
+            [fileName: string]: string | Blob;
+        };
         /**
          * Downloads the glTF data as files based on their names and data
          */
@@ -904,14 +552,12 @@ declare module BABYLON {
          * @param idleGLTFAnimations
          * @param nodeMap
          * @param nodes
-         * @param binaryWriter
+         * @param bufferManager
          * @param bufferViews
          * @param accessors
          * @param animationSampleRate
          */
-        static _CreateNodeAnimationFromNodeAnimations(babylonNode: Node, runtimeGLTFAnimation: BABYLON.GLTF2.IAnimation, idleGLTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: {
-            [key: number]: number;
-        }, nodes: BABYLON.GLTF2.INode[], binaryWriter: _BinaryWriter, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
+        static _CreateNodeAnimationFromNodeAnimations(babylonNode: Node, runtimeGLTFAnimation: BABYLON.GLTF2.IAnimation, idleGLTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: Map<Node, number>, nodes: BABYLON.GLTF2.INode[], bufferManager: BufferManager, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, useRightHanded: boolean, shouldExportAnimation?: (animation: Animation) => boolean): void;
         /**
          * @ignore
          * Create individual morph animations from the mesh's morph target animation tracks
@@ -920,14 +566,12 @@ declare module BABYLON {
          * @param idleGLTFAnimations
          * @param nodeMap
          * @param nodes
-         * @param binaryWriter
+         * @param bufferManager
          * @param bufferViews
          * @param accessors
          * @param animationSampleRate
          */
-        static _CreateMorphTargetAnimationFromMorphTargetAnimations(babylonNode: Node, runtimeGLTFAnimation: BABYLON.GLTF2.IAnimation, idleGLTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: {
-            [key: number]: number;
-        }, nodes: BABYLON.GLTF2.INode[], binaryWriter: _BinaryWriter, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
+        static _CreateMorphTargetAnimationFromMorphTargetAnimations(babylonNode: Node, runtimeGLTFAnimation: BABYLON.GLTF2.IAnimation, idleGLTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: Map<Node, number>, nodes: BABYLON.GLTF2.INode[], bufferManager: BufferManager, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, useRightHanded: boolean, shouldExportAnimation?: (animation: Animation) => boolean): void;
         /**
          * @internal
          * Create node and morph animations from the animation groups
@@ -935,14 +579,12 @@ declare module BABYLON {
          * @param glTFAnimations
          * @param nodeMap
          * @param nodes
-         * @param binaryWriter
+         * @param bufferManager
          * @param bufferViews
          * @param accessors
          * @param animationSampleRate
          */
-        static _CreateNodeAndMorphAnimationFromAnimationGroups(babylonScene: Scene, glTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: {
-            [key: number]: number;
-        }, binaryWriter: _BinaryWriter, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, shouldExportAnimation?: (animation: Animation) => boolean): void;
+        static _CreateNodeAndMorphAnimationFromAnimationGroups(babylonScene: Scene, glTFAnimations: BABYLON.GLTF2.IAnimation[], nodeMap: Map<Node, number>, bufferManager: BufferManager, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], animationSampleRate: number, leftHandedNodes: Set<Node>, shouldExportAnimation?: (animation: Animation) => boolean): void;
         private static _AddAnimation;
         /**
          * Create a baked animation
@@ -1022,6 +664,94 @@ declare module BABYLON {
     }
 
 
+    /** @internal */
+    export class DataWriter {
+        private _data;
+        private _dataView;
+        private _byteOffset;
+        writeTypedArray(value: Exclude<TypedArray, BigInt64Array | BigUint64Array>): void;
+        constructor(byteLength: number);
+        get byteOffset(): number;
+        getOutputData(): Uint8Array;
+        writeUInt8(value: number): void;
+        writeInt8(value: number): void;
+        writeInt16(entry: number): void;
+        writeUInt16(value: number): void;
+        writeInt32(entry: number): void;
+        writeUInt32(value: number): void;
+        writeFloat32(value: number): void;
+        writeFloat64(value: number): void;
+        private _checkGrowBuffer;
+    }
+
+
+    type TypedArrayForglTF = Exclude<TypedArray, Float64Array | BigInt64Array | BigUint64Array>;
+    interface IPropertyWithBufferView {
+        bufferView?: number;
+    }
+    /**
+     * Utility class to centralize the management of binary data, bufferViews, and the objects that reference them.
+     * @internal
+     */
+    export class BufferManager {
+        /**
+         * Maps a bufferView to its data
+         */
+        private _bufferViewToData;
+        /**
+         * Maps a bufferView to glTF objects that reference it via a "bufferView" property (e.g. accessors, images)
+         */
+        private _bufferViewToProperties;
+        /**
+         * Maps an accessor to its bufferView
+         */
+        private _accessorToBufferView;
+        /**
+         * Generates a binary buffer from the stored bufferViews. Also populates the bufferViews list.
+         * @param bufferViews The list of bufferViews to be populated while writing the binary
+         * @returns The binary buffer
+         */
+        generateBinary(bufferViews: BABYLON.GLTF2.IBufferView[]): Uint8Array;
+        /**
+         * Creates a buffer view based on the supplied arguments
+         * @param data a TypedArray to create the bufferView for
+         * @param byteStride byte distance between consecutive elements
+         * @returns bufferView for glTF
+         */
+        createBufferView(data: TypedArrayForglTF, byteStride?: number): BABYLON.GLTF2.IBufferView;
+        /**
+         * Creates an accessor based on the supplied arguments and assigns it to the bufferView
+         * @param bufferView The glTF bufferView referenced by this accessor
+         * @param type The type of the accessor
+         * @param componentType The datatype of components in the attribute
+         * @param count The number of attributes referenced by this accessor
+         * @param byteOffset The offset relative to the start of the bufferView in bytes
+         * @param minMax Minimum and maximum value of each component in this attribute
+         * @param normalized Specifies whether integer data values are normalized before usage
+         * @returns accessor for glTF
+         */
+        createAccessor(bufferView: BABYLON.GLTF2.IBufferView, type: BABYLON.GLTF2.AccessorType, componentType: BABYLON.GLTF2.AccessorComponentType, count: number, byteOffset?: number, minMax?: {
+            min: number[];
+            max: number[];
+        }, normalized?: boolean): BABYLON.GLTF2.IAccessor;
+        /**
+         * Assigns a bufferView to a glTF object that references it
+         * @param object The glTF object
+         * @param bufferView The bufferView to assign
+         */
+        setBufferView(object: IPropertyWithBufferView, bufferView: BABYLON.GLTF2.IBufferView): void;
+        /**
+         * Removes buffer view from the binary data, as well as from all its known references
+         * @param bufferView the bufferView to remove
+         */
+        removeBufferView(bufferView: BABYLON.GLTF2.IBufferView): void;
+        getBufferView(accessor: BABYLON.GLTF2.IAccessor): BABYLON.GLTF2.IBufferView;
+        getPropertiesWithBufferView(bufferView: BABYLON.GLTF2.IBufferView): IPropertyWithBufferView[];
+        getData(bufferView: BABYLON.GLTF2.IBufferView): TypedArrayForglTF;
+        private _verifyBufferView;
+    }
+
+
 
 
     /**
@@ -1041,7 +771,6 @@ declare module BABYLON {
         /** @internal */
         get wasUsed(): boolean;
         postExportTexture?(context: string, textureInfo: BABYLON.GLTF2.ITextureInfo, babylonTexture: Texture): void;
-        preExportTextureAsync(context: string, babylonTexture: Texture): Promise<Nullable<Texture>>;
     }
 
 
@@ -1057,7 +786,7 @@ declare module BABYLON {
         required: boolean;
         private _exporter;
         private _wasUsed;
-        constructor(exporter: _Exporter);
+        constructor(exporter: GLTFExporter);
         dispose(): void;
         /** @internal */
         get wasUsed(): boolean;
@@ -1113,7 +842,7 @@ declare module BABYLON {
         required: boolean;
         private _exporter;
         private _wasUsed;
-        constructor(exporter: _Exporter);
+        constructor(exporter: GLTFExporter);
         /** Dispose */
         dispose(): void;
         /** @internal */
@@ -1151,7 +880,7 @@ declare module BABYLON {
         required: boolean;
         private _exporter;
         private _wasUsed;
-        constructor(exporter: _Exporter);
+        constructor(exporter: GLTFExporter);
         /** Dispose */
         dispose(): void;
         /** @internal */
@@ -1189,7 +918,7 @@ declare module BABYLON {
         required: boolean;
         private _wasUsed;
         private _exporter;
-        constructor(exporter: _Exporter);
+        constructor(exporter: GLTFExporter);
         dispose(): void;
         /** @internal */
         get wasUsed(): boolean;
@@ -1210,7 +939,7 @@ declare module BABYLON {
         required: boolean;
         private _exporter;
         private _wasUsed;
-        constructor(exporter: _Exporter);
+        constructor(exporter: GLTFExporter);
         dispose(): void;
         /** @internal */
         get wasUsed(): boolean;
@@ -1316,7 +1045,7 @@ declare module BABYLON {
         required: boolean;
         private _exporter;
         private _wasUsed;
-        constructor(exporter: _Exporter);
+        constructor(exporter: GLTFExporter);
         dispose(): void;
         /** @internal */
         get wasUsed(): boolean;
@@ -1353,7 +1082,7 @@ declare module BABYLON {
         required: boolean;
         private _exporter;
         private _wasUsed;
-        constructor(exporter: _Exporter);
+        constructor(exporter: GLTFExporter);
         dispose(): void;
         /** @internal */
         get wasUsed(): boolean;
@@ -1374,7 +1103,7 @@ declare module BABYLON {
         required: boolean;
         private _exporter;
         private _wasUsed;
-        constructor(exporter: _Exporter);
+        constructor(exporter: GLTFExporter);
         dispose(): void;
         /** @internal */
         get wasUsed(): boolean;
@@ -1399,7 +1128,7 @@ declare module BABYLON {
         /**
          * @internal
          */
-        constructor(exporter: _Exporter);
+        constructor(exporter: GLTFExporter);
         /** @internal */
         dispose(): void;
         /** @internal */
@@ -1411,12 +1140,41 @@ declare module BABYLON {
          * @param context The context when exporting the node
          * @param node glTF node
          * @param babylonNode BabylonJS node
-         * @param nodeMap Node mapping of unique id to glTF node index
+         * @param nodeMap Node mapping of babylon node to glTF node index
+         * @param convertToRightHanded Flag to convert the values to right-handed
          * @returns nullable BABYLON.GLTF2.INode promise
          */
-        postExportNodeAsync(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: {
-            [key: number]: number;
-        }): Promise<Nullable<BABYLON.GLTF2.INode>>;
+        postExportNodeAsync(context: string, node: BABYLON.GLTF2.INode, babylonNode: Node, nodeMap: Map<Node, number>, convertToRightHanded: boolean): Promise<Nullable<BABYLON.GLTF2.INode>>;
+    }
+
+
+    /**
+     * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_draco_mesh_compression/README.md)
+     */
+    export class KHR_draco_mesh_compression implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "KHR_draco_mesh_compression";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** KHR_draco_mesh_compression is required, as uncompressed fallback data is not yet implemented. */
+        required: boolean;
+        /** BufferViews used for Draco data, which may be eligible for removal after Draco encoding */
+        private _bufferViewsUsed;
+        /** Accessors that were replaced with Draco data, which may be eligible for removal after Draco encoding */
+        private _accessorsUsed;
+        /** Promise pool for Draco encoding work */
+        private _encodePromises;
+        private _wasUsed;
+        /** @internal */
+        get wasUsed(): boolean;
+        /** @internal */
+        constructor(exporter: GLTFExporter);
+        /** @internal */
+        dispose(): void;
+        /** @internal */
+        postExportMeshPrimitive(primitive: BABYLON.GLTF2.IMeshPrimitive, bufferManager: BufferManager, accessors: BABYLON.GLTF2.IAccessor[]): void;
+        /** @internal */
+        preGenerateBinaryAsync(bufferManager: BufferManager): Promise<void>;
     }
 
 
@@ -1432,7 +1190,7 @@ declare module BABYLON {
         required: boolean;
         private _exporter;
         private _wasUsed;
-        constructor(exporter: _Exporter);
+        constructor(exporter: GLTFExporter);
         dispose(): void;
         /** @internal */
         get wasUsed(): boolean;
@@ -1442,12 +1200,11 @@ declare module BABYLON {
          * @param node the node exported
          * @param babylonNode the corresponding babylon node
          * @param nodeMap map from babylon node id to node index
-         * @param binaryWriter binary writer
+         * @param convertToRightHanded true if we need to convert data from left hand to right hand system.
+         * @param bufferManager buffer manager
          * @returns nullable promise, resolves with the node
          */
-        postExportNodeAsync(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: {
-            [key: number]: number;
-        }, binaryWriter: _BinaryWriter): Promise<Nullable<BABYLON.GLTF2.INode>>;
+        postExportNodeAsync(context: string, node: Nullable<BABYLON.GLTF2.INode>, babylonNode: Node, nodeMap: Map<Node, number>, convertToRightHanded: boolean, bufferManager: BufferManager): Promise<Nullable<BABYLON.GLTF2.INode>>;
         private _buildAccessor;
     }
 
@@ -1495,9 +1252,9 @@ declare module BABYLON {
      * @param options options to configure the export
      * @param meshPredicate predicate to filter the meshes to export
      * @returns a uint8 array containing the USDZ file
-     * #H2G5XW#3 - Simple sphere
-     * #H2G5XW#4 - Red sphere
-     * #5N3RWK#4 - Boombox
+     * #H2G5XW#6 - Simple sphere
+     * #H2G5XW#7 - Red sphere
+     * #5N3RWK#5 - Boombox
      */
     export function USDZExportAsync(scene: Scene, options: Partial<IUSDZExportOptions>, meshPredicate?: (m: Mesh) => boolean): Promise<Uint8Array>;
 

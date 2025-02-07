@@ -3124,7 +3124,7 @@ export class TextureCanvasManager {
     private updateDisplay;
     set channels(channels: IChannel[]);
     paintPixelsOnCanvas(pixelData: Uint8Array, canvas: HTMLCanvasElement): void;
-    grabOriginalTexture(): Promise<Uint8Array>;
+    grabOriginalTexture(): Promise<Uint8Array<ArrayBufferLike>>;
     getMouseCoordinates(pointerInfo: PointerInfo): Vector2;
     get scene(): Scene;
     get canvas2D(): HTMLCanvasElement;
@@ -3282,9 +3282,31 @@ interface ISpotLightPropertyGridComponentProps {
     light: SpotLight;
     lockObject: LockObject;
     onPropertyChangedObservable?: Observable<PropertyChangedEvent>;
+    onSelectionChangedObservable?: Observable<any>;
 }
 export class SpotLightPropertyGridComponent extends React.Component<ISpotLightPropertyGridComponentProps> {
     constructor(props: ISpotLightPropertyGridComponentProps);
+
+}
+export {};
+
+}
+declare module "babylonjs-inspector/components/actionTabs/tabs/propertyGrids/lights/rectAreaLightPropertyGridComponent" {
+import * as React from "react";
+import { Observable } from "babylonjs/Misc/observable";
+import { RectAreaLight } from "babylonjs/Lights/rectAreaLight";
+import { PropertyChangedEvent } from "babylonjs-inspector/components/propertyChangedEvent";
+import { LockObject } from "babylonjs-inspector/tabs/propertyGrids/lockObject";
+import { GlobalState } from "babylonjs-inspector/components/globalState";
+interface IRectAreaLightPropertyGridComponentProps {
+    globalState: GlobalState;
+    light: RectAreaLight;
+    lockObject: LockObject;
+    onPropertyChangedObservable?: Observable<PropertyChangedEvent>;
+    onSelectionChangedObservable?: Observable<any>;
+}
+export class RectAreaLightPropertyGridComponent extends React.Component<IRectAreaLightPropertyGridComponentProps> {
+    constructor(props: IRectAreaLightPropertyGridComponentProps);
 
 }
 export {};
@@ -4689,7 +4711,7 @@ declare module "babylonjs-inspector/styleHelper" {
  * @param source document to copy styles from
  * @param target document or shadow root to copy styles to
  */
-export function CopyStyles(source: Document, target: Document): void;
+export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
 
 }
 declare module "babylonjs-inspector/stringTools" {
@@ -5325,6 +5347,7 @@ export class StateManager {
     isElbowConnectionAllowed: (nodeA: FrameNodePort | NodePort, nodeB: FrameNodePort | NodePort) => boolean;
     isDebugConnectionAllowed: (nodeA: FrameNodePort | NodePort, nodeB: FrameNodePort | NodePort) => boolean;
     applyNodePortDesign: (data: IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+    getPortColor: (portData: IPortData) => string;
     storeEditorData: (serializationObject: any, frame?: Nullable<GraphFrame>) => void;
     getEditorDataMap: () => {
         [key: number]: number;
@@ -5334,6 +5357,8 @@ export class StateManager {
         data: INodeData;
         name: string;
     }>;
+    private _isRebuildQueued;
+    queueRebuildCommand(): void;
 }
 
 }
@@ -6038,6 +6063,9 @@ export interface INodeData {
     outputs: IPortData[];
     invisibleEndpoints?: Nullable<any[]>;
     isConnectedToOutput?: () => boolean;
+    isActive?: boolean;
+    setIsActive?: (value: boolean) => void;
+    canBeActivated?: boolean;
 }
 
 }
@@ -10523,7 +10551,7 @@ declare module INSPECTOR {
         private updateDisplay;
         set channels(channels: IChannel[]);
         paintPixelsOnCanvas(pixelData: Uint8Array, canvas: HTMLCanvasElement): void;
-        grabOriginalTexture(): Promise<Uint8Array>;
+        grabOriginalTexture(): Promise<Uint8Array<ArrayBufferLike>>;
         getMouseCoordinates(pointerInfo: BABYLON.PointerInfo): BABYLON.Vector2;
         get scene(): BABYLON.Scene;
         get canvas2D(): HTMLCanvasElement;
@@ -10644,9 +10672,23 @@ declare module INSPECTOR {
         light: BABYLON.SpotLight;
         lockObject: INSPECTOR.SharedUIComponents.LockObject;
         onPropertyChangedObservable?: BABYLON.Observable<PropertyChangedEvent>;
+        onSelectionChangedObservable?: BABYLON.Observable<any>;
     }
     export class SpotLightPropertyGridComponent extends React.Component<ISpotLightPropertyGridComponentProps> {
         constructor(props: ISpotLightPropertyGridComponentProps);
+        render(): import("react/jsx-runtime").JSX.Element;
+    }
+
+
+    interface IRectAreaLightPropertyGridComponentProps {
+        globalState: GlobalState;
+        light: BABYLON.RectAreaLight;
+        lockObject: INSPECTOR.SharedUIComponents.LockObject;
+        onPropertyChangedObservable?: BABYLON.Observable<PropertyChangedEvent>;
+        onSelectionChangedObservable?: BABYLON.Observable<any>;
+    }
+    export class RectAreaLightPropertyGridComponent extends React.Component<IRectAreaLightPropertyGridComponentProps> {
+        constructor(props: IRectAreaLightPropertyGridComponentProps);
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -11752,7 +11794,7 @@ declare module INSPECTOR.SharedUIComponents {
      * @param source document to copy styles from
      * @param target document or shadow root to copy styles to
      */
-    export function CopyStyles(source: Document, target: Document): void;
+    export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
 
 
 
@@ -12436,6 +12478,7 @@ declare module INSPECTOR.SharedUIComponents {
         isElbowConnectionAllowed: (nodeA: INSPECTOR.SharedUIComponents.FrameNodePort | INSPECTOR.SharedUIComponents.NodePort, nodeB: INSPECTOR.SharedUIComponents.FrameNodePort | INSPECTOR.SharedUIComponents.NodePort) => boolean;
         isDebugConnectionAllowed: (nodeA: INSPECTOR.SharedUIComponents.FrameNodePort | INSPECTOR.SharedUIComponents.NodePort, nodeB: INSPECTOR.SharedUIComponents.FrameNodePort | INSPECTOR.SharedUIComponents.NodePort) => boolean;
         applyNodePortDesign: (data: INSPECTOR.SharedUIComponents.IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+        getPortColor: (portData: INSPECTOR.SharedUIComponents.IPortData) => string;
         storeEditorData: (serializationObject: any, frame?: BABYLON.Nullable<INSPECTOR.SharedUIComponents.GraphFrame>) => void;
         getEditorDataMap: () => {
             [key: number]: number;
@@ -12445,6 +12488,8 @@ declare module INSPECTOR.SharedUIComponents {
             data: INSPECTOR.SharedUIComponents.INodeData;
             name: string;
         }>;
+        private _isRebuildQueued;
+        queueRebuildCommand(): void;
     }
 
 
@@ -13181,6 +13226,9 @@ declare module INSPECTOR.SharedUIComponents {
         outputs: INSPECTOR.SharedUIComponents.IPortData[];
         invisibleEndpoints?: BABYLON.Nullable<any[]>;
         isConnectedToOutput?: () => boolean;
+        isActive?: boolean;
+        setIsActive?: (value: boolean) => void;
+        canBeActivated?: boolean;
     }
 
 

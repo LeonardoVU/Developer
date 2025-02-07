@@ -153,10 +153,10 @@ declare module BABYLON.NodeRenderGraphEditor {
      * Static class for BlockTools
      */
     export class BlockTools {
-        static GetBlockFromString(data: string, frameGraph: BABYLON.FrameGraph, scene: BABYLON.Scene): BABYLON.NodeRenderGraphTeleportInBlock | BABYLON.NodeRenderGraphTeleportOutBlock | BABYLON.NodeRenderGraphOutputBlock | BABYLON.NodeRenderGraphElbowBlock | BABYLON.NodeRenderGraphInputBlock | BABYLON.NodeRenderGraphClearBlock | BABYLON.NodeRenderGraphCopyTextureBlock | BABYLON.NodeRenderGraphGenerateMipmapsBlock | BABYLON.NodeRenderGraphBlackAndWhitePostProcessBlock | BABYLON.NodeRenderGraphBloomPostProcessBlock | BABYLON.NodeRenderGraphBlurPostProcessBlock | BABYLON.GUI.NodeRenderGraphGUIBlock | BABYLON.NodeRenderGraphObjectRendererBlock | BABYLON.NodeRenderGraphGeometryRendererBlock | BABYLON.NodeRenderGraphTAAObjectRendererBlock | BABYLON.NodeRenderGraphCullObjectsBlock | BABYLON.NodeRenderGraphCircleOfConfusionPostProcessBlock | BABYLON.NodeRenderGraphDepthOfFieldPostProcessBlock | BABYLON.NodeRenderGraphExtractHighlightsPostProcessBlock | null;
+        static GetBlockFromString(data: string, frameGraph: BABYLON.FrameGraph, scene: BABYLON.Scene): BABYLON.NodeRenderGraphTeleportInBlock | BABYLON.NodeRenderGraphTeleportOutBlock | BABYLON.NodeRenderGraphOutputBlock | BABYLON.NodeRenderGraphElbowBlock | BABYLON.NodeRenderGraphResourceContainerBlock | BABYLON.NodeRenderGraphExecuteBlock | BABYLON.NodeRenderGraphInputBlock | BABYLON.NodeRenderGraphClearBlock | BABYLON.NodeRenderGraphCopyTextureBlock | BABYLON.NodeRenderGraphGenerateMipmapsBlock | BABYLON.NodeRenderGraphBlackAndWhitePostProcessBlock | BABYLON.NodeRenderGraphBloomPostProcessBlock | BABYLON.NodeRenderGraphBlurPostProcessBlock | BABYLON.NodeRenderGraphPassPostProcessBlock | BABYLON.NodeRenderGraphPassCubePostProcessBlock | BABYLON.GUI.NodeRenderGraphGUIBlock | BABYLON.NodeRenderGraphObjectRendererBlock | BABYLON.NodeRenderGraphGeometryRendererBlock | BABYLON.NodeRenderGraphTAAObjectRendererBlock | BABYLON.NodeRenderGraphCullObjectsBlock | BABYLON.NodeRenderGraphCircleOfConfusionPostProcessBlock | BABYLON.NodeRenderGraphDepthOfFieldPostProcessBlock | BABYLON.NodeRenderGraphExtractHighlightsPostProcessBlock | BABYLON.NodeRenderGraphShadowGeneratorBlock | BABYLON.NodeRenderGraphCascadedShadowGeneratorBlock | BABYLON.NodeRenderGraphGlowLayerBlock | BABYLON.NodeRenderGraphHighlightLayerBlock | null;
         static GetColorFromConnectionNodeType(type: BABYLON.NodeRenderGraphBlockConnectionPointTypes): string;
-        static GetConnectionNodeTypeFromString(type: string): BABYLON.NodeRenderGraphBlockConnectionPointTypes.Texture | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureBackBuffer | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureBackBufferDepthStencilAttachment | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureDepthStencilAttachment | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureViewDepth | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureViewNormal | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureAlbedo | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureReflectivity | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureWorldPosition | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureVelocity | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureScreenDepth | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureWorldNormal | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureLocalPosition | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureLinearVelocity | BABYLON.NodeRenderGraphBlockConnectionPointTypes.Camera | BABYLON.NodeRenderGraphBlockConnectionPointTypes.ObjectList | BABYLON.NodeRenderGraphBlockConnectionPointTypes.AutoDetect;
-        static GetStringFromConnectionNodeType(type: BABYLON.NodeRenderGraphBlockConnectionPointTypes): "" | "Texture" | "Camera" | "TextureBackBuffer" | "TextureBackBufferDepthStencilAttachment" | "TextureDepthStencilAttachment" | "ObjectList" | "TextureNormal" | "TextureAlbedo" | "TextureReflectivity" | "TexturePosition" | "TextureVelocity" | "TextureScreenDepth" | "TextureLocalPosition" | "TextureWorldNormal" | "TextureLinearVelocity" | "TextureDepth";
+        static GetConnectionNodeTypeFromString(type: string): BABYLON.NodeRenderGraphBlockConnectionPointTypes.Texture | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureBackBuffer | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureBackBufferDepthStencilAttachment | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureDepthStencilAttachment | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureViewDepth | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureViewNormal | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureAlbedo | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureReflectivity | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureWorldPosition | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureVelocity | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureScreenDepth | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureWorldNormal | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureLocalPosition | BABYLON.NodeRenderGraphBlockConnectionPointTypes.TextureLinearVelocity | BABYLON.NodeRenderGraphBlockConnectionPointTypes.ResourceContainer | BABYLON.NodeRenderGraphBlockConnectionPointTypes.ShadowGenerator | BABYLON.NodeRenderGraphBlockConnectionPointTypes.ShadowLight | BABYLON.NodeRenderGraphBlockConnectionPointTypes.Camera | BABYLON.NodeRenderGraphBlockConnectionPointTypes.ObjectList | BABYLON.NodeRenderGraphBlockConnectionPointTypes.AutoDetect;
+        static GetStringFromConnectionNodeType(type: BABYLON.NodeRenderGraphBlockConnectionPointTypes): "" | "Texture" | "Camera" | "TextureBackBuffer" | "TextureBackBufferDepthStencilAttachment" | "TextureDepthStencilAttachment" | "ObjectList" | "TextureNormal" | "TextureAlbedo" | "TextureReflectivity" | "TexturePosition" | "TextureVelocity" | "TextureScreenDepth" | "TextureLocalPosition" | "TextureWorldNormal" | "TextureLinearVelocity" | "ResourceContainer" | "ShadowGenerator" | "ShadowLight" | "TextureDepth";
     }
 
 
@@ -528,6 +528,16 @@ declare module BABYLON.NodeRenderGraphEditor {
     }
 
 
+    interface ITextureMemoryUsagePropertyTabComponentProps {
+        globalState: GlobalState;
+    }
+    export class TextureMemoryUsagePropertyTabComponent extends React.Component<ITextureMemoryUsagePropertyTabComponentProps> {
+        constructor(props: ITextureMemoryUsagePropertyTabComponentProps);
+        private _formatMemorySize;
+        render(): import("react/jsx-runtime").JSX.Element;
+    }
+
+
     interface IPropertyTabComponentProps {
         globalState: GlobalState;
         lockObject: BABYLON.NodeRenderGraphEditor.SharedUIComponents.LockObject;
@@ -550,19 +560,6 @@ declare module BABYLON.NodeRenderGraphEditor {
         customSave(): void;
         saveToSnippetServer(): void;
         loadFromSnippet(): void;
-        render(): import("react/jsx-runtime").JSX.Element;
-    }
-
-
-    interface IInputsPropertyTabComponentProps {
-        globalState: GlobalState;
-        inputs: BABYLON.NodeRenderGraphInputBlock[];
-        lockObject: BABYLON.NodeRenderGraphEditor.SharedUIComponents.LockObject;
-    }
-    export class InputsPropertyTabComponent extends React.Component<IInputsPropertyTabComponentProps> {
-        constructor(props: IInputsPropertyTabComponentProps);
-        processInputBlockUpdate(): void;
-        renderInputBlock(block: BABYLON.NodeRenderGraphInputBlock): import("react/jsx-runtime").JSX.Element | null;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -620,6 +617,7 @@ declare module BABYLON.NodeRenderGraphEditor {
         private _reset;
         private _prepareLights;
         private _createNodeRenderGraph;
+        private _getMesh;
         private _buildGraph;
         private _frameCamera;
         private _prepareBackgroundHDR;
@@ -692,7 +690,7 @@ declare module BABYLON.NodeRenderGraphEditor.SharedUIComponents {
      * @param source document to copy styles from
      * @param target document or shadow root to copy styles to
      */
-    export function CopyStyles(source: Document, target: Document): void;
+    export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
 
 
 
@@ -1376,6 +1374,7 @@ declare module BABYLON.NodeRenderGraphEditor.SharedUIComponents {
         isElbowConnectionAllowed: (nodeA: BABYLON.NodeRenderGraphEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeRenderGraphEditor.SharedUIComponents.NodePort, nodeB: BABYLON.NodeRenderGraphEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeRenderGraphEditor.SharedUIComponents.NodePort) => boolean;
         isDebugConnectionAllowed: (nodeA: BABYLON.NodeRenderGraphEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeRenderGraphEditor.SharedUIComponents.NodePort, nodeB: BABYLON.NodeRenderGraphEditor.SharedUIComponents.FrameNodePort | BABYLON.NodeRenderGraphEditor.SharedUIComponents.NodePort) => boolean;
         applyNodePortDesign: (data: BABYLON.NodeRenderGraphEditor.SharedUIComponents.IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+        getPortColor: (portData: BABYLON.NodeRenderGraphEditor.SharedUIComponents.IPortData) => string;
         storeEditorData: (serializationObject: any, frame?: BABYLON.Nullable<BABYLON.NodeRenderGraphEditor.SharedUIComponents.GraphFrame>) => void;
         getEditorDataMap: () => {
             [key: number]: number;
@@ -1385,6 +1384,8 @@ declare module BABYLON.NodeRenderGraphEditor.SharedUIComponents {
             data: BABYLON.NodeRenderGraphEditor.SharedUIComponents.INodeData;
             name: string;
         }>;
+        private _isRebuildQueued;
+        queueRebuildCommand(): void;
     }
 
 
@@ -2121,6 +2122,9 @@ declare module BABYLON.NodeRenderGraphEditor.SharedUIComponents {
         outputs: BABYLON.NodeRenderGraphEditor.SharedUIComponents.IPortData[];
         invisibleEndpoints?: BABYLON.Nullable<any[]>;
         isConnectedToOutput?: () => boolean;
+        isActive?: boolean;
+        setIsActive?: (value: boolean) => void;
+        canBeActivated?: boolean;
     }
 
 

@@ -847,7 +847,13 @@ export interface IGLTF extends GLTF2.IGLTF {
 /**
  * Loader interface with additional members.
  */
+/** @internal */
 export interface IKHRLightsPunctual_Light extends GLTF2.IKHRLightsPunctual_Light, IArrayItem {
+    /** @hidden */
+    _babylonLight?: Light;
+}
+/** @internal */
+export interface IEXTLightsIES_Light extends GLTF2.IEXTLightsIES_Light, IArrayItem {
     /** @hidden */
     _babylonLight?: Light;
 }
@@ -1558,6 +1564,7 @@ export * from "babylonjs/glTF/2.0/Extensions/EXT_mesh_gpu_instancing";
 export * from "babylonjs/glTF/2.0/Extensions/EXT_meshopt_compression";
 export * from "babylonjs/glTF/2.0/Extensions/EXT_texture_webp";
 export * from "babylonjs/glTF/2.0/Extensions/EXT_texture_avif";
+export * from "babylonjs/glTF/2.0/Extensions/EXT_lights_ies";
 export * from "babylonjs/glTF/2.0/Extensions/KHR_draco_mesh_compression";
 export * from "babylonjs/glTF/2.0/Extensions/KHR_lights_punctual";
 export * from "babylonjs/glTF/2.0/Extensions/KHR_materials_pbrSpecularGlossiness";
@@ -2009,6 +2016,40 @@ export class KHR_node_visibility implements IGLTFLoaderExtension {
 }
 
 }
+declare module "babylonjs/glTF/2.0/Extensions/KHR_node_hoverability" {
+import { GLTFLoader } from "babylonjs/glTF/2.0/glTFLoader";
+import { IGLTFLoaderExtension } from "babylonjs/glTF/2.0/glTFLoaderExtension";
+module "babylonjs/glTF/glTFFileLoader" {
+    interface GLTFLoaderExtensionOptions {
+        /**
+         * Defines options for the KHR_node_hoverability extension.
+         */
+        ["KHR_node_hoverability"]: {};
+    }
+}
+/**
+ * Loader extension for KHR_node_hoverability
+ * @see https://github.com/KhronosGroup/glTF/pull/2426
+ */
+export class KHR_node_hoverability implements IGLTFLoaderExtension {
+    /**
+     * The name of this extension.
+     */
+    readonly name: string;
+    /**
+     * Defines whether this extension is enabled.
+     */
+    enabled: boolean;
+    private _loader;
+    /**
+     * @internal
+     */
+    constructor(loader: GLTFLoader);
+    onReady(): Promise<void>;
+    dispose(): void;
+}
+
+}
 declare module "babylonjs/glTF/2.0/Extensions/KHR_mesh_quantization" {
 import { IGLTFLoaderExtension } from "babylonjs/glTF/2.0/glTFLoaderExtension";
 import { GLTFLoader } from "babylonjs/glTF/2.0/glTFLoader";
@@ -2091,15 +2132,33 @@ declare module "babylonjs/glTF/2.0/Extensions/KHR_materials_variants" {
 import { Nullable } from "babylonjs/types";
 import { IGLTFLoaderExtension } from "babylonjs/glTF/2.0/glTFLoaderExtension";
 import { GLTFLoader } from "babylonjs/glTF/2.0/glTFLoader";
-import { Mesh } from "babylonjs/Meshes/mesh";
 import { AbstractMesh } from "babylonjs/Meshes/abstractMesh";
 import { INode, IMeshPrimitive, IMesh } from "babylonjs/glTF/2.0/glTFLoaderInterfaces";
+import { TransformNode } from "babylonjs/Meshes/transformNode";
+import { MaterialVariantsController } from "babylonjs/glTF/glTFFileLoader";
+export { MaterialVariantsController };
 module "babylonjs/glTF/glTFFileLoader" {
+    type MaterialVariantsController = {
+        /**
+         * The list of available variant names for this asset.
+         */
+        readonly variants: readonly string[];
+        /**
+         * Gets or sets the selected variant.
+         */
+        selectedVariant: string;
+    };
     interface GLTFLoaderExtensionOptions {
         /**
          * Defines options for the KHR_materials_variants extension.
          */
-        ["KHR_materials_variants"]: {};
+        ["KHR_materials_variants"]: Partial<{
+            /**
+             * Defines a callback that will be called if material variants are loaded.
+             * @experimental
+             */
+            onLoaded: (controller: MaterialVariantsController) => void;
+        }>;
     }
 }
 /**
@@ -2124,53 +2183,55 @@ export class KHR_materials_variants implements IGLTFLoaderExtension {
     dispose(): void;
     /**
      * Gets the list of available variant names for this asset.
-     * @param rootMesh The glTF root mesh
+     * @param rootNode The glTF root node
      * @returns the list of all the variant names for this model
      */
-    static GetAvailableVariants(rootMesh: Mesh): string[];
+    static GetAvailableVariants(rootNode: TransformNode): string[];
     /**
      * Gets the list of available variant names for this asset.
-     * @param rootMesh The glTF root mesh
+     * @param rootNode The glTF root node
      * @returns the list of all the variant names for this model
      */
-    getAvailableVariants(rootMesh: Mesh): string[];
+    getAvailableVariants(rootNode: TransformNode): string[];
     /**
      * Select a variant given a variant name or a list of variant names.
-     * @param rootMesh The glTF root mesh
+     * @param rootNode The glTF root node
      * @param variantName The variant name(s) to select.
      */
-    static SelectVariant(rootMesh: Mesh, variantName: string | string[]): void;
+    static SelectVariant(rootNode: TransformNode, variantName: string | string[]): void;
     /**
      * Select a variant given a variant name or a list of variant names.
-     * @param rootMesh The glTF root mesh
+     * @param rootNode The glTF root node
      * @param variantName The variant name(s) to select.
      */
-    selectVariant(rootMesh: Mesh, variantName: string | string[]): void;
+    selectVariant(rootNode: TransformNode, variantName: string | string[]): void;
     /**
      * Reset back to the original before selecting a variant.
-     * @param rootMesh The glTF root mesh
+     * @param rootNode The glTF root node
      */
-    static Reset(rootMesh: Mesh): void;
+    static Reset(rootNode: TransformNode): void;
     /**
      * Reset back to the original before selecting a variant.
-     * @param rootMesh The glTF root mesh
+     * @param rootNode The glTF root node
      */
-    reset(rootMesh: Mesh): void;
+    reset(rootNode: TransformNode): void;
     /**
      * Gets the last selected variant name(s) or null if original.
-     * @param rootMesh The glTF root mesh
+     * @param rootNode The glTF root node
      * @returns The selected variant name(s).
      */
-    static GetLastSelectedVariant(rootMesh: Mesh): Nullable<string | string[]>;
+    static GetLastSelectedVariant(rootNode: TransformNode): Nullable<string | string[]>;
     /**
      * Gets the last selected variant name(s) or null if original.
-     * @param rootMesh The glTF root mesh
+     * @param rootNode The glTF root node
      * @returns The selected variant name(s).
      */
-    getLastSelectedVariant(rootMesh: Mesh): Nullable<string | string[]>;
+    getLastSelectedVariant(rootNode: TransformNode): Nullable<string | string[]>;
     private static _GetExtensionMetadata;
     /** @internal */
     onLoading(): void;
+    /** @internal */
+    onReady(): void;
     /**
      * @internal
      */
@@ -2806,7 +2867,7 @@ export class KHR_interactivity implements IGLTFLoaderExtension {
 
 }
 declare module "babylonjs/glTF/2.0/Extensions/KHR_draco_mesh_compression" {
-import { DracoCompression } from "babylonjs/Meshes/Compression/dracoCompression";
+import { DracoDecoder } from "babylonjs/Meshes/Compression/dracoDecoder";
 import { Nullable } from "babylonjs/types";
 import { Geometry } from "babylonjs/Meshes/geometry";
 import { Mesh } from "babylonjs/Meshes/mesh";
@@ -2830,9 +2891,9 @@ export class KHR_draco_mesh_compression implements IGLTFLoaderExtension {
      */
     readonly name: string;
     /**
-     * The draco compression used to decode vertex data or DracoCompression.Default if not defined
+     * The draco decoder used to decode vertex data or DracoDecoder.Default if not defined
      */
-    dracoCompression?: DracoCompression;
+    dracoDecoder?: DracoDecoder;
     /**
      * Defines whether this extension is enabled.
      */
@@ -3141,6 +3202,15 @@ export const animationPointerTree: {
                         innerConeAngle: LightAnimationPropertyInfo[];
                         outerConeAngle: LightAnimationPropertyInfo[];
                     };
+                };
+            };
+        };
+        EXT_lights_ies: {
+            lights: {
+                __array__: {
+                    __target__: boolean;
+                    color: LightAnimationPropertyInfo[];
+                    multiplier: LightAnimationPropertyInfo[];
                 };
             };
         };
@@ -3454,6 +3524,50 @@ export class EXT_lights_image_based implements IGLTFLoaderExtension {
      */
     loadSceneAsync(context: string, scene: IScene): Nullable<Promise<void>>;
     private _loadLightAsync;
+}
+
+}
+declare module "babylonjs/glTF/2.0/Extensions/EXT_lights_ies" {
+import { Nullable } from "babylonjs/types";
+import { TransformNode } from "babylonjs/Meshes/transformNode";
+import { INode } from "babylonjs/glTF/2.0/glTFLoaderInterfaces";
+import { IGLTFLoaderExtension } from "babylonjs/glTF/2.0/glTFLoaderExtension";
+import { GLTFLoader } from "babylonjs/glTF/2.0/glTFLoader";
+module "babylonjs/glTF/glTFFileLoader" {
+    interface GLTFLoaderExtensionOptions {
+        /**
+         * Defines options for the EXT_lights_ies extension.
+         */
+        ["EXT_lights_ies"]: {};
+    }
+}
+/**
+ * [Specification](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Vendor/EXT_lights_ies)
+ */
+export class EXT_lights_ies implements IGLTFLoaderExtension {
+    /**
+     * The name of this extension.
+     */
+    readonly name: string;
+    /**
+     * Defines whether this extension is enabled.
+     */
+    enabled: boolean;
+    /** hidden */
+    private _loader;
+    private _lights?;
+    /**
+     * @internal
+     */
+    constructor(loader: GLTFLoader);
+    /** @internal */
+    dispose(): void;
+    /** @internal */
+    onLoading(): void;
+    /**
+     * @internal
+     */
+    loadNodeAsync(context: string, node: INode, assign: (babylonTransformNode: TransformNode) => void): Nullable<Promise<TransformNode>>;
 }
 
 }
@@ -4254,6 +4368,9 @@ export const SPLATFileLoaderMetadata: {
         readonly ".ply": {
             readonly isBinary: true;
         };
+        readonly ".spz": {
+            readonly isBinary: true;
+        };
     };
 };
 
@@ -4295,6 +4412,9 @@ export class SPLATFileLoader implements ISceneLoaderPluginAsync, ISceneLoaderPlu
         readonly ".ply": {
             readonly isBinary: true;
         };
+        readonly ".spz": {
+            readonly isBinary: true;
+        };
     };
     /**
      * Creates loader for gaussian splatting files
@@ -4317,6 +4437,7 @@ export class SPLATFileLoader implements ISceneLoaderPluginAsync, ISceneLoaderPlu
     importMeshAsync(meshesNames: any, scene: Scene, data: any, rootUrl: string, onProgress?: (event: ISceneLoaderProgressEvent) => void, fileName?: string): Promise<ISceneLoaderAsyncResult>;
     private static _BuildPointCloud;
     private static _BuildMesh;
+    private _parseSPZ;
     private _parse;
     /**
      * Load into an asset container.
@@ -5580,7 +5701,13 @@ declare module BABYLON {
     /**
      * Loader interface with additional members.
      */
+    /** @internal */
     export interface IKHRLightsPunctual_Light extends GLTF2.IKHRLightsPunctual_Light, IArrayItem {
+        /** @hidden */
+        _babylonLight?: Light;
+    }
+    /** @internal */
+    export interface IEXTLightsIES_Light extends GLTF2.IEXTLightsIES_Light, IArrayItem {
         /** @hidden */
         _babylonLight?: Light;
     }
@@ -6583,6 +6710,35 @@ declare module BABYLON {
 
         interface GLTFLoaderExtensionOptions {
             /**
+             * Defines options for the KHR_node_hoverability extension.
+             */
+            ["KHR_node_hoverability"]: {};
+        }
+    /**
+     * Loader extension for KHR_node_hoverability
+     * @see https://github.com/KhronosGroup/glTF/pull/2426
+     */
+    export class KHR_node_hoverability implements IGLTFLoaderExtension {
+        /**
+         * The name of this extension.
+         */
+        readonly name = "KHR_node_hoverability";
+        /**
+         * Defines whether this extension is enabled.
+         */
+        enabled: boolean;
+        private _loader;
+        /**
+         * @internal
+         */
+        constructor(loader: GLTFLoader);
+        onReady(): Promise<void>;
+        dispose(): void;
+    }
+
+
+        interface GLTFLoaderExtensionOptions {
+            /**
              * Defines options for the KHR_mesh_quantization extension.
              */
             ["KHR_mesh_quantization"]: {};
@@ -6646,11 +6802,27 @@ declare module BABYLON {
     }
 
 
+        type MaterialVariantsController = {
+            /**
+             * The list of available variant names for this asset.
+             */
+            readonly variants: readonly string[];
+            /**
+             * Gets or sets the selected variant.
+             */
+            selectedVariant: string;
+        };
         interface GLTFLoaderExtensionOptions {
             /**
              * Defines options for the KHR_materials_variants extension.
              */
-            ["KHR_materials_variants"]: {};
+            ["KHR_materials_variants"]: Partial<{
+                /**
+                 * Defines a callback that will be called if material variants are loaded.
+                 * @experimental
+                 */
+                onLoaded: (controller: MaterialVariantsController) => void;
+            }>;
         }
     /**
      * [Specification](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_variants/README.md)
@@ -6674,53 +6846,55 @@ declare module BABYLON {
         dispose(): void;
         /**
          * Gets the list of available variant names for this asset.
-         * @param rootMesh The glTF root mesh
+         * @param rootNode The glTF root node
          * @returns the list of all the variant names for this model
          */
-        static GetAvailableVariants(rootMesh: Mesh): string[];
+        static GetAvailableVariants(rootNode: TransformNode): string[];
         /**
          * Gets the list of available variant names for this asset.
-         * @param rootMesh The glTF root mesh
+         * @param rootNode The glTF root node
          * @returns the list of all the variant names for this model
          */
-        getAvailableVariants(rootMesh: Mesh): string[];
+        getAvailableVariants(rootNode: TransformNode): string[];
         /**
          * Select a variant given a variant name or a list of variant names.
-         * @param rootMesh The glTF root mesh
+         * @param rootNode The glTF root node
          * @param variantName The variant name(s) to select.
          */
-        static SelectVariant(rootMesh: Mesh, variantName: string | string[]): void;
+        static SelectVariant(rootNode: TransformNode, variantName: string | string[]): void;
         /**
          * Select a variant given a variant name or a list of variant names.
-         * @param rootMesh The glTF root mesh
+         * @param rootNode The glTF root node
          * @param variantName The variant name(s) to select.
          */
-        selectVariant(rootMesh: Mesh, variantName: string | string[]): void;
+        selectVariant(rootNode: TransformNode, variantName: string | string[]): void;
         /**
          * Reset back to the original before selecting a variant.
-         * @param rootMesh The glTF root mesh
+         * @param rootNode The glTF root node
          */
-        static Reset(rootMesh: Mesh): void;
+        static Reset(rootNode: TransformNode): void;
         /**
          * Reset back to the original before selecting a variant.
-         * @param rootMesh The glTF root mesh
+         * @param rootNode The glTF root node
          */
-        reset(rootMesh: Mesh): void;
+        reset(rootNode: TransformNode): void;
         /**
          * Gets the last selected variant name(s) or null if original.
-         * @param rootMesh The glTF root mesh
+         * @param rootNode The glTF root node
          * @returns The selected variant name(s).
          */
-        static GetLastSelectedVariant(rootMesh: Mesh): Nullable<string | string[]>;
+        static GetLastSelectedVariant(rootNode: TransformNode): Nullable<string | string[]>;
         /**
          * Gets the last selected variant name(s) or null if original.
-         * @param rootMesh The glTF root mesh
+         * @param rootNode The glTF root node
          * @returns The selected variant name(s).
          */
-        getLastSelectedVariant(rootMesh: Mesh): Nullable<string | string[]>;
+        getLastSelectedVariant(rootNode: TransformNode): Nullable<string | string[]>;
         private static _GetExtensionMetadata;
         /** @internal */
         onLoading(): void;
+        /** @internal */
+        onReady(): void;
         /**
          * @internal
          */
@@ -7261,9 +7435,9 @@ declare module BABYLON {
          */
         readonly name = "KHR_draco_mesh_compression";
         /**
-         * The draco compression used to decode vertex data or DracoCompression.Default if not defined
+         * The draco decoder used to decode vertex data or DracoDecoder.Default if not defined
          */
-        dracoCompression?: DracoCompression;
+        dracoDecoder?: DracoDecoder;
         /**
          * Defines whether this extension is enabled.
          */
@@ -7570,6 +7744,15 @@ declare module BABYLON {
                     };
                 };
             };
+            EXT_lights_ies: {
+                lights: {
+                    __array__: {
+                        __target__: boolean;
+                        color: LightAnimationPropertyInfo[];
+                        multiplier: LightAnimationPropertyInfo[];
+                    };
+                };
+            };
         };
     };
 
@@ -7818,6 +8001,42 @@ declare module BABYLON {
          */
         loadSceneAsync(context: string, scene: IScene): Nullable<Promise<void>>;
         private _loadLightAsync;
+    }
+
+
+        interface GLTFLoaderExtensionOptions {
+            /**
+             * Defines options for the EXT_lights_ies extension.
+             */
+            ["EXT_lights_ies"]: {};
+        }
+    /**
+     * [Specification](https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Vendor/EXT_lights_ies)
+     */
+    export class EXT_lights_ies implements IGLTFLoaderExtension {
+        /**
+         * The name of this extension.
+         */
+        readonly name = "EXT_lights_ies";
+        /**
+         * Defines whether this extension is enabled.
+         */
+        enabled: boolean;
+        /** hidden */
+        private _loader;
+        private _lights?;
+        /**
+         * @internal
+         */
+        constructor(loader: GLTFLoader);
+        /** @internal */
+        dispose(): void;
+        /** @internal */
+        onLoading(): void;
+        /**
+         * @internal
+         */
+        loadNodeAsync(context: string, node: INode, assign: (babylonTransformNode: TransformNode) => void): Nullable<Promise<TransformNode>>;
     }
 
 
@@ -8564,6 +8783,9 @@ declare module BABYLON {
             readonly ".ply": {
                 readonly isBinary: true;
             };
+            readonly ".spz": {
+                readonly isBinary: true;
+            };
         };
     };
 
@@ -8597,6 +8819,9 @@ declare module BABYLON {
             readonly ".ply": {
                 readonly isBinary: true;
             };
+            readonly ".spz": {
+                readonly isBinary: true;
+            };
         };
         /**
          * Creates loader for gaussian splatting files
@@ -8619,6 +8844,7 @@ declare module BABYLON {
         importMeshAsync(meshesNames: any, scene: Scene, data: any, rootUrl: string, onProgress?: (event: ISceneLoaderProgressEvent) => void, fileName?: string): Promise<ISceneLoaderAsyncResult>;
         private static _BuildPointCloud;
         private static _BuildMesh;
+        private _parseSPZ;
         private _parse;
         /**
          * Load into an asset container.
