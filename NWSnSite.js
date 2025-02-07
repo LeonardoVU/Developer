@@ -787,7 +787,7 @@ const createScene = async function () {
     scene.registerBeforeRender(() => {
         //bldgs[0].COT.rotation.y += 0.01;
         //bldgs[0].COT.position.y += 0.5;
-        bldgs[1].COT.rotation.y += 0.01;
+        bldgs[1].COT.rotation.y += 0.1;
         if (camera.beta > PI / 2) {
             camera.beta = PI / 2;
         }
