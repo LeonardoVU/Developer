@@ -405,15 +405,15 @@ var ca = 3 * PI / 2;
 
 var esc = 0.75;
 
-const ua = navigator.userAgent;
+var ua = navigator.userAgent;
 if (/mobile/i.test(ua)) {
-    dvc = 1.5;
+    dvc = 5;
     //return 'Mobile';
 } else if (/tablet/i.test(ua)) {
-    dvc = 1.5;
+    dvc = 5;
     //return 'Tablet';
 } else {
-    dvc = 5;
+    dvc = 10;
     //return 'Desktop';
 }
 
@@ -793,7 +793,17 @@ const createScene = async function () {
         }
 
         //camera.alpha -= 0.01;
-
+        var ua = navigator.userAgent;
+        if (/mobile/i.test(ua)) {
+            dvc = 5;
+            //return 'Mobile';
+        } else if (/tablet/i.test(ua)) {
+            dvc = 5;
+            //return 'Tablet';
+        } else {
+            dvc = 10;
+            //return 'Desktop';
+        }
 
         if (this.outerWidth > this.outerHeight) {
             panel.isVertical = false;
