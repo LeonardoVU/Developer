@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>LV Projects</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LV Projects II</title>
 
     <style>
         html,
@@ -15,25 +15,48 @@
             padding: 0;
         }
 
-        #renderCanvas {
+        #Vue0 {
             width: 100%;
             height: 100%;
-            touch-action: none;
+            /* touch-action: none; */
         }
     </style>
+    <!-- <script src="./BabylonJs//havok/HavokPhysics_umd.js"></script> -->
+    <script src="./babylonJs/babylon.js"></script>
+    <script src="./babylonJs/gui/babylon.gui.min.js"></script>
+    <script src="./babylonJs/materialsLibrary/babylonjs.materials.min.js"></script>
 
-    <script src="./babylonjs/babylon.js"></script>
-    <script src="./babylonjs/gui/babylon.gui.min.js"></script>
-    <script src="./babylonjs/materialsLibrary/babylonjs.materials.min.js"></script>
 
 </head>
 
 <body>
 
-    <canvas id="renderCanvas"></canvas>
+    <!--  <input type="file" name="client-file" id="get-files" onchange="fch()" />
 
-    <script src="./Site.js"></script>
+    <script>
+        var inp = document.getElementById("get-files");
+        // Access and handle the files 
 
+        for (i = 0; i < inp.files.length; i++) {
+            let file = inp.files[i];
+            // do things with file
+        }
+
+        function fch() {
+            const txt = document.getElementById('get-files').value;
+            //const tl = txt.length;
+            const txt2 = ".\/" + txt.slice(12);
+            console.log(txt, txt2);
+
+        }
+
+    </script> -->
+    <canvas id="Vue0"></canvas>
+
+    <script src="./NWSnSite.js"></script>
+    <!--         <script src="./Dcad copy 2.js"></script> -->
+    <!-- <script src="./Base.js"></script> -->
+    <!-- <script src="./WebS3.js"></script> -->
 </body>
 
 </html>
