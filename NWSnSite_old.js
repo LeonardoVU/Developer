@@ -1,29 +1,20 @@
-var s_c = {
-    i: String.fromCharCode(237),
-    o: String.fromCharCode(243),
-    n: String.fromCharCode(241),
-    a: String.fromCharCode(225),
-    e: String.fromCharCode(233),
-    u: String.fromCharCode(250),
-};
-//alert(chrtr);
 var mn =
 {
-    SIC: {
-        0: { ttl: "Start_Inicio_Click" },
-        LNG1: {
-            0: { ttl: "English" },
-            LNG1_PS: {
-                0: { ttl: "Products_and_Services" },
-                LNG1_PS_G: {
-                    0: { ttl: "General" },
+    Start_Inicio_Click: {
+        0: {},
+        English: {
+            0: {},
+            Products_and_Services: {
+                0: {},
+                General: {
+                    0: {},
                     1: "Engineering\nDesign\nData",
                     2: "Project\nEngineering\nPlan",
                     3: "Project\nEquipment\nList",
                     4: "Engineering\nDocument\nRegister"
                 },
-                LNG1_PS_P: {
-                    0: { ttl: "Process" },
+                Process: {
+                    0: {},
                     1: "Process\ndescription\nand\noperating\nphilosophy",
                     2: "General\nspecification\nfor valves",
                     3: "Process\nEquipment\nlist",
@@ -40,8 +31,8 @@ var mn =
                     14: "Operating\nmanual"
 
                 },
-                LNG1_PS_E: {
-                    0: { ttl: "Equipment" },
+                Equipment: {
+                    0: {},
                     1: "General\nspecification\nper\nequipment\ntype",
                     2: "Pressure\nVessels\nDesign\nSpecification",
                     3: "Equipment\nsupply\nspecification",
@@ -51,11 +42,11 @@ var mn =
                     7: "Material\nrequisition",
                     8: "Technical\nbid\nevaluation"
                 },
-                LNG1_PS_H: {
-                    0: { ttl: "HSE" },
+                HSE: {
+                    0: {}
                 },
-                LNG1_PS_C: {
-                    0: { ttl: "Civil" },
+                Civil: {
+                    0: {},
                     1: "Design\nspecification\n/ Basis of\ndesign",
                     2: "Grading\nplan",
                     3: "Foundation\ncalculation\nnote",
@@ -73,15 +64,15 @@ var mn =
                     15: "Civil\nMaterial\nTake-Off\n(MTO)",
                     16: "Steel\nstructure\nstandard\ndrawings"
                 },
-                LNG1_PS_PL: {
-                    0: { ttl: "Plant_Layout" },
+                Plant_Layout: {
+                    0: {},
                     1: "Plant Layout\nDesign\nspecification\n/ Plant layout\nguidelines",
                     2: "General\nPlot Plan\ndrawing",
                     3: "Key plan",
                     4: "Unit\nPlot Plan\ndrawing"
                 },
-                LNG1_PS_PD: {
-                    0: { ttl: "Piping_Design" },
+                Piping_Design: {
+                    0: {},
                     1: "Piping\nDesign\nBasis",
                     2: "Line\ndiagrams",
                     3: "Piping\nlayout\ndrawings",
@@ -90,24 +81,24 @@ var mn =
                     6: "Line\nlist",
                     7: "Piping\nMaterial\nTake-Off"
                 },
-                LNG1_PS_PM: {
-                    0: { ttl: "Piping_Material" },
+                Piping_Material: {
+                    0: {},
                     1: "General\npiping\nspecification",
                     2: "General\nspecification\nfor\nvalves",
                     3: "Piping\nmaterial\nclasses\nspecifications",
                     4: "Job\nSpecifications\nfor\nSupply",
                     5: "Piping\nMaterial\nRequisition"
                 },
-                LNG1_PS_PSA: {
-                    0: { ttl: "Piping_Stress_Analysis" },
+                Piping_Stress_Analysis: {
+                    0: {},
                     1: "Piping\nflexibility\nand stress\nanalysis\ncriteria",
                     2: "Piping\nstress\nanalysis\nCalculation\nnote",
                     3: "Pipe\nsupport\nbooklet",
                     4: "Job\nSpecifications\nfor\nSupply",
                     5: "Pipe\nsupport\ndrawings"
                 },
-                LNG1_PS_MC: {
-                    0: { ttl: "Material_and_Corrosion" },
+                Material_and_Corrosion: {
+                    0: {},
                     1: "Corrosion\ncontrol and\nmaterial\nselection\nreport",
                     2: "Material\nselection\ndiagrams",
                     3: "Cathodic\nprotection\nsystem\ndesign\nspecification",
@@ -115,8 +106,8 @@ var mn =
                     5: "Insulation\nspecification",
                     6: "Insulation\nmaterial\ntake-off"
                 },
-                LNG1_PS_IC: {
-                    0: { ttl: "Instruments_and_Control" },
+                Instruments_and_Control: {
+                    0: {},
                     1: "System\nDesiqn\nSpecification\n/Desiqn basis\n/Philosophy",
                     2: "System\narchitecture\ndrawing",
                     3: "Instrument\nfunctional\ndiagram",
@@ -139,8 +130,8 @@ var mn =
                     20: "Telecom.\nequipment\nlayout\ndrawing",
                     21: "Instrument\nloop\ndiagrams"
                 },
-                LNG1_PS_EL: {
-                    0: { ttl: "Electricity" },
+                Electricity: {
+                    0: {},
                     1: "Electrical\ndesign\nspecification",
                     2: "Electrical\nconsumer\nlist",
                     3: "Electrical\nload\nsummary",
@@ -162,24 +153,25 @@ var mn =
                     19: "Electrical\ncalculations"
                 }
             },
-            LNG1_E: {
-                0: { ttl: "Experience" },
-                LNG1_E_M: {
-                    0: { ttl: "Mining" },
+            Experience: {
+                0: {},
+                Mining: {
+                    0: {},
                     1: "Under\nConstruction"
                 },
-                LNG1_E_OG: {
-                    0: { ttl: "Oil_and_Gas" },
+                Oil_and_Gas: {
+                    0: {},
                     1: "Under\nConstruction"
                 },
-                LNG1_E_PG: {
-                    0: { ttl: "Power_Generation" },
-                    1: {
-                        0: { ttl: "Up to 100 MW" },
-                        1: {
-                            0: { ttl: "Grid Back Up" },
-                            1: {
-                                0: { ttl: "Open Cycle_50 MW" },
+                Power_Generation: {
+                    0: {},
+
+                    Up_to_100MW: {
+                        0: {},
+                        Grid_BackUp: {
+                            0: {},
+                            Open_Cycle_50MW: {
+                                0: {},
                                 1: "Location:\nZulia\nState,\nVenezuela",
                                 2: "Company:\nPENTECH",
                                 3: "Date:\n2011-2012",
@@ -189,12 +181,12 @@ var mn =
                             }
                         }
                     },
-                    2: {
-                        0: { ttl: "More than_100 MW" },
-                        1: {
-                            0: { ttl: "New Plants" },
-                            1: {
-                                0: { ttl: "Open Cycle_150 MW" },
+                    More_100MW: {
+                        0: {},
+                        New_Plants: {
+                            0: {},
+                            Open_Cycle_150MW: {
+                                0: {},
                                 1: "Location:\nCasanare\nDepartment,\nColombia",
                                 2: "Company:\nSINCO-\nSOLUCIONES\nDE I&C",
                                 3: "Date:\n2019-2020",
@@ -202,8 +194,8 @@ var mn =
                                 5: "Scope:\nCivil\nDesign",
                                 6: "Qty:\n3 Units\nGE LM6000\n50 MW eu"
                             },
-                            2: {
-                                0: { ttl: "Closed Cycle_250 MW" },
+                            Closed_Cycle_250MW: {
+                                0: {},
                                 1: "Location:\nBuenos Aires\nProvince,\nArgentina",
                                 2: "Company:\nBarker\nThermoelectric",
                                 3: "Date:\n2018-2019",
@@ -212,8 +204,8 @@ var mn =
                                 6: "Qty:\n4 Units\nGE LM6000\n50 MW eu"
 
                             },
-                            3: {
-                                0: { ttl: "Closed Cycle_450 MW" },
+                            Closed_Cycle_450MW: {
+                                0: {},
                                 1: "Location:\nZulia\nState,\nVenezuela",
                                 2: "Company:\nJANTESA",
                                 3: "Date:\n2009-2010",
@@ -230,176 +222,172 @@ var mn =
                 }
             },
             Contact: {
-                0: { ttl: "Contact" },
+                0: {},
                 Email: "email:\nljv004ar@\ngmail.com",
                 Phone: "Phone:\n+541160423223"
             }
 
         },
-        LNG2: {
-            0: { ttl: "Spanish" },
-            1: {
-                0: { ttl: "Productos_y_Servicios" },
-                1: {
-                    0: { ttl: "General" },
-                    1: "Levantamiento\n(Relevamiento)\nde Informaci" + s_c.o + "n\nde Ingenier" + s_c.i + "a",
-                    2: "Planificaci" + s_c.o + "n\nde Proyectos\nde Ingenier" + s_c.i + "a",
+        Spanish: {
+            0: {},
+            Productos_y_Servicios: {
+                0: {},
+                General: {
+                    0: {},
+                    1: "Levantamiento\n(Relevamiento)\nde Información\nde Ingeniería",
+                    2: "Planificación\nde Proyectos\nde Ingeniería",
                     3: "Lista de\nEquipos de\nProyectos",
-                    4: "Registro de\nDocumentos\nde Ingenier" + s_c.i + "a"
+                    4: "Registro de\nDocumentos\nde Ingeniería"
                 },
-                2: {
-                    0: { ttl: "Procesos" },
-                    1: "Descripci" + s_c.o + "n\nde Procesos y\nFilosof" + s_c.i + "a\nde Operaci" + s_c.o + "n",
-                    2: "Especificaciones\ngenerales\npara\nv" + s_c.a + "lvulas",
+                Procesos: {
+                    0: {},
+                    1: "Descripción\nde Procesos y\nFilosofía\nde Operación",
+                    2: "Especificaciones\ngenerales\npara\nválvulas",
                     3: "Lista de\nEquipos de\nProcesos",
                     4: "Balances\nde Energia\ny Materia",
                     5: "Lista de\nSistemas de\nServicios",
                     6: "Hojas de\nDatos de\nEquipos de\nProcesos",
-                    7: "Diagramas\nde Tuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as) e\nInstrumentaci" + s_c.o + "n\n(P&IDs)",
+                    7: "Diagramas\nde Tuberías\n(Cañerías) e\nInstrumentación\n(P&IDs)",
                     8: "Diagramas\nde Causa\ny Efecto",
                     9: "Diagramas\nde Bloque de\nParo de\nEmergencia",
-                    10: "Diagranas\nde L" + s_c.o + "gica\nESD",
+                    10: "Diagranas\nde Lógica\nESD",
                     11: "Reporte\nde Flare",
                     12: "Lista de\nFluidos de\nProcesos",
-                    13: "Notas de\nC" + s_c.a + "lculo",
-                    14: "Manuales de\nOperaci" + s_c.o + "n"
+                    13: "Notas de\nCálculo",
+                    14: "Manuales de\nOperación"
 
                 },
-                3: {
-                    0: { ttl: "Equipos" },
+                Equipos: {
+                    0: {},
                     1: "Especificaciones\nGenerales\npor tipo\nde Equipo",
-                    2: "Especificaci" + s_c.o + "n\nde Dise" + s_c.n + "o\nde Recipientes\na Presi" + s_c.o + "n",
-                    3: "Especifiaci" + s_c.o + "n\nde Suministro\nde Equipos",
-                    4: "Hojas de\nDatos de\nEquipos\nMec" + s_c.a + "nicos",
-                    5: "Hoja de\nC" + s_c.a + "lculos de\nIntercambiadores\nde Calor",
-                    6: "Planos\nGu" + s_c.i + "a de\nRecipientes",
+                    2: "Especificación\nde Diseño\nde Recipientes\na Presión",
+                    3: "Especifiación\nde Suministro\nde Equipos",
+                    4: "Hojas de\nDatos de\nEquipos\nMecánicos",
+                    5: "Hoja de\nCálculos de\nIntercambiadores\nde Calor",
+                    6: "Planos\nGuía de\nRecipientes",
                     7: "Requisiones\nde\nMateriales",
-                    8: "Evaluaci" + s_c.o + "n\nT" + s_c.e + "cnica de\nOfertas"
+                    8: "Evaluación\nTécnica de\nOfertas"
                 },
-                4: {
-                    0: { ttl: "SHA" },
+                SHA: {
+                    0: {}
                 },
-                5: {
-                    0: { ttl: "Civil" },
-                    1: "Especificaciones\n/ Bases de\nDise" + s_c.n + "o",
-                    2: "Planos de\nRelleno, Corte\ny Nivelaci" + s_c.o + "n",
-                    3: "Notas de\nC" + s_c.a + "lculo de\nFundaciones",
+                Civil: {
+                    0: {},
+                    1: "Especificaciones\n/ Bases de\nDiseño",
+                    2: "Planos de\nRelleno, Corte\ny Nivelación",
+                    3: "Notas de\nCálculo de\nFundaciones",
                     4: "Planos de\nFundaciones:\nRefuerzos",
                     5: "Planos de\nFundaciones:\nEncofrado",
                     6: "Especificaciones\nde trabajos\nCiviles",
                     7: "Planos\nEstandar",
-                    8: "Notas de\nC" + s_c.a + "lculo de\nDrenajes",
+                    8: "Notas de\nCálculo de\nDrenajes",
                     9: "Planos\nGenerales\nde Redes\nSubterraneas",
-                    10: "Planos de\nInstalaci" + s_c.o + "n\nde Trabajos\nCiviles",
+                    10: "Planos de\nInstalación\nde Trabajos\nCiviles",
                     11: "Planos de\nArquitectura",
                     12: "Planos de\nDetalles de\nEdificaciones",
-                    13: "Notas de\nC" + s_c.a + "lculo de\nEstructuras\nde Acero",
-                    14: "Planos de\nDise" + s_c.n + "o de\nEstructuras\nde Acero",
-                    15: "Cuantificaci" + s_c.o + "n\nde Materiales\nCiviles (MTO)",
+                    13: "Notas de\nCálculo de\nEstructuras\nde Acero",
+                    14: "Planos de\nDiseño de\nEstructuras\nde Acero",
+                    15: "Cuantificación\nde Materiales\nCiviles (MTO)",
                     16: "Planos\nEstandar de\nEstructuras\nde Acero"
                 },
-                6: {
-                    0: { ttl: "Arreglo_de_Planta" },
-                    1: "Especificaci" + s_c.o + "n\nde Dise" + s_c.n + "o/\nLineamientos de\nDisposici" + s_c.o + "n de\nPlanta",
-                    2: "Plano\nGeneral de\nDisposici" + s_c.o + "n\nde Planta",
+                Arreglo_de_Planta: {
+                    0: {},
+                    1: "Especificación\nde Diseño/\nLineamientos de\nDisposición de\nPlanta",
+                    2: "Plano\nGeneral de\nDisposición\nde Planta",
                     3: "Plano\nLlave",
-                    4: "Plano de\nDisposici" + s_c.o + "n\npor\nUnidad"
+                    4: "Plano de\nDisposición\npor\nUnidad"
                 },
-                7: {
-                    0: { ttl: "Dise" + s_c.n + "o de\nTuber" + s_c.i + "as_(Ca" + s_c.n + "er" + s_c.i + "as)" },
-                    1: "Bases de\nDise" + s_c.n + "o de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
-                    2: "Diagramas\nde L" + s_c.i + "nea",
-                    3: "Planos de\nDisposici" + s_c.o + "n de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
-                    4: "Planos de\narreglos\ngenerales de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
-                    5: "Planos\nIsom" + s_c.e + "tricos de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
-                    6: "Lista de\nL" + s_c.i + "neas",
-                    7: "Cuantificaci" + s_c.o + "n\nde Materiales de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)"
+                Diseño_de_Tuberías_Cañerias: {
+                    0: {},
+                    1: "Bases de\nDiseño de\nTuberías\n(Cañerías)",
+                    2: "Diagramas\nde Línea",
+                    3: "Planos de\nDisposición de\nTuberías\n(Cañerías)",
+                    4: "Planos de\narreglos\ngenerales de\nTuberías\n(Cañerías)",
+                    5: "Planos\nIsométricos de\nTuberías\n(Cañerías)",
+                    6: "Lista de\nLíneas",
+                    7: "Cuantificación\nde Materiales de\nTuberías\n(Cañerías)"
                 },
-                8: {
-                    0: { ttl: "Materiales_de_Tuber" + s_c.i + "as_(Ca" + s_c.n + "er" + s_c.i + "as)" },
-                    1: "Especificaci" + s_c.o + "n\nGeneral de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
-                    2: "Especificaci" + s_c.o + "n\nGeneral de\nV" + s_c.a + "lvulas",
-                    3: "Especificaciones\nde Clases de\nMaterial de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                Materiales_de_Tuberías_Cañerias: {
+                    0: {},
+                    1: "Especificación\nGeneral de\nTuberías\n(Cañerías)",
+                    2: "Especificación\nGeneral de\nVálvulas",
+                    3: "Especificaciones\nde Clases de\nMaterial de\nTuberías\n(Cañerías)",
                     4: "Especificaciones\nde Trabajo para\nsuministro",
-                    5: "Requisici" + s_c.o + "n de\nMateriales de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)"
+                    5: "Requisición de\nMateriales de\nTuberías\n(Cañerías)"
                 },
-                9: {
-                    0: { ttl: "An"+s_c.a+"lisis de\nEsfuerzos en\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)" },
-                    1: "Criterios de\nFlexibilidad y\nEsfuerzos en\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
-                    2: "Notas de\nC" + s_c.a + "lculo de\nan" + s_c.a + "lisis de\nEsfuerzos en\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
-                    3: "Cuaderno de\nsoportes de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                Análisis_de_Esfuerzos_en_Tuberías_Cañerias: {
+                    0: {},
+                    1: "Criterios de\nFlexibilidad y\nEsfuerzos en\nTuberías\n(Cañerías)",
+                    2: "Notas de\nCálculo de\nanálisis de\nEsfuerzos en\nTuberías\n(Cañerías)",
+                    3: "Cuaderno de\nsoportes de\nTuberías\n(Cañerías)",
                     4: "Especificaciones\nde Trabajo para\nsuministro",
-                    5: "Planos de\nsoportes de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)"
+                    5: "Planos de\nsoportes de\nTuberías\n(Cañerías)"
                 },
-                10: {
-                    0: { ttl: "Materiales_y_Corrosión" },
-                    1: "Reporte de\nControl de\nCorrosi" + s_c.o + "n y\nselecci" + s_c.o + "n de\nmateriales",
-                    2: "Diagramas de\nselecci" + s_c.o + "n de\nMateriales",
-                    3: "Especificaci" + s_c.o + "n\nde dise" + s_c.n + "o\nde Sistemas\nde Protecci" + s_c.o + "n\nCat" + s_c.o + "dica",
-                    4: "Especificaci" + s_c.o + "n\nde Sistemas\nde Pintura y\nProtecci" + s_c.o + "n\nMec" + s_c.a + "nica",
-                    5: "Especificaci" + s_c.o + "n\nde Aislamiento\nT" + s_c.e + "rmico",
-                    6: "Cuantificaci" + s_c.o + "n\nde materiales\nde aislamiento"
+                Materiales_y_Corrosión: {
+                    0: {},
+                    1: "Reporte de\nControl de\nCorrosión y\nselección de\nmateriales",
+                    2: "Diagramas de\nselección de\nMateriales",
+                    3: "Especificación\nde diseño\nde Sistemas\nde Protección\nCatódica",
+                    4: "Especificación\nde Sistemas\nde Pintura y\nProtección\nMecánica",
+                    5: "Especificación\nde Aislamiento\nTérmico",
+                    6: "Cuantificación\nde materiales\nde aislamiento"
                 },
-                11: {
-                    0: { ttl: "Instrumentos_y_Control" },
-                    1: "Especificaci" + s_c.o + "n\nde Dise" + s_c.n + "o /\nBases de\nDise" + s_c.n + "o /\nFilosof" + s_c.i + "a\ndel Sistema",
+                Instrumentación_y_Control: {
+                    0: {},
+                    1: "Especificación\nde Diseño /\nBases de\nDiseño /\nFilosofía\ndel Sistema",
                     2: "Planos de\nArquitectura\ndel Sistema",
                     3: "Diagrama\nfuncional de\nInstrumentos",
                     4: "Narrativa\nde Control",
                     5: "Planos de\ndespliegue\nde Mimicos",
-                    6: "Revisi" + s_c.o + "n\nNivel de\nIntegridad\nde Seguridad\n(SIL)",
+                    6: "Revisión\nNivel de\nIntegridad\nde Seguridad\n(SIL)",
                     7: "Indice de\nInsrtumentos",
                     8: "Hojas de\nDatos de\nInstrumentos",
                     9: "Bosquejos\nde Nivel",
-                    10: "Planos de\nrutas de cables\nprincipales y\nubicaci" + s_c.o + "n de\nCajas de\nConexi" + s_c.o + "n (JB)",
-                    11: "Planos de\nubicaci" + s_c.o + "n de\nInstrumentos y\nruta de cables\nsecundarios",
+                    10: "Planos de\nrutas de cables\nprincipales y\nubicación de\nCajas de\nConexión (JB)",
+                    11: "Planos de\nubicación de\nInstrumentos y\nruta de cables\nsecundarios",
                     12: "Planos de\nrutas de\ncables",
-                    13: "Planos de\nsecci" + s_c.o + "n\ntransversal\nde cables",
+                    13: "Planos de\nsección\ntransversal\nde cables",
                     14: "Lista de\nCables",
-                    15: "Cuantificaci" + s_c.o + "n\nde Materiales\nde Instrumentos\na granel",
-                    16: "Conexionado\nde Cajas de\nConexi" + s_c.o + "n (JB)",
-                    17: "Planos t" + s_c.i + "picos\nde instalaci" + s_c.o + "n",
+                    15: "Cuantificación\nde Materiales\nde Instrumentos\na granel",
+                    16: "Conexionado\nde Cajas de\nConexión (JB)",
+                    17: "Planos típicos\nde instalación",
                     18: "Planos de\narreglo\nde Equipos",
-                    19: "Especificaciones\nde dise" + s_c.n + "o de\nsistemas de\ntelecom.",
-                    20: "Planos de\ndisposici" + s_c.o + "n\nde equipos\nde telecom.",
+                    19: "Especificaciones\nde diseño de\nsistemas de\ntelecom.",
+                    20: "Planos de\ndisposición\nde equipos\nde telecom.",
                     21: "Diagramas\nde lazo de\nInstrumentos"
                 },
-                10: {
-                    0: { ttl: "Electricidad" },
-                    1: "Especificaci" + s_c.o + "n\nde dise" + s_c.n + "o\nElectrica",
-                    2: "Lista\nde consumo\nEl" + s_c.e + "ctrico",
-                    3: "Totalizaci" + s_c.o + "n\nde Carga\nEl" + s_c.e + "ctrica",
+                Electricidad: {
+                    0: {},
+                    1: "Especificación\nde diseño\nElectrica",
+                    2: "Lista\nde consumo\nEléctrico",
+                    3: "Totalización\nde Carga\nEléctrica",
                     4: "Diagrama\nunifilar\ngeneral",
                     5: "Hojas\nde datos\nde Equipos",
-                    6: "Especificaci" + s_c.o + "n\ngeneral\nde Equipos",
-                    7: "Requisici" + s_c.o + "n\nde Equipos",
+                    6: "Especificación\ngeneral\nde Equipos",
+                    7: "Requisición\nde Equipos",
                     8: "Diagramas\nunifilares de\nInterruptores",
-                    9: "Diagrama\nt" + s_c.i + "pico de\nInterruptores",
+                    9: "Diagrama\ntípico de\nInterruptores",
                     10: "Plano de\nArquitectura",
-                    11: "Planos de\ndisposici" + s_c.o + "n\nde Equipos",
-                    12: "Planos de\ndisposici" + s_c.o + "n de\nIluminaci" + s_c.o + "n",
+                    11: "Planos de\ndisposición\nde Equipos",
+                    12: "Planos de\ndisposición de\nIluminación",
                     13: "Planos de\nrutas\nde cables",
                     14: "Lista de\nCables",
-                    15: "Planos\nT" + s_c.i + "picos de\ninstalaci" + s_c.o + "n",
-                    16: "Cuantificaci" + s_c.o + "n\nde material\nElectrico a\ngranel (MTO)",
+                    15: "Planos\nTípicos de\ninstalación",
+                    16: "Cuantificación\nde material\nElectrico a\ngranel (MTO)",
                     17: "Diagramas\nde Bloque",
-                    18: "Diagramas\nde Resoluci" + s_c.o + "n\nde Problemas\n(TroubleShooting)",
-                    19: "C" + s_c.a + "lculos\nEl" + s_c.e + "ctricos"
-                }
+                    18: "Diagramas\nde Resolución\nde Problemas\n(TroubleShooting)",
+                    19: "Cálculos\nEléctricos"
+                }/*  */
             },
             Experiencia: {
-                0: { ttl: "Experiencia" },
+                0: {},
                 1: "En\nConstruccion"
             },
             Contacto: {
-                0: { ttl: "Contacto" },
+                0: {},
                 Email: "ljv004ar@\ngmail.com",
                 Telefono: "Telefono:\n+541160423223"
             }
-        },
-        LNG3: {
-            0: { ttl: "German" },
-            1: "Under\nConstruction"
         }
     }
 };
@@ -417,12 +405,12 @@ var ca = 3 * PI / 2;
 
 var esc = 0.75;
 
-const ua = navigator.userAgent;
+var ua = navigator.userAgent;
 if (/mobile/i.test(ua)) {
-    dvc = 1.5;
+    dvc = 2.5;
     //return 'Mobile';
 } else if (/tablet/i.test(ua)) {
-    dvc = 1.5;
+    dvc = 2.5;
     //return 'Tablet';
 } else {
     dvc = 10;
@@ -435,9 +423,6 @@ var dfrc = [];
 var whr = 0;
 var X = -300;
 var Z = 600;
-
-var lbl = "";
-
 //(async function () {
 /*     if (!navigator.gpu) {
         alert("Web GPU is not supported on your platform so far.");
@@ -552,7 +537,7 @@ const createScene = async function () {
     skyMaterial.turbidity = 1;
     skyMaterial.luminance = 1;
     skyMaterial.inclination = 0.425;
-    skyMaterial.azimuth = 0.75;
+    skyMaterial.azimuth = 0.375;
     //skyMaterial.useSunPosition = true;
     //skyMaterial.sunPosition = new BABYLON.Vector3(-3500, 7500, 7000);
     skyMaterial.rayleigh = 2;
@@ -592,9 +577,9 @@ const createScene = async function () {
     anchor.position.y = 5;
 
     var stxt = "";
-    var addButton = function (txt, value, lbl) {
-        //console.log(txt, value, lbl);
-        var button = new BABYLON.GUI.HolographicButton(txt);
+    var addButton = function (txt, value) {
+
+        var button = new BABYLON.GUI.HolographicButton("");
         panel.addControl(button);
         button.backgroundColor = "Black";
         //button.text.fontSize = 12;
@@ -602,45 +587,32 @@ const createScene = async function () {
         text1.color = "White";
         text1.fontSize = 32;
         if (typeof value === "object") {
-            //stxt = txt;
 
-            if (txt === "0") {
-                lbl = "Back";
-                //stxt = lbl
-            }
-
+            if (txt === "0") { txt = "Back"; }
             try {
-
-                text1.text = lbl.replace(/_/g, "\n");
-                //text1.text = txt.replace(/ñ/g, s_c.n);
+                text1.text = txt.replace(/_/g, "\n");
                 //text0.text = text1.text;
             }
             catch {
-                text1.text = lbl;
+                text1.text = txt;
                 //text0.text = text1.text;
             }
 
             //text1.text = txt;
             button.content = text1;
             //button.text = txt;
-            button.onPointerUpObservable.add(function () {
+            button.onPointerUpObservable.add(function (txt) {
                 //console.log(button.text);
-                /* try {
-                   stxt = text1.text.replace(/\n/g, "_");
-               }
-               catch {
-                   stxt = text1.text;// = txt;
-               } */
-                //stxt = text1.text;
-                stxt = button.name;
-                if (stxt === "0") {
-                    stxt = "Back";
+                try {
+                    stxt = text1.text.replace(/\n/g, "_");
                 }
-                //console.log("Devolviendo:", stxt);
+                catch {
+                    stxt = text1.text;// = txt;
+                }
+                //stxt = text1.text;
                 clk = 1;
                 //camera.alpha = ca;
                 return stxt;
-
             });
         } else {
             //button.text = value;
@@ -815,13 +787,23 @@ const createScene = async function () {
     scene.registerBeforeRender(() => {
         //bldgs[0].COT.rotation.y += 0.01;
         //bldgs[0].COT.position.y += 0.5;
-        bldgs[1].COT.rotation.y += 0.01;
+        bldgs[1].COT.rotation.y += 0.1;
         if (camera.beta > PI / 2) {
             camera.beta = PI / 2;
         }
 
         //camera.alpha -= 0.01;
-
+        var ua = navigator.userAgent;
+        if (/mobile/i.test(ua)) {
+            dvc = 2.5;
+            //return 'Mobile';
+        } else if (/tablet/i.test(ua)) {
+            dvc = 2.5;
+            //return 'Tablet';
+        } else {
+            dvc = 10;
+            //return 'Desktop';
+        }
 
         if (this.outerWidth > this.outerHeight) {
             panel.isVertical = false;
@@ -850,28 +832,11 @@ const createScene = async function () {
         if (camera.radius >= cz) { camera.radius = cz; }
 
         if (clk === -1) {
-
             panel.blockLayout = true;
             //panel._columns = 24;
-
             for (let key in e) {
                 //console.log(mn[key].lbl);
-                /*                 if (key === "PS7") {
-                                    console.log(e[key][0]["PS7"]);
-                                addButton(e[key][0]["PS7"], e[key]);
-                
-                                }else{ */
-                //console.log(key, e[key]);
-                try {
-                    lbl = e[key][0].ttl;
-                    //console.log(lbl);
-                } catch {
-                    lbl = key;
-                }
-                //console.log(key, e[key], lbl);
-                addButton(key, e[key], lbl);
-
-                //      }
+                addButton(key, e[key]);
             }
             panel.blockLayout = false;
             //en.push(e);
@@ -909,7 +874,7 @@ const createScene = async function () {
                             cz = -cz;
                         } */
 
-            if ((stxt === "Back" || stxt === "0") && en.length > 0 && mstxt.length > 0) {
+            if (stxt === "Back" && en.length > 0 && mstxt.length > 0) {
                 mstxt.pop();
                 var mtxt = mstxt[mstxt.length - 1];
                 /*                         if (mtxt) {
@@ -936,9 +901,8 @@ const createScene = async function () {
                     anchor.position.x = 0;
                 }
                 //console.log(e, enlen, mstxt);
-                //console.log(mstxt);
             }
-            if (stxt !== "Back" || stxt === "0") {
+            if (stxt !== "Back") {
                 mstxt.push(stxt);
                 /*                         try {
                                             text0.text = "LV Projects\n" + stxt.replace(/_/g, "\n");
@@ -950,19 +914,14 @@ const createScene = async function () {
                 en.push(e);
                 enlen = en.length - 1;
                 e = en[enlen][stxt];
-                //console.log(e);
-
                 if (panel.isVertical) {
                     anchor.position.y = 5;
                 } else {
                     anchor.position.x = 0;
                 }
                 //console.log(en, enlen, mstxt)
-                //console.log(mstxt)
             }
             clk = -1;
-            //console.log(mstxt)
-
         }
         //console.log(clk);
 
