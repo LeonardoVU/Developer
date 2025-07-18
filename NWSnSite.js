@@ -551,7 +551,7 @@ const createScene = async function () {
     skyDome.material = skyMaterial;
     skyMaterial.turbidity = 1;
     skyMaterial.luminance = 1;
-    skyMaterial.inclination = 0.425;
+    skyMaterial.inclination = 0.4985;
     skyMaterial.azimuth = 0.75;
     //skyMaterial.useSunPosition = true;
     //skyMaterial.sunPosition = new BABYLON.Vector3(-3500, 7500, 7000);
@@ -836,10 +836,9 @@ const createScene = async function () {
 
         }
 
-        skyMaterial.inclination += 0.000255;
+        skyMaterial.inclination -= 0.000255;
         //console.log(skyMaterial.inclination);
-        if (skyMaterial.inclination > (0.4985 - 0.000255)) { skyMaterial.inclination = -0.4985 + 0.000255 * 0; }
-
+        if (skyMaterial.inclination < (-0.4985 + 0.000255)) { skyMaterial.inclination = 0.4985 - 0.000255 * 0; }
         /* if (camera.beta >= PI / 2) { camera.beta = PI / 2; }
         if (camera.beta <= PI / 2.5) { camera.beta = PI / 2.5; } */
 
