@@ -419,10 +419,10 @@ var esc = 0.75;
 
 const ua = navigator.userAgent;
 if (/mobile/i.test(ua)) {
-    dvc = 1.5;
+    dvc = 3.5;
     //return 'Mobile';
 } else if (/tablet/i.test(ua)) {
-    dvc = 1.5;
+    dvc = 3.5;
     //return 'Tablet';
 } else {
     dvc = 10;
