@@ -1,1 +1,1186 @@
-var _0x1642=['CM9IwMW=','WPyowSkbWOtcKgnF','vw5qC0O=','Egjfrxq=','Vector3','Bgn1Bg8GzgukrhjLBMfQzxm=','W5VcMcFdRCkjW6vpWOi=','Civil\x0aworks\x0ainstallation\x0adrawings','tfztr08=','r2vUzxjHBaPqBg90ifbSyw4kzhjHD2LUzW==','WRRdNCobW7K4f8kUW6jP','CgLHt0q=','jQYOU','n\x20y\x0aselecci','W5BcUIvCws8=','W5SInuRcOCoX','position','BGPKzsbdyxjNyqPfBa==','ymoOWOJcHJfvBHKoW4hdIq==','yxbWBhK=','W6JcSI9qjJbvuhy=','qNVcH1e=','n\x0ade\x20Proyectos\x0ade\x20Ingenier','WO9xcHxdHCktcc3dO8oBWQX+xSo1z2VcUW==','uhjLC3n1CMukvMvZC2vSCWPezxnPz24ku3bLy2LMAwnHDgLVBG==','Bg9J','tgTprKq=','AMFcQeisW7BcSGC=','W79HW7b8WPVdIbf3W7hcNmkKW5K=','W5tcVCkcl07dSa54WP4S','twLTAwmkzgLZCgXHEqPKCMf3Aw5NCW==','ATAnt','WR8KwSkIW6JcJmk5WPHdr2jSAmk6DmkCW5WR','Planos\x0aT','W5ddUmkTW7TuFSooeN1LsvtcTSkPbSkFm8oAW5DrW67dNMxdNctdSCoevmkjW6ldMSkjW4hdG8kCWRFcMmoMWOev','yjwwL','n\x20de\x0aMateriales\x20de\x0aTuber','tRXax','oSkScL7cMYq8WQlcMrdcJLBdG8kugW==','DwJcH3ddSSkx','WQfecCowasBcTColW4tcO3WYW7/dSSkB','Bgn1Bg9ZigrLcKLUDgvYy2fTyMLHzg9YzxmkzguGq2fSB3i=','Du1rvg8=','gSoVfaveWO3cMcdcV1pcMrmkamkSf8oRW4P4WPtcUmklW6ldVmkiW4WbAWS=','qunPyu4=','r1vj','o8kRW6bXkW==','WOvfDsy=','WQDEomoJW6FdNtO=','sMrpshC=','ugXHBM9ZigrLcKfYCxvPDgvJDhvYyq==','test','ugXHBNrFtgf5B3v0','ngqXg3m=','WPDgp8oKW6VdMtJcG8o3W68tW5VdICkfWRJcSchcUSk0W6FdGmkZWOVcKriA','ZAkEr','r20AWPDx','Mesh','WQnmcq==','HSE','wKDeD3G=','Texture','resize','WRJcLSkp','D2HLzwXezwX0yq==','Steel\x0astructure\x0adesign\x0adrawings','CreateAudioEngineAsync','ctrica','Diagramas\x0ade\x20Causa\x0ay\x20Efecto','ugXHBM9ZigrLcKrLDgfSBgvZigrLcKvKAwzPy2fJAw9Uzxm=','yu93DwC=','constructor','kSknW7fFf1/cUmkQCe0Eis3dTG7cUxJcNCoiW64eWRzgW5tcUCo+WQpcT29UW7PgW4qtja==','t2LSx2fUzf9hyxm=','uxr5oGOZifvUAxrZcKDfieXnnJaWmaO1mcbnvYbLDq==','W5nHW6v3WP3dQrj3W7xcLCkZ','Bosquejos\x0ade\x20Nivel','ihCxgxvFW6VcISokW5beW4P8bCopW7bMWOC=','k8o9WRu1tW==','u8krWPmHfsJdQCkZW5ddPXXkrulcKtnomHiHW5ePga5tW4WgWPWw','tCk5iMeN','W7GFymka','yMfJA0zHy2vdDwXSAw5N','WQXfa8oLgHW=','W5BcJSkpjNG=','x3VcQ04fW7BcUWa5W7pdV11pW7qmBrhdJbZcTmoBuxHiDSoAWPtdS8o9W4pdPrqYzYtdVXBdQ8oPWOzzW4hcMa==','u3bHBMLZAa==','rmkFsrFdM8ot','uELmi','Painting\x0aspecification','v2f0zxjnyxrLCMLHBa==','rCk7WRKfm17cT8kZW7ddLZW=','WOrLk8odoZJcHmo2W6NcGKS=','o8ouW65FDSkwW5DDhdBdOc3cJSonzwT5mqBcMcpcJvG=','BGPhzw5LCMfSigrLcLy=','hWqLcq==','FuFcGWCDW6RcIa==','r2vUzxjHBaPWAxbPBMCkC3bLy2LMAwnHDgLVBG==','qvrbBNq=','n\x0aT','Electrical\x0aload\x0asummary','vhRcHa==','tg9JyxrPB246cLP1BgLHcLn0yxrLlaPwzw5LENvLBge=','kmoSWQS5vCkY','oJLiJ','Indice\x20de\x0aInsrtumentos','D2f0zxjnzxnO','COT','omoieIPC','rgf0ztOkmJaXms0YmdeY','WQnKpSoIW4u=','cSoNWR0xva==','qKZcQ1iO','tM90yxmGzgukqW==','Diagramas\x0ade\x20L','abs','D8ojaCkVzCkLW4lcUSonruFdLXxdOdeEW73dQfG=','ASkBWOy3','x19WCM90B19F','pop','CMfUzg9T','picos\x20de\x0ainstalaci','W5PXECoIWOdcLCk0zHtdUCoppCkefubMeSkSrSoHWQtdT27cNGfI','kCUwk','W4T9W792WQVdIav7W7hcICkUW59R','Productos_y_Servicios','Engineering\x0aDesign\x0aData','WR5ghXO=','Revisi','ymkvsX/dImojrmk3WO3dPJ7dPH4lW4HnyG==','WRtdMSkpeHW7CSoSaCkc','Location:\x0aBuenos\x20Aires\x0aProvince,\x0aArgentina','wmkvtH7dM8oEv8kF','Planos\x20de\x0arutas\x20de\x20cables\x0aprincipales\x20y\x0aubicaci','XOHol','volume','Lista\x20de\x0aEquipos\x20de\x0aProcesos','q11M','rmktqbJdMW==','n\x20de\x0aTuber','zNjVBunOyxjdB2rL','ueDduNe=','r2vUzxjHBaPVBMuGBgLUzqPKAwfNCMfT','Bwf0zxjPywW=','yMfJA2DYB3vUzenVBg9Y','W4jYCSoTWPZcV8kxzNddMmoCkmkhrGrNFCoIzSo8WQFdRg/cGG9UWRrMW7CQ','B25qB2LUDgvYvxbpyNnLCNzHyMXL','cCkeWO0Bz2LEWRNdU8kMzL7cKa==','WO5JamkKWRWLfrSctxq=','BCk2nGRdNfhcHSoWeW==','rM91BMrHDgLVBGPKCMf3Aw5NoGPgB3jTD29YAW==','Equipment\x0arequisition','Civil\x0aMaterial\x0aTake-Off\x0a(MTO)','rwXLy3rYAwnHBaPJB25ZDw1LCGPSAxn0','rgvZy3jPCgnP','camera','pointerY','ugLWAw5Nx1n0CMvZC19bBMfSExnPCW==','WQddQSo6W5X+WQq=','Electricidad','ugXHBM9ZcKD1','lculo','iYiob8kr','BMfTzq==','C3rYCW==','3|0|1|5|4|2','W6XVD8oHWQZdT8ksCtNdS8ozoq==','qNvPBgrPBMCkzgv0ywLScMrYyxDPBMDZ','Procesos','zgLMzNvZzvrLEhr1CMu=','General','wmkpvbG=','z3vUC2HVDa==','playbackRate','W7v0WOlcNL7dMSkpoLJcKSk5yddcQSoOWOP4WRfNWRVdOG==','n\x0ade\x20Dise','ywjZ','Job\x0aSpecifications\x0afor\x0aSupply','lHKVbmkug0BdM1tdVfpdLcLosSksacjIWRq8WQHXW7G=','xmkitHpdGmoibCkJWOdcHqNdKqKAW44=','Scope:\x0aBOP\x0aDesign','r1PZruW=','W6GhDG==','ww9mtM0=','r3jHzgLUzWPWBgfU','eey9bvrBW5BcHCkMg8ow','ugXHBM9ZigrLcKz1BMrHy2LVBMvZoGPfBMnVzNjHzg8=','q3vHBNrPzMLJywnP','ugXHBM9ZigrLcNnVCg9YDgvZigrLcLr1yMvY','q2XVC2vKien5y2XLxZq1mcbnvW==','CM9Hzdi=','WPLqmt/cVgNdK3DQnCohp1ddPauKW4JdOIhcMSoCW6W=','ugXHBM9Zihq=','t3bLCMf0Aw5NcM1HBNvHBa==','Instruments_and_Control','toString','W5tcTdjCwdvttq==','rgvZAwDUcNnWzwnPzMLJyxrPB24klYbcyxnPCYbVzGPKzxnPz24=','lWGJv','W5JcGYBdOa==','q29TCgfUEtOkuevovevdsa==','A8kiqHhdM8oEySk1WORdUJpdGa==','Cuantificaci','BIbKzqPnyxrLCMLHBgvZ','sNRcTeGdW6ZcRMm+W7FdR1DsW7mzANldHXFcNSoUtx0GEmoaWP7cOCoSW5BdVHTFhIhdUHBdQCoVWOzcW4pcN8kz','zgLZCg9Zzq==','blockLayout','Especificaci','yxmkkenH','IYPDs','vgvSzwnVBs4kzxf1AxbTzw50cMXHEw91DaPKCMf3Aw5N','MeshBuilder','W6Hwhmo9vtVcKmoV','AxnqAwnRywjSzq==','W47cPJNdNCkS','Line\x0adiagrams','kCkhW65ghalcUmkpwNnxwqNdTMhcU37cNCoaW6mcWR8HW7xcSSo5W4dcThm=','ugXHBM9ZigrLcKz1BMrHy2LVBMvZoGPszwz1zxj6B3m=','lculo\x20de\x0aan','BgvUz3rO','rYJcNXziW4VcMdCWbvFdQK/dPmoamrysW6hcN31/FCkVW4pdUW==','qM9Lzuu=','Reporte\x20de\x0aControl\x20de\x0aCorrosi','ntv6ha3cSmoufCoNWR5mWPW=','EmkNmwa6eCk2W63cV8onWQTxF8kyg8ksprLHW6fJlCoJWRvW','SVurj','ugXHBM9ZcKvZDgfUzgfYigrLcKvZDhj1y3r1CMfZcMrLiefJzxjV','render','WPH7cCkmWR44fGaitxVdLSkQjh7dSCkWrbdcJCowqrVcJSkzWRldG8klW73dGSk5m1e=','pmo1wJRcUczVDseZb3P4WQFcNXFcR8oxlColcmohWQ7cGmksWRBcUq==','vhLWAwnHBaPPBNn0ywXSyxrPB24kzhjHD2LUz3m=','ECk/ktrFuCk2W5ZcTmkUWQ1raCk+lCksftfzWRCYF8kfW6i2gc3cI2NcQ8oB','AmkqWPSHhL3cHq==','yxmP','W7zTW6L/WP8=','eCUCo','t8kgbCosWOm3oX4SW7rhW7RdJ8knfCkFW4dcOqzeW7JcKCoNv8oqB1tcI8ouW6xcG3LX','Planos\x20de\x0aDisposici','v2Trq2m=','oLT6oKlcM8oreSoHWQi=','WQ1NcSkaWQK4hWC=','W6FcNIFdSmkCWQXeWONcUfhcT8oAFCkuWQndctldGSoenCk5W7qTW7FdVK3dNG==','piaOD','zM9UDfnPEMu=','CMfKAxvZ','k1bTefNcNmokdG==','DgfIBgu=','Planos\x0aGenerales\x0ade\x20Redes\x0aSubterraneas','q3vHCNrV','C3tcLLJdISkiW6xdPa==','Scope:\x0aSite\x20Design\x0aModifications','defaultCursor','add','ugXHBM9ZigrLcMrPC3bVC2LJAq==','WOiit8koWOxcIMLLW6uar8opW6pcJG==','yMXVy2TmyxLVDxq=','y2HPBgrYzw4=','uvFcN0BdSG==','Planos\x20de\x0aarreglos\x0agenerales\x20de\x0aTuber','zhFdRchdK8kxjf3dHCkBW6KY','outerWidth','Trouble\x0ashooting\x0adiagrams','WQjUBYuj','WPyuwSka','WQTvW5ldJ8oPzg81WPfaaeaqWPTtWOtcUxxdVSkf','qxjYzwDSB19Kzv9qBgfUDge=','myMaterial','keTShq==','PGaLM','rgLZzq==','pCkIee/dGe16','n\x20de\x0amateriales','hbPVR','A1fiEuK=','u3rHy2Tqyw5LBdne','WOSZtSkQW4a=','W5iEW5X3WOW=','rxnWzwnPzMLHy2K=','rgf0ztOkmJaXos0YmdiW','uScale','u3rHBMrHCMrnyxrLCMLHBa==','beX9gehcKmo8','q2XVC2vKien5y2XLxZi1mcbnvW==','DgvZDa==','oCojW61EoCo/W6bhnt7dOKpcLCo7C3bOnGdcJ1O=','gofpJ','sg9QysbKzqPd','WRyoqmkgWOtcNh50W7yDxCooW4xcKSontuG=','sw5ZDwXHDgLVBGPZCgvJAwzPy2f0Aw9U','W60sFmkEW7S=','q29UDgfJDg8=','y2XK','BGP0CMfUC3zLCNnHBaPKzsbJywjSzxm=','_scaleX','random','as\x0a(Ca','WQffamoUaa==','rflxA','diffuseTexture','dq81hw9FW4RcM8ooWPvsW4O=','vxaGDg8GmtaWie1x','ug9PBNrLCKv2zw50vhLWzxm=','u2NdPdZcKCk0jLxdVmoAW4GN','yqPKzwWGu2LZDgvTyq==','rxf1AxbVCW==','W49gWR9SWReBW7uesH3dSmkyy8oQW6RdKgxcKvdcMvjgwulcNG==','q0PJBMi=','yMLUza==','uCkxWO8TchxdQCkTW5JdPXWyB0RcI1bWxsy6W58ZhX9FW5fI','yNHZAq==','W6m/WPngW58=','sNvUy3rPB24kyM94cNDPCMLUzW==','rhFdRdBdNSo8c1RdTSkmW7G=','rgLHz3jHBwfZcMrLifr1yMvY','WR7dQSoyW59Y','Criterios\x20de\x0aFlexibilidad\x20y\x0aEsfuerzos\x20en\x0aTuber','WOKuxCknWOlcRMvvW7qq','W55SW6i=','WR5HkCoWW5ZdO8obF0O=','BYaVcKjHC2vZigrLcKrPC2u=','yuvzvfK=','windForce','WP7cICkBeNugyCoNb8krW5ldISk5WOXRwuFdISogwSkTW4FdI8o4fhRdHmoSWOlcGatdJ8otW69HW5pdNxNcNLrrmMpcTSomWRtcIG==','WQfchG==','r2vUzxjHBaPLCxvPCg1LBNqkC3bLy2LMAwnHDgLVBG==','z2LJyqPfu0q=','WPXVuK7cPujfbMNdTueaWRbt','zQYZH','zNLUELu=','rKCPWRjnWRFdQmoMrmo9xWm=','WQ8acCoNzcdcPCohW4xcTa==','Project\x0aEquipment\x0aList','u3rLzwWkC3rYDwn0DxjLcNn0yw5KyxjKcMrYyxDPBMDZ','Open\x20Cycle_50\x20MW','a\x0ade\x20Operaci','zvfTwve=','nmk0bLBdKq==','Cg9ZAxrPB24=','WQH7hmkBWPW2fqCF','WQ3dQ8oWW758WQLHyGb9qKmLjafY','bumpTexture','Hojas\x0ade\x20datos\x0ade\x20Equipos','C1rpDMq=','Instrument\x0aloop\x0adiagrams','W4H4WPlcMq==','rxnWzwnPzMLJywnP','BYaVcKzPBg9ZB2y=','nmo7WQWWwSk1','W7SeyCknW5O7W6e6','W5lcL8knW7vwCW==','uxr5oGOYifvUAxrZcLnhvdyTntaWmeykmtuWie1xigv1','BGPKzsbKAxnL','W5ZcM8knW7y=','keys','z8odwmkvj8o3oNGaWR3cNq==','v3DLu1i=','as)','rgLHz3jHBwekzNvUy2LVBMfSigrLcKLUC3rYDw1LBNrVCW==','ugXHBM8GzgukqxjXDwL0zwn0DxjH','v1H2tuC=','W4begmo9rdVcL8oQWRyaewW=','LmdTi','Axnwzxj0AwnHBa==','uKDiv1O=','tmoEf8k/','BGPWB3ikvw5PzgfK','Instrument\x0afunctional\x0adiagram','BSoSWPNcGHyQzaCfW5FdIemdFt3cSCkIWQVcH8k8W7PbWOldRCkZW5Pmoq==','twvZAej1AwXKzxi=','cWi1aCkjbLdcVW==','q2fIBgukCM91DgLUzWPKCMf3Aw5NCW==','zM5XEK4=','RGHWZ','W53cNSkh','push','Material_and_Corrosion','rgLHz3jHBMfZcMrLieW=','bumpHeight','W7j0WO/cLtJdKCkyu3q=','Corrosion\x0acontrol\x20and\x0amaterial\x0aselection\x0areport','FCkCbuKt','sSo/WPtcMX1enq==','Material\x0aselection\x0adiagrams','yiTeR','vmolaSkLDa==','exception','WQTBW5tdNmo7mgiMW7Oj','E30Uy29UC3rYDwn0B3iOiNjLDhvYBIb0AgLZiIKOicK=','colorBlendFactor','yNHZ','uSkDWPOQaW==','Requisici','BGPKzsbtAxn0zw1HCWPKzsbqAw50DxjHihKkuhjVDgvJy2K=','p8kiW6rvduRdM8kUDe9BmtNdTM/dKKFcJSoDW6urWRPkW53dNCoEW4JcUhGIW4jjW4X+F3NdVcKg','Totalizaci','vMvJDg9YmW==','isVertical','ue8HWRbxWQK=','material','wSoSWO3cIZTfBHicW5a=','WPJdQSoMW5HVWR5G','WOVdMSoD','WR/dU8oMW58=','W6S9dmo9bZ/cKmo3WRatg2rBWRCximoabxpdQatdUSkiuSkiafJdImkAiW==','W4rLx8k0W6NdO8koWOqcqhnMACkSCSkqW4bQAwFcSY9IW6NcNSkgW4OCW5tcSmkWe8kFsSocumoowa3dLIdcIa==','zuzStLG=','bind','ugLWAw5NcK1HDgvYAwfScLrHA2uTt2zM','r8kDWPu2fa==','WRzqmSo5W73dGG==','rgLHz3jHBwfZcMrLigXHEM8Gzguksw5ZDhj1BwvUDg9Z','SHA','WR7dQSoGW454WQiVow40gHC0iG1ZW6NcO1lcMCk1','hmkkW7bmnW==','CCkrWOWTeNVcJmko','r3n4BeO=','W5H4ACo5WOBdRmkAybm=','gUhrM','BCkrWPW=','Equipment','W5pcSSkNd3S=','uM9Szxm6cLbPCgLUzWPezxnPz24kEdm=','Dhj1BMm=','GZsEL','oaolf','W6Xzc8o0tJZcKmo3WRWoha==','ugLWAw5NcKrLC2LNBGPcyxnPCW==','fNVrn','meGMbuujW4lcImk2FSobi8omBmkaW6JcNbqgWPuMqfO9FG==','fromCharCode','BGPKzsbfCxvPCg9Z','tgv2zwWkC2TLDgnOzxm=','2|0|4|1|3','u3LZDgvTcKrLC2LXBGPtCgvJAwzPy2f0Aw9UcI9ezxnPCw4GyMfZAxmkl1bOAwXVC29WAhK=','cmozW7e=','TextBlock','z2/dVZW=','fgCIdCoDpfBcOKpdTLddHI8PxSkdsr1+W5eKWQrHW6/cMW==','WRlcSCkgehm=','Aw5MBW==','play','OKyxU','B01iqLO=','pvfVa2m=','W4bzd8oXstC=','q09u','WRTrcHK=','xgVcSvKu','WOnfDJ45ksq=','r2ZdPcZdKSkEifpdTSkiWPCKzSk9WQf5W6C9AxddRCkkBCkFW4naimkcb2K=','waveLength','W6CRoKpcUSoQW4yObwGpeCofW4D7W7m0WOHm','i8oLwJRcVgSbCvKvhMzLWRlcKXddUSoblColpmohWQdcJSkEWRVcQIZdKW==','n\x0a(P&IDs)','BMLJB3m=','ugXHBNqGtgf5B3v0cKrLC2LNBGPZCgvJAwzPy2f0Aw9UcI8GugXHBNqGBgf5B3v0cMD1AwrLBgLUzxm=','WRLfzYzslZNcTmobh8k9p0KtWRRdRmomW55Fo8ojW6/dImoHsCovaSk7khbRkW==','ZLqhA','WQrHlCkmWO8=','neas','AuTTz2u=','as_(Ca','C3pcGL3dJ8keW6pdOZldL8o7iwLAWP/dLSoFaLqfW6WcW5HoW73dLSk/W5zu','sw5ZDhj1BwvUDaPPBMrLEa==','y29UDgvUDa==','Planos\x20de\x0adisposici','WRPpvsO2','C21RwLu=','zeiUWQzDW47dN8oaw8o+qGu=','eaG/gW==','ChvZAa==','WQ58c8kn','Piping_Material','fmkIevtdIa==','Company:\x0aBarker\x0aThermoelectric','POINTERPICK','BgP2mda0yxjacMDTywLSlMnVBq==','BgLZAxmGzgukrxnMDwvYEM9ZigvUcLr1yMvY','Process\x0aEquipment\x0alist','ySojdmohW6GjlKviW5nV','ymk6ASkvDCotp3OpWQu=','C3rYza==','BfzOBvO=','D0aRWRfkW47dJSokrCoIrapcKmkeW5FcMSkbpG==','outerHeight','BWPKzsbszwnPCgLLBNrLCWPHifbYzxnP','WQzBW47dICo6F2PjWP4RfLDrWQXvWPZcQa==','CreateSoundAsync','Unit\x0aPlot\x20Plan\x0adrawing','B2vRvfK=','u2fMzxr5cKLUDgvNCML0EqPmzxzLBcaOu0LmkqPYzxzPzxC=','Especificaciones\x0ade\x20Trabajo\x20para\x0asuministro','WRS+r8o9WPdcSSoAWQjdxwjTf8kErCovW78iAMFcTYzCW6ZcG8orW6y/WPhcP8oO','zxzLBNq=','WOzBit/cOw7cJq==','vhjHBNnMB3jTtM9Kzq==','BGPKzsbuCMfIywPVCWPdAxzPBgvZ','W6CZWPi=','W6GdWRzGW4GyW7qstbhdVSk1ECkTW6BdGq==','KrJlE','x2tcVKGsW63cTaOZW6BdPq==','CreateGround','WOjSW6dcRHZcQs3dPCkbFSosW7XsEGGmW7/cPCkKW6/dQsX8DmkIDSkfWOuA','DmoqfW==','ugXHBM9ZigrLcMfYCMvNBg8kzguGrxf1AxbVCW==','General\x0aspecification\x0afor\x0avalves','r2TTtvC=','kSkdbMJdSa==','WRDRkJNcGW==','jmomW5POwwxcMCoLnqGGdwZdHY/dSshdHSkcW5S9W7n2W4W=','W5X8k8oRuW==','Notas\x20de\x0aC','WOJdPSo1W5X4WQ1IDZ8EvvjGgafZWQBdPaFdMmoZ','runRenderLoop','forEach','ttl','t8kGnZ/dH2BcOCoXd8ovW68pmrJdQq==','Technical\x0abid\x0aevaluation','WRzmlsBcJxtdN2bhlSomkq==','Piping\x0alayout\x0adrawings','Planos\x20de\x0aDise','WONdOCooW5Wr','ChDzExe=','ChjVDg90ExbL','hvX0c18=','ysbKzqPszwnPCgLLBNrLCW==','B25qB2LUDgvYt2jZzxj2ywjSzq==','smkuzmkaACk4W5tdKCogqfFdKaxdVeHsW7ddVIysgH7cJcqIWOVcPvW=','cmohoHnp','twvJAgfUAwnHBaPKyxrHcNnOzwv0','WRDAl8oDW6NdHtRcLmo/W7X1','General\x0aspecification\x0aper\x0aequipment\x0atype','WRrEjCo5W7ZdMddcIa==','sw5ZDhj1BwvUDaPKyxrHcNnOzwv0CW==','Emergency\x0ashutdown\x0ablock\x0adiagram','t8kQvSkcDq==','Telecom.\x0asystems\x0adesign\x0aspecification','mGm1hCkrdKVcUfJdVtFdIJ1xx8kuacXGWRqKWQbPW6NdN8kSW4hdOq==','q2L2AwW=','WPuaqM7dQuPjf2ldS2OyWPu9W7FdJ8oSW6ZcJSkslLPyq8klW6KIfxGJoCowm8ofmSkYW7/cTG==','B8kFvr3dJSov','Experience','dSkIdvldLuDHW7W=','Engineering\x0aDocument\x0aRegister','pH42dCkEbLNcUftdSL7dJG==','D2LUzezVCMnL','tgLZDgeGzguku2LZDgvTyxmGzguku2vYDMLJAw9Z','Cable\x0arouting\x0adrawings','u3rHCNrFsw5Py2LVx0nSAwnR','tgLNAhrPBMCkBgf5B3v0cMrYyxDPBMDZ','groundMaterial','W49SBCoLWP/dSSkwBq7cLSorpCkrwLf3eSkmxCoZWQpdSxpcKbe=','PointerEventTypes','luminance','W5iEW7v3W4/dPr5TW7C=','CreateBox','mCo0da1uW4i=','n\x20de\x0aCajas\x20de\x0aConexi','cld','sg9QyxmGzgukrgf0B3mGzgukrxf1AxbVCYbKzqPqCM9JzxnVCW==','r8kbhgCF','lri+ch5uW60=','TjHnb','Aw5JBgLUyxrPB24=','gCkFWO0szM5CWQRcNmkC','content','if14nLKt','WOzEm8o1W40=','yUSrI','TransformNode','rhjHAw5Hz2uky2fSy3vSyxrPB24kBM90zq==','eCkDWQmZua==','Bgn1Bg9ZcKvS','jmkFWRGqrG==','intensity','Material\x0arequisition','Piping\x0aisometric\x0adrawings','rotation','DM3cTuWsW7C=','twvZAa==','spatial','f2FdM8o3r8oC','ugLWzqPZDxbWB3j0cMjVB2TSzxq=','n\x0ageneral\x0ade\x20Equipos','Scope:\x0aCivil\x0aDesign','y2XZBG==','W4RdKsvqdb1vug55ygLKW48sWPVdTCk0','q3jLyxrLr3jVDw5K','Cg9PBNrLCLG=','Fcjrr','ctricos','W67cTcm/FYXzqgT+zgnGW5upWPVcKCktvdpdUSkmuCoaW7uPW4nCxa==','ugLWzqPZDxbWB3j0cMrYyxDPBMDZ','sMXoBgW=','s8oshCkLC8o2W5xdLCkHBehdMatdTKKiW7VdQaWZhwFcQd4ZWOFcTa==','rftdHbBdPCkZfwpdHW==','W7RcT8kLW5n3v8o2yvbebG==','f8k+kf7dK1PNW7hdIuq=','BwfYz2LU','attach','twfUDwfSzxmGzgukt3bLCMfJAq==','name','q2fIBguGBgLZDa==','ugXHBM9ZcKLZB20=','Dx/dQrVdNSkym0tdUmkw','WP5vCJCQaItcVSoofSkN','Plano\x20de\x0aDisposici','y3RdUt3dG8k1kfRdUmki','WQZcM8kDeLOkACoPemky','ywrK','W7KeC8kaWP8=','rgFcKf3dJmkDW6pdVWtcUmoTphrCWQJdGmocBfuw','e8oQW5TGba==','W4RdKsvqdaXotgf9FM9YWOeFW77cUCkjmJRdPSkrpq==','CM1Py28=','q29SB3iZ','strd','zM9YrwfJAa==','bounce','o\x20de\x0aEstructuras\x0ade\x20Acero','q3jLyxrLqM94','g8okmX5c','Bhz1BgfZ','mhWYFdn8nhWXFdu=','AQZac','jHlNk','FSkOtSkE','WR/dLCobW7Krfq==','q29UzxHPB25Hzg8kzguGq2fQyxmGzgukq29UzxHP','Back','FSo5WPRcGbDbDreNW4xdJYWcCt/cQq==','Lista\x20de\x0aCables','sK3cLqaCW6RcMdKTbeW=','WRzVvwpcI1jbd2pdPhe=','length','EKDvAuO=','Dgv4Da==','DfjyyxG=','WRv5W7q=','W7tcSJfCqJSCqMX8b0LVW5isWOBcISknoZVdOCkFl8o6W683WRL0tmkgWRPHaeW4ExbyrHZcR8kicG==','ugXHBM9ZigrLcLjLBgXLBM8SienVCNrLcNKGtML2zwXHy2K=','we9iB2W=','W7tcQs5rwt9ithe4DcbsW4quWOlcLSkdnZRdPG==','W6GmWQ1AW6G='];(function(_0x3c0f19,_0x36dda3){var _0x1642ac=function(_0x1ecddd){while(--_0x1ecddd){_0x3c0f19['push'](_0x3c0f19['shift']());}},_0x7941ce=function(){var _0xce985d={'data':{'key':'cookie','value':'timeout'},'setCookie':function(_0x6775eb,_0xc5d7b5,_0x25c7fe,_0x453d9b){_0x453d9b=_0x453d9b||{};var _0x42de2d=_0xc5d7b5+'='+_0x25c7fe,_0x5628fb=0x0;for(var _0x4874cc=0x0,_0x291c58=_0x6775eb['length'];_0x4874cc<_0x291c58;_0x4874cc++){var _0x14d633=_0x6775eb[_0x4874cc];_0x42de2d+=';\x20'+_0x14d633;var _0x17cb62=_0x6775eb[_0x14d633];_0x6775eb['push'](_0x17cb62),_0x291c58=_0x6775eb['length'],_0x17cb62!==!![]&&(_0x42de2d+='='+_0x17cb62);}_0x453d9b['cookie']=_0x42de2d;},'removeCookie':function(){return'dev';},'getCookie':function(_0x5f4d24,_0x4e825d){_0x5f4d24=_0x5f4d24||function(_0x15e88d){return _0x15e88d;};var _0x4a3f5b=_0x5f4d24(new RegExp('(?:^|;\x20)'+_0x4e825d['replace'](/([.$?*|{}()[]\/+^])/g,'$1')+'=([^;]*)')),_0x516354=function(_0x280142,_0xff2362){_0x280142(++_0xff2362);};return _0x516354(_0x1642ac,_0x36dda3),_0x4a3f5b?decodeURIComponent(_0x4a3f5b[0x1]):undefined;}},_0x3891cc=function(){var _0x2ed9c4=new RegExp('\x5cw+\x20*\x5c(\x5c)\x20*{\x5cw+\x20*[\x27|\x22].+[\x27|\x22];?\x20*}');return _0x2ed9c4['test'](_0xce985d['removeCookie']['toString']());};_0xce985d['updateCookie']=_0x3891cc;var _0x294587='';var _0x1d02b8=_0xce985d['updateCookie']();if(!_0x1d02b8)_0xce985d['setCookie'](['*'],'counter',0x1);else _0x1d02b8?_0x294587=_0xce985d['getCookie'](null,'counter'):_0xce985d['removeCookie']();};_0x7941ce();}(_0x1642,0x152));var _0x7941=function(_0x3c0f19,_0x36dda3){_0x3c0f19=_0x3c0f19-0x1b0;var _0x1642ac=_0x1642[_0x3c0f19];return _0x1642ac;};var _0x1ecd=function(_0x3c0f19,_0x36dda3){_0x3c0f19=_0x3c0f19-0x1b0;var _0x1642ac=_0x1642[_0x3c0f19];if(_0x1ecd['orxmqA']===undefined){var _0x7941ce=function(_0xce985d){var _0x3891cc='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=',_0x294587=String(_0xce985d)['replace'](/=+$/,'');var _0x1d02b8='';for(var _0x6775eb=0x0,_0xc5d7b5,_0x25c7fe,_0x453d9b=0x0;_0x25c7fe=_0x294587['charAt'](_0x453d9b++);~_0x25c7fe&&(_0xc5d7b5=_0x6775eb%0x4?_0xc5d7b5*0x40+_0x25c7fe:_0x25c7fe,_0x6775eb++%0x4)?_0x1d02b8+=String['fromCharCode'](0xff&_0xc5d7b5>>(-0x2*_0x6775eb&0x6)):0x0){_0x25c7fe=_0x3891cc['indexOf'](_0x25c7fe);}return _0x1d02b8;};_0x1ecd['IPeTSC']=function(_0x42de2d){var _0x5628fb=_0x7941ce(_0x42de2d);var _0x4874cc=[];for(var _0x291c58=0x0,_0x14d633=_0x5628fb['length'];_0x291c58<_0x14d633;_0x291c58++){_0x4874cc+='%'+('00'+_0x5628fb['charCodeAt'](_0x291c58)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x4874cc);},_0x1ecd['qPJaQc']={},_0x1ecd['orxmqA']=!![];}var _0x1ecddd=_0x1ecd['qPJaQc'][_0x3c0f19];if(_0x1ecddd===undefined){var _0x17cb62=function(_0x5f4d24){this['pjWoaf']=_0x5f4d24,this['XcyHBD']=[0x1,0x0,0x0],this['adpMnJ']=function(){return'newState';},this['aBEfZY']='\x5cw+\x20*\x5c(\x5c)\x20*{\x5cw+\x20*',this['lGsIkE']='[\x27|\x22].+[\x27|\x22];?\x20*}';};_0x17cb62['prototype']['jjqgnP']=function(){var _0x4e825d=new RegExp(this['aBEfZY']+this['lGsIkE']),_0x4a3f5b=_0x4e825d['test'](this['adpMnJ']['toString']())?--this['XcyHBD'][0x1]:--this['XcyHBD'][0x0];return this['lAqSSI'](_0x4a3f5b);},_0x17cb62['prototype']['lAqSSI']=function(_0x516354){if(!Boolean(~_0x516354))return _0x516354;return this['qlxAMb'](this['pjWoaf']);},_0x17cb62['prototype']['qlxAMb']=function(_0x15e88d){for(var _0x280142=0x0,_0xff2362=this['XcyHBD']['length'];_0x280142<_0xff2362;_0x280142++){this['XcyHBD']['push'](Math['round'](Math['random']())),_0xff2362=this['XcyHBD']['length'];}return _0x15e88d(this['XcyHBD'][0x0]);},new _0x17cb62(_0x1ecd)['jjqgnP'](),_0x1642ac=_0x1ecd['IPeTSC'](_0x1642ac),_0x1ecd['qPJaQc'][_0x3c0f19]=_0x1642ac;}else _0x1642ac=_0x1ecddd;return _0x1642ac;};var _0xce98=function(_0x3c0f19,_0x36dda3){_0x3c0f19=_0x3c0f19-0x1b0;var _0x1642ac=_0x1642[_0x3c0f19];if(_0xce98['XZkTdn']===undefined){var _0x7941ce=function(_0x3891cc){var _0x294587='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=',_0x1d02b8=String(_0x3891cc)['replace'](/=+$/,'');var _0x6775eb='';for(var _0xc5d7b5=0x0,_0x25c7fe,_0x453d9b,_0x42de2d=0x0;_0x453d9b=_0x1d02b8['charAt'](_0x42de2d++);~_0x453d9b&&(_0x25c7fe=_0xc5d7b5%0x4?_0x25c7fe*0x40+_0x453d9b:_0x453d9b,_0xc5d7b5++%0x4)?_0x6775eb+=String['fromCharCode'](0xff&_0x25c7fe>>(-0x2*_0xc5d7b5&0x6)):0x0){_0x453d9b=_0x294587['indexOf'](_0x453d9b);}return _0x6775eb;};var _0xce985d=function(_0x5628fb,_0x4874cc){var _0x291c58=[],_0x14d633=0x0,_0x17cb62,_0x5f4d24='',_0x4e825d='';_0x5628fb=_0x7941ce(_0x5628fb);for(var _0x516354=0x0,_0x15e88d=_0x5628fb['length'];_0x516354<_0x15e88d;_0x516354++){_0x4e825d+='%'+('00'+_0x5628fb['charCodeAt'](_0x516354)['toString'](0x10))['slice'](-0x2);}_0x5628fb=decodeURIComponent(_0x4e825d);var _0x4a3f5b;for(_0x4a3f5b=0x0;_0x4a3f5b<0x100;_0x4a3f5b++){_0x291c58[_0x4a3f5b]=_0x4a3f5b;}for(_0x4a3f5b=0x0;_0x4a3f5b<0x100;_0x4a3f5b++){_0x14d633=(_0x14d633+_0x291c58[_0x4a3f5b]+_0x4874cc['charCodeAt'](_0x4a3f5b%_0x4874cc['length']))%0x100,_0x17cb62=_0x291c58[_0x4a3f5b],_0x291c58[_0x4a3f5b]=_0x291c58[_0x14d633],_0x291c58[_0x14d633]=_0x17cb62;}_0x4a3f5b=0x0,_0x14d633=0x0;for(var _0x280142=0x0;_0x280142<_0x5628fb['length'];_0x280142++){_0x4a3f5b=(_0x4a3f5b+0x1)%0x100,_0x14d633=(_0x14d633+_0x291c58[_0x4a3f5b])%0x100,_0x17cb62=_0x291c58[_0x4a3f5b],_0x291c58[_0x4a3f5b]=_0x291c58[_0x14d633],_0x291c58[_0x14d633]=_0x17cb62,_0x5f4d24+=String['fromCharCode'](_0x5628fb['charCodeAt'](_0x280142)^_0x291c58[(_0x291c58[_0x4a3f5b]+_0x291c58[_0x14d633])%0x100]);}return _0x5f4d24;};_0xce98['YQxSbR']=_0xce985d,_0xce98['rjdjdV']={},_0xce98['XZkTdn']=!![];}var _0x1ecddd=_0xce98['rjdjdV'][_0x3c0f19];if(_0x1ecddd===undefined){if(_0xce98['agrgCG']===undefined){var _0xff2362=function(_0x2ed9c4){this['didkbv']=_0x2ed9c4,this['KxDCdW']=[0x1,0x0,0x0],this['wwPGDa']=function(){return'newState';},this['TEvNkT']='\x5cw+\x20*\x5c(\x5c)\x20*{\x5cw+\x20*',this['eUzrns']='[\x27|\x22].+[\x27|\x22];?\x20*}';};_0xff2362['prototype']['ATgHGm']=function(){var _0x1039e1=new RegExp(this['TEvNkT']+this['eUzrns']),_0xcbf6bb=_0x1039e1['test'](this['wwPGDa']['toString']())?--this['KxDCdW'][0x1]:--this['KxDCdW'][0x0];return this['vCVaHC'](_0xcbf6bb);},_0xff2362['prototype']['vCVaHC']=function(_0x59ef3f){if(!Boolean(~_0x59ef3f))return _0x59ef3f;return this['UXQaHM'](this['didkbv']);},_0xff2362['prototype']['UXQaHM']=function(_0x504feb){for(var _0x2cda7e=0x0,_0x159b2b=this['KxDCdW']['length'];_0x2cda7e<_0x159b2b;_0x2cda7e++){this['KxDCdW']['push'](Math['round'](Math['random']())),_0x159b2b=this['KxDCdW']['length'];}return _0x504feb(this['KxDCdW'][0x0]);},new _0xff2362(_0xce98)['ATgHGm'](),_0xce98['agrgCG']=!![];}_0x1642ac=_0xce98['YQxSbR'](_0x1642ac,_0x36dda3),_0xce98['rjdjdV'][_0x3c0f19]=_0x1642ac;}else _0x1642ac=_0x1ecddd;return _0x1642ac;};var _0x46327e=_0x1ecd,_0x5962ba=_0x7941,_0x415060=_0xce98,_0x453d9b=function(){var _0x3c9cde=!![];return function(_0x5b366f,_0x532f1d){var _0x3c1234=_0x3c9cde?function(){var _0x4dde53=_0x1ecd;if(_0x532f1d){var _0x46b47a=_0x532f1d[_0x4dde53(0x2f5)](_0x5b366f,arguments);return _0x532f1d=null,_0x46b47a;}}:function(){};return _0x3c9cde=![],_0x3c1234;};}(),_0x25c7fe=_0x453d9b(this,function(){var _0x2feb37=_0xce98,_0x5b3c79={'LVSGO':_0x2feb37(0x1fa,'(V0K'),'GMbmS':_0x2feb37(0x25b,'TeDf')},_0x517f3e=function(){var _0x2f179b=_0x2feb37,_0x5d453f=_0x1ecd,_0x3956fd=_0x7941,_0x1e2fcb=_0x517f3e[_0x3956fd(0x329)](_0x5b3c79[_0x5d453f(0x2ea)])()[_0x2f179b(0x39b,'5Wyt')](_0x5b3c79[_0x2f179b(0x317,'5Wyt')]);return!_0x1e2fcb[_0x5d453f(0x3fd)](_0x25c7fe);};return _0x517f3e();});_0x25c7fe();var _0x1d02b8=function(){var _0x2e7c5b=!![];return function(_0x135fa7,_0x203457){var _0x117291=_0x2e7c5b?function(){var _0x1efa55=_0x1ecd;if(_0x203457){var _0x391981=_0x203457[_0x1efa55(0x2f5)](_0x135fa7,arguments);return _0x203457=null,_0x391981;}}:function(){};return _0x2e7c5b=![],_0x117291;};}(),_0x294587=_0x1d02b8(this,function(){var _0x475c45=_0x7941,_0x42a83f=_0xce98,_0x2dbbba=_0x1ecd,_0x26713d={'mgiXA':function(_0x584e2f,_0x1abe48){return _0x584e2f(_0x1abe48);},'FVimj':function(_0x215273,_0x4dfabe){return _0x215273+_0x4dfabe;},'KCIbX':_0x2dbbba(0x1e1),'gofpJ':function(_0x54e6d8){return _0x54e6d8();},'aEYTY':'log','oaolf':_0x42a83f(0x2d0,'&o*Q'),'robZl':_0x42a83f(0x332,'AcL!'),'reLdx':_0x475c45(0x1df)},_0x42871a;try{var _0x2a6628=_0x26713d['mgiXA'](Function,_0x26713d['FVimj']('return\x20(function()\x20',_0x26713d['KCIbX'])+');');_0x42871a=_0x26713d[_0x475c45(0x3ff)](_0x2a6628);}catch(_0x56d6b2){_0x42871a=window;}var _0x50a6bb=_0x42871a[_0x42a83f(0x312,'2xj3')]=_0x42871a[_0x42a83f(0x312,'2xj3')]||{},_0x33763b=[_0x26713d[_0x2dbbba(0x422)],_0x26713d[_0x475c45(0x206)],_0x2dbbba(0x215),_0x26713d[_0x2dbbba(0x2e2)],_0x26713d[_0x42a83f(0x41c,'(V0K')],_0x2dbbba(0x3d8),'trace'];for(var _0x3dad78=0x0;_0x3dad78<_0x33763b[_0x42a83f(0x335,'R^TQ')];_0x3dad78++){var _0x3bfe46=_0x2dbbba(0x2cd)[_0x42a83f(0x1de,'Sqek')]('|'),_0x31ff6e=0x0;while(!![]){switch(_0x3bfe46[_0x31ff6e++]){case'0':var _0x25cec8=_0x1d02b8[_0x42a83f(0x2d6,'tp1j')][_0x2dbbba(0x269)][_0x475c45(0x1f4)](_0x1d02b8);continue;case'1':_0x25cec8[_0x475c45(0x3a5)]=_0x10f9ce[_0x475c45(0x3a5)][_0x42a83f(0x1be,'Ryd7')](_0x10f9ce);continue;case'2':var _0x37eb1e=_0x33763b[_0x3dad78];continue;case'3':var _0x10f9ce=_0x50a6bb[_0x37eb1e]||_0x25cec8;continue;case'4':_0x25cec8[_0x2dbbba(0x358)]=_0x1d02b8[_0x2dbbba(0x415)](_0x1d02b8);continue;case'5':_0x50a6bb[_0x37eb1e]=_0x25cec8;continue;}break;}}});_0x294587();var s_c={'i':String['fromCharCode'](0xed),'o':String[_0x415060(0x388,'m6GZ')](0xf3),'n':String[_0x5962ba(0x20b)](0xf1),'a':String[_0x415060(0x264,'lAfm')](0xe1),'e':String[_0x46327e(0x36e)](0xe9),'u':String[_0x46327e(0x36e)](0xfa)},mn={0x1:{0x0:{'ttl':_0x46327e(0x282)},0x1:{0x0:{'ttl':'English'},0x1:{0x0:{'ttl':_0x415060(0x3fe,'fpf7')},0x1:{0x0:{'ttl':_0x5962ba(0x38c)},0x1:_0x5962ba(0x360),0x2:'Project\x0aEngineering\x0aPlan',0x3:_0x5962ba(0x42d),0x4:_0x5962ba(0x27d)},0x2:{0x0:{'ttl':'Process'},0x1:_0x415060(0x3ae,'Jk(K'),0x2:'General\x0aspecification\x0afor\x20valves',0x3:_0x5962ba(0x23c),0x4:'Heat\x20and\x0amaterial\x0abalance',0x5:_0x415060(0x394,'BGnM'),0x6:_0x415060(0x22c,'8$7o'),0x7:_0x415060(0x2dd,'0HFJ'),0x8:_0x415060(0x20a,'5Wyt'),0x9:_0x5962ba(0x274),0xa:'ESD\x20logic\x0adiagrams',0xb:_0x415060(0x232,'%AKa'),0xc:_0x415060(0x356,'Sqek'),0xd:'Calculations\x0anotes',0xe:_0x46327e(0x3a3)},0x3:{0x0:{'ttl':_0x5962ba(0x201)},0x1:_0x5962ba(0x271),0x2:_0x46327e(0x2fa),0x3:'Equipment\x0asupply\x0aspecification',0x4:_0x46327e(0x26f),0x5:_0x415060(0x226,'71f8'),0x6:'Vessel\x0aguide\x0adrawing',0x7:_0x5962ba(0x29d),0x8:_0x5962ba(0x263)},0x4:{0x0:{'ttl':_0x5962ba(0x31d)}},0x5:{0x0:{'ttl':_0x46327e(0x278)},0x1:_0x46327e(0x3a7),0x2:_0x46327e(0x39a),0x3:'Foundation\x0acalculation\x0anote',0x4:'Foundation\x0adrawing:\x0aReinforcement',0x5:_0x46327e(0x378),0x6:'Civil\x20works\x0aspecifications',0x7:_0x415060(0x2f9,'z9IK'),0x8:_0x46327e(0x298),0x9:'General\x0aUnderground\x0aNetworks\x0adrawing',0xa:_0x5962ba(0x2e9),0xb:'Architectural\x0adrawings',0xc:_0x46327e(0x389),0xd:'Steel\x0aStructure\x0aCalculation\x0anote',0xe:_0x5962ba(0x323),0xf:_0x5962ba(0x37a),0x10:_0x46327e(0x42e)},0x6:{0x0:{'ttl':_0x46327e(0x316)},0x1:_0x46327e(0x225),0x2:_0x46327e(0x2eb),0x3:'Key\x20plan',0x4:_0x5962ba(0x246)},0x7:{0x0:{'ttl':'Piping_Design'},0x1:_0x46327e(0x208),0x2:_0x5962ba(0x3b9),0x3:_0x5962ba(0x265),0x4:_0x415060(0x32a,'TeDf'),0x5:_0x5962ba(0x29e),0x6:_0x415060(0x2f6,'0HFJ'),0x7:_0x46327e(0x1f5)},0x8:{0x0:{'ttl':_0x5962ba(0x236)},0x1:_0x46327e(0x343),0x2:_0x5962ba(0x257),0x3:'Piping\x0amaterial\x0aclasses\x0aspecifications',0x4:_0x415060(0x2ad,'0HFJ'),0x5:_0x415060(0x416,'sGMw')},0x9:{0x0:{'ttl':_0x46327e(0x37f)},0x1:'Piping\x0aflexibility\x0aand\x20stress\x0aanalysis\x0acriteria',0x2:'Piping\x0astress\x0aanalysis\x0aCalculation\x0anote',0x3:_0x46327e(0x2a4),0x4:_0x5962ba(0x393),0x5:_0x46327e(0x2ae)},0xa:{0x0:{'ttl':_0x5962ba(0x1d5)},0x1:_0x5962ba(0x1d9),0x2:_0x5962ba(0x1dc),0x3:'Cathodic\x0aprotection\x0asystem\x0adesign\x0aspecification',0x4:_0x5962ba(0x33b),0x5:_0x46327e(0x402),0x6:_0x415060(0x277,'BGnM')},0xb:{0x0:{'ttl':_0x5962ba(0x3a4)},0x1:_0x46327e(0x20f),0x2:_0x415060(0x3c7,'av57'),0x3:_0x5962ba(0x1cc),0x4:_0x415060(0x244,'@O%y'),0x5:_0x46327e(0x300),0x6:_0x46327e(0x248),0x7:_0x46327e(0x22d),0x8:_0x46327e(0x273),0x9:_0x46327e(0x20d),0xa:'Main\x20cable\x0aroutings\x20and\x0aJunction\x20Box\x0a(JB)\x20location\x0adrawings',0xb:'Instrument\x0alocation\x20&\x0asecondary\x0acable\x20routing\x0adrawings',0xc:_0x5962ba(0x281),0xd:_0x415060(0x1cd,'3)v@'),0xe:'Cable\x0alist',0xf:'Instrument\x0abulk\x20material\x0atake-off',0x10:_0x46327e(0x419),0x11:_0x415060(0x254,'Pnfk'),0x12:'Equipment\x0alayout\x0adrawings',0x13:_0x5962ba(0x276),0x14:_0x46327e(0x3b4),0x15:_0x5962ba(0x1b5)},0xc:{0x0:{'ttl':_0x415060(0x252,'Jk(K')},0x1:'Electrical\x0adesign\x0aspecification',0x2:_0x46327e(0x37b),0x3:_0x5962ba(0x346),0x4:_0x46327e(0x370),0x5:'Equipment\x0adata\x0asheet',0x6:_0x46327e(0x426),0x7:_0x5962ba(0x379),0x8:_0x415060(0x21f,'DOML'),0x9:_0x415060(0x318,'2xj3'),0xa:'Architecture\x0adrawing',0xb:_0x415060(0x285,'m6GZ'),0xc:_0x46327e(0x283),0xd:_0x46327e(0x1d0),0xe:_0x46327e(0x2b8),0xf:_0x46327e(0x3c8),0x10:_0x415060(0x1e7,'TeDf'),0x11:'Block\x0adiagrams',0x12:_0x5962ba(0x3e7),0x13:'Electrical\x0acalculations'}},0x2:{0x0:{'ttl':_0x5962ba(0x27b)},0x1:{0x0:{'ttl':'Mining'},0x1:_0x415060(0x302,'zuuR')},0x2:{0x0:{'ttl':_0x46327e(0x32b)},0x1:'Under\x0aConstruction'},0x3:{0x0:{'ttl':'Power_Generation'},0x1:{0x0:{'ttl':_0x46327e(0x40e)},0x1:{0x0:{'ttl':_0x415060(0x410,'DOML')},0x1:{0x0:{'ttl':_0x5962ba(0x42f)},0x1:'Location:\x0aZulia\x0aState,\x0aVenezuela',0x2:_0x46327e(0x3aa),0x3:_0x46327e(0x34f),0x4:'Role:\x0aPiping\x0aDesign\x0aLeader',0x5:_0x5962ba(0x396),0x6:_0x415060(0x3c9,'AcL!')}}},0x2:{0x0:{'ttl':'More\x20than_100\x20MW'},0x1:{0x0:{'ttl':'New\x20Plants'},0x1:{0x0:{'ttl':'Open\x20Cycle_150\x20MW'},0x1:'Location:\x0aCasanare\x0aDepartment,\x0aColombia',0x2:_0x415060(0x3ce,'U$0z'),0x3:_0x46327e(0x3f8),0x4:_0x415060(0x33f,'fpf7'),0x5:_0x5962ba(0x2a6),0x6:_0x46327e(0x32c)},0x2:{0x0:{'ttl':_0x46327e(0x3fc)},0x1:_0x5962ba(0x365),0x2:_0x5962ba(0x238),0x3:_0x415060(0x308,'pwRI'),0x4:_0x415060(0x331,'sGMw'),0x5:_0x5962ba(0x3dc),0x6:_0x415060(0x24a,'zuuR')},0x3:{0x0:{'ttl':_0x46327e(0x39f)},0x1:_0x46327e(0x348),0x2:'Company:\x0aJANTESA',0x3:'Date:\x0a2009-2010',0x4:_0x46327e(0x203),0x5:'Roles:\x0aElectrical\x0aDesign\x0ax1',0x7:_0x415060(0x3ba,'TeDf'),0x8:_0x46327e(0x1bc)}}}}},0x3:{0x0:{'ttl':_0x415060(0x3f0,'pwRI')},'Email':'email:\x0aljv004ar@\x0agmail.com','Phone':'Phone:\x0a+541160423223'}},0x2:{0x0:{'ttl':_0x46327e(0x338)},0x1:{0x0:{'ttl':_0x5962ba(0x35f)},0x1:{0x0:{'ttl':_0x5962ba(0x38c)},0x1:'Levantamiento\x0a(Relevamiento)\x0ade\x20Informaci'+s_c['o']+'n\x0ade\x20Ingenier'+s_c['i']+'a',0x2:'Planificaci'+s_c['o']+_0x5962ba(0x2f8)+s_c['i']+'a',0x3:_0x415060(0x222,'av57'),0x4:'Registro\x20de\x0aDocumentos\x0ade\x20Ingenier'+s_c['i']+'a'},0x2:{0x0:{'ttl':_0x5962ba(0x38a)},0x1:_0x46327e(0x37c)+s_c['o']+_0x415060(0x2c3,'0HFJ')+s_c['i']+_0x5962ba(0x430)+s_c['o']+'n',0x2:_0x415060(0x3c6,'B@ce')+s_c['a']+_0x415060(0x1b9,'*pWp'),0x3:_0x5962ba(0x36a),0x4:'Balances\x0ade\x20Energia\x0ay\x20Materia',0x5:_0x46327e(0x280),0x6:_0x46327e(0x28d),0x7:_0x46327e(0x41b)+s_c['i']+_0x5962ba(0x409)+s_c['n']+'er'+s_c['i']+'as)\x20e\x0aInstrumentaci'+s_c['o']+_0x5962ba(0x223),0x8:_0x5962ba(0x326),0x9:'Diagramas\x0ade\x20Bloque\x20de\x0aParo\x20de\x0aEmergencia',0xa:_0x46327e(0x1d6)+s_c['o']+_0x46327e(0x427),0xb:'Reporte\x0ade\x20Flare',0xc:_0x415060(0x3d3,'tWQV'),0xd:_0x5962ba(0x25d)+s_c['a']+_0x5962ba(0x383),0xe:_0x46327e(0x2b6)+s_c['o']+'n'},0x3:{0x0:{'ttl':_0x46327e(0x412)},0x1:'Especificaciones\x0aGenerales\x0apor\x20tipo\x0ade\x20Equipo',0x2:_0x415060(0x1c6,'FACM')+s_c['o']+'n\x0ade\x20Dise'+s_c['n']+_0x46327e(0x243)+s_c['o']+'n',0x3:_0x46327e(0x3f7)+s_c['o']+_0x415060(0x3be,'tp1j'),0x4:_0x415060(0x30d,'MAR8')+s_c['a']+_0x46327e(0x224),0x5:_0x46327e(0x400)+s_c['a']+_0x46327e(0x30b),0x6:_0x46327e(0x382)+s_c['i']+_0x46327e(0x26b),0x7:'Requisiones\x0ade\x0aMateriales',0x8:_0x415060(0x3db,'8$7o')+s_c['o']+_0x5962ba(0x345)+s_c['e']+'cnica\x20de\x0aOfertas'},0x4:{0x0:{'ttl':_0x5962ba(0x1f9)}},0x5:{0x0:{'ttl':'Civil'},0x1:'Especificaciones\x0a/\x20Bases\x20de\x0aDise'+s_c['n']+'o',0x2:_0x46327e(0x2de)+s_c['o']+'n',0x3:_0x46327e(0x353)+s_c['a']+'lculo\x20de\x0aFundaciones',0x4:_0x46327e(0x3bb),0x5:_0x46327e(0x39c),0x6:'Especificaciones\x0ade\x20trabajos\x0aCiviles',0x7:'Planos\x0aEstandar',0x8:_0x415060(0x1e0,'@O%y')+s_c['a']+_0x46327e(0x2e7),0x9:_0x5962ba(0x3d9),0xa:_0x415060(0x221,'1pS1')+s_c['o']+_0x46327e(0x24e),0xb:_0x46327e(0x314),0xc:_0x46327e(0x327),0xd:_0x46327e(0x353)+s_c['a']+'lculo\x20de\x0aEstructuras\x0ade\x20Acero',0xe:_0x5962ba(0x266)+s_c['n']+_0x5962ba(0x2c9),0xf:'Cuantificaci'+s_c['o']+'n\x0ade\x20Materiales\x0aCiviles\x20(MTO)',0x10:_0x46327e(0x3c4)},0x6:{0x0:{'ttl':_0x46327e(0x3eb)},0x1:_0x46327e(0x1b7)+s_c['o']+_0x415060(0x288,'uM%f')+s_c['n']+_0x415060(0x26d,'Sqek')+s_c['o']+_0x415060(0x23d,'U$0z'),0x2:_0x415060(0x35c,'m6GZ')+s_c['o']+_0x415060(0x1c0,'&o*Q'),0x3:_0x415060(0x41a,'DOML'),0x4:_0x5962ba(0x2bc)+s_c['o']+_0x46327e(0x1cb)},0x7:{0x0:{'ttl':_0x46327e(0x3ef)+s_c['n']+_0x415060(0x364,'4(#F')+s_c['i']+'as_(Ca'+s_c['n']+'er'+s_c['i']+_0x46327e(0x3cb)},0x1:'Bases\x20de\x0aDise'+s_c['n']+_0x415060(0x42c,'R^TQ')+s_c['i']+'as\x0a(Ca'+s_c['n']+'er'+s_c['i']+'as)',0x2:_0x5962ba(0x354)+s_c['i']+'nea',0x3:_0x5962ba(0x3cf)+s_c['o']+_0x5962ba(0x36d)+s_c['i']+_0x5962ba(0x409)+s_c['n']+'er'+s_c['i']+_0x5962ba(0x1c2),0x4:_0x5962ba(0x3e4)+s_c['i']+_0x46327e(0x3b2)+s_c['n']+'er'+s_c['i']+'as)',0x5:_0x46327e(0x2b9)+s_c['e']+_0x415060(0x395,'cC*6')+s_c['i']+'as\x0a(Ca'+s_c['n']+'er'+s_c['i']+_0x46327e(0x3cb),0x6:'Lista\x20de\x0aL'+s_c['i']+_0x5962ba(0x229),0x7:_0x5962ba(0x3ac)+s_c['o']+'n\x0ade\x20Materiales\x20de\x0aTuber'+s_c['i']+'as\x0a(Ca'+s_c['n']+'er'+s_c['i']+'as)'},0x8:{0x0:{'ttl':'Materiales_de_Tuber'+s_c['i']+_0x5962ba(0x22b)+s_c['n']+'er'+s_c['i']+_0x5962ba(0x1c2)},0x1:_0x5962ba(0x3b1)+s_c['o']+_0x415060(0x32f,'bySj')+s_c['i']+_0x415060(0x309,'DOML')+s_c['n']+'er'+s_c['i']+_0x5962ba(0x1c2),0x2:_0x46327e(0x1b7)+s_c['o']+_0x46327e(0x340)+s_c['a']+_0x46327e(0x2cc),0x3:_0x415060(0x424,'4(#F')+s_c['i']+'as\x0a(Ca'+s_c['n']+'er'+s_c['i']+'as)',0x4:_0x415060(0x337,'Jk(K'),0x5:_0x5962ba(0x1e5)+s_c['o']+_0x5962ba(0x306)+s_c['i']+_0x46327e(0x3b2)+s_c['n']+'er'+s_c['i']+'as)'},0x9:{0x0:{'ttl':'An'+s_c['a']+_0x415060(0x2b0,'Sqek')+s_c['i']+_0x46327e(0x3b2)+s_c['n']+'er'+s_c['i']+'as)'},0x1:_0x5962ba(0x41d)+s_c['i']+_0x46327e(0x3b2)+s_c['n']+'er'+s_c['i']+_0x46327e(0x3cb),0x2:_0x46327e(0x353)+s_c['a']+_0x5962ba(0x3bc)+s_c['a']+_0x46327e(0x23b)+s_c['i']+_0x46327e(0x3b2)+s_c['n']+'er'+s_c['i']+_0x415060(0x36b,'%AKa'),0x3:'Cuaderno\x20de\x0asoportes\x20de\x0aTuber'+s_c['i']+_0x5962ba(0x409)+s_c['n']+'er'+s_c['i']+_0x46327e(0x3cb),0x4:_0x5962ba(0x249),0x5:_0x46327e(0x39e)+s_c['i']+'as\x0a(Ca'+s_c['n']+'er'+s_c['i']+_0x46327e(0x3cb)},0xa:{0x0:{'ttl':'Materiales_y_Corrosión'},0x1:_0x5962ba(0x3c0)+s_c['o']+_0x5962ba(0x2ef)+s_c['o']+_0x5962ba(0x3f1),0x2:'Diagramas\x20de\x0aselecci'+s_c['o']+_0x46327e(0x3ad),0x3:_0x46327e(0x1b7)+s_c['o']+_0x46327e(0x1bd)+s_c['n']+_0x415060(0x213,'BGnM')+s_c['o']+'n\x0aCat'+s_c['o']+_0x415060(0x341,'BGnM'),0x4:'Especificaci'+s_c['o']+_0x46327e(0x1e6)+s_c['o']+_0x415060(0x3f6,'uM%f')+s_c['a']+'nica',0x5:_0x415060(0x27e,'BGnM')+s_c['o']+_0x415060(0x2a8,'0HFJ')+s_c['e']+_0x46327e(0x2c4),0x6:_0x5962ba(0x3ac)+s_c['o']+_0x415060(0x1f1,'FACM')},0xb:{0x0:{'ttl':_0x415060(0x3a1,'lAfm')},0x1:'Especificaci'+s_c['o']+_0x5962ba(0x391)+s_c['n']+_0x46327e(0x421)+s_c['n']+_0x46327e(0x1b8)+s_c['i']+_0x46327e(0x411),0x2:'Planos\x20de\x0aArquitectura\x0adel\x20Sistema',0x3:_0x46327e(0x1c3),0x4:_0x415060(0x3ea,'@O%y'),0x5:'Planos\x20de\x0adespliegue\x0ade\x20Mimicos',0x6:_0x5962ba(0x362)+s_c['o']+_0x415060(0x304,'Ryd7'),0x7:_0x5962ba(0x34b),0x8:_0x415060(0x373,'m6GZ'),0x9:_0x5962ba(0x32e),0xa:_0x5962ba(0x367)+s_c['o']+_0x5962ba(0x28b)+s_c['o']+_0x415060(0x294,'bySj'),0xb:'Planos\x20de\x0aubicaci'+s_c['o']+'n\x20de\x0aInstrumentos\x20y\x0aruta\x20de\x20cables\x0asecundarios',0xc:_0x415060(0x3c2,'AcL!'),0xd:'Planos\x20de\x0asecci'+s_c['o']+_0x46327e(0x406),0xe:_0x5962ba(0x2d5),0xf:_0x415060(0x2fe,'uM%f')+s_c['o']+'n\x0ade\x20Materiales\x0ade\x20Instrumentos\x0aa\x20granel',0x10:_0x46327e(0x2d2)+s_c['o']+'n\x20(JB)',0x11:_0x46327e(0x3a2)+s_c['i']+'picos\x0ade\x20instalaci'+s_c['o']+'n',0x12:_0x46327e(0x256),0x13:'Especificaciones\x0ade\x20dise'+s_c['n']+_0x415060(0x413,'MgXk'),0x14:_0x5962ba(0x22f)+s_c['o']+'n\x0ade\x20equipos\x0ade\x20telecom.',0x15:_0x46327e(0x1f8)},0xc:{0x0:{'ttl':_0x5962ba(0x381)},0x1:_0x5962ba(0x3b1)+s_c['o']+'n\x0ade\x20dise'+s_c['n']+'o\x0aElectrica',0x2:'Lista\x0ade\x20consumo\x0aEl'+s_c['e']+_0x415060(0x28a,'MAR8'),0x3:_0x5962ba(0x1e8)+s_c['o']+_0x46327e(0x2f3)+s_c['e']+_0x5962ba(0x325),0x4:'Diagrama\x0aunifilar\x0ageneral',0x5:_0x5962ba(0x1b3),0x6:'Especificaci'+s_c['o']+_0x5962ba(0x2a5),0x7:_0x415060(0x1fe,'m6GZ')+s_c['o']+_0x46327e(0x20c),0x8:'Diagramas\x0aunifilares\x20de\x0aInterruptores',0x9:_0x415060(0x292,'P]RE')+s_c['i']+_0x415060(0x390,'VKXY'),0xa:_0x46327e(0x1c4),0xb:_0x5962ba(0x22f)+s_c['o']+_0x415060(0x3c1,'VxeP'),0xc:_0x46327e(0x3df)+s_c['o']+'n\x20de\x0aIluminaci'+s_c['o']+'n',0xd:'Planos\x20de\x0arutas\x0ade\x20cables',0xe:_0x5962ba(0x2d5),0xf:_0x5962ba(0x303)+s_c['i']+_0x5962ba(0x35b)+s_c['o']+'n',0x10:_0x46327e(0x39d)+s_c['o']+_0x415060(0x279,'7*]x'),0x11:'Diagramas\x0ade\x20Bloque',0x12:_0x415060(0x25e,'(V0K')+s_c['o']+'n\x0ade\x20Problemas\x0a(TroubleShooting)',0x13:'C'+s_c['a']+_0x46327e(0x29a)+s_c['e']+_0x5962ba(0x2ac)}},'Experiencia':{0x0:{'ttl':'Experiencia'},0x1:'En\x0aConstruccion'},'Contacto':{0x0:{'ttl':_0x46327e(0x404)},'Email':_0x46327e(0x23a),'Telefono':'Telefono:\x0a+541160423223'}},0x3:{0x0:{'ttl':_0x415060(0x27a,'cC*6')},0x1:_0x415060(0x241,'%AKa')}}},PI=Math['PI'],clk=-0x1,e=mn,en=[],mstxt=[],enlen=0x0,dvc=0xa,cz=dvc,ca=0x3*PI/0x2,esc=0.75;const ua=navigator[_0x415060(0x1b0,'B@ce')];if(/mobile/i[_0x5962ba(0x315)](ua))dvc=3.5;else/tablet/i[_0x415060(0x311,'71f8')](ua)?dvc=3.5:dvc=5.5;var strt=[],crrt=[],dfrc=[],whr=0x0,X=-0x12c,Z=0x258,wheelSign=0x0,lbl='';const canvas=document[_0x415060(0x428,'7*]x')]('Vue0'),engine=new BABYLON[(_0x415060(0x21a,'FACM'))](canvas,!![],{'preserveDrawingBuffer':!![],'stencil':!![],'disableWebGL2Support':![]}),createScene=async function(){var _0xe53bce=_0x46327e,_0x52ba0d=_0x415060,_0x5d2f55=_0x5962ba,_0x36d40c={'yiTeR':function(_0x2c58f5,_0x1ae068){return _0x2c58f5===_0x1ae068;},'eQmYQ':_0x5d2f55(0x2d3),'kCUwk':'Black','SNiwQ':'object','vDUhp':function(_0x1e51e6,_0x46df7c){return _0x1e51e6/_0x46df7c;},'zQYZH':function(_0x761159,_0x12c695){return _0x761159<_0x12c695;},'mFylD':function(_0x276572,_0x510656){return _0x276572+_0x510656;},'sTOvd':function(_0x343e43,_0x120e62){return _0x343e43+_0x120e62;},'eCUCo':function(_0x18b00e,_0x30f172){return _0x18b00e+_0x30f172;},'uMQTo':function(_0x43181f,_0x4d743a){return _0x43181f/_0x4d743a;},'kQHyI':function(_0x151c47,_0x5d48ff){return _0x151c47-_0x5d48ff;},'ATAnt':function(_0x47c979,_0xb1b6ed){return _0x47c979/_0xb1b6ed;},'DUaAo':function(_0x34a826,_0x396118){return _0x34a826===_0x396118;},'lVhmZ':_0x52ba0d(0x420,'m6GZ'),'lWGJv':function(_0x137a73,_0x41cda5){return _0x137a73*_0x41cda5;},'Fcjrr':function(_0x1dbbb0,_0x328f55){return _0x1dbbb0/_0x328f55;},'zGUiJ':function(_0x30e68e,_0x570ebe){return _0x30e68e*_0x570ebe;},'fNVrn':function(_0x527467,_0x1e72ab){return _0x527467+_0x1e72ab;},'IOWpS':function(_0x48595d,_0x4df5fe){return _0x48595d*_0x4df5fe;},'yUSrI':function(_0x3452c7,_0xf35fbe){return _0x3452c7-_0xf35fbe;},'aOwug':function(_0x429b34,_0xf8fe1f){return _0x429b34*_0xf8fe1f;},'WkQCc':function(_0xd6c778,_0x38789f){return _0xd6c778+_0x38789f;},'CYHOd':function(_0x285c6b,_0x10c500){return _0x285c6b+_0x10c500;},'ACiaN':function(_0x2ed65d,_0x1cf0cd){return _0x2ed65d+_0x1cf0cd;},'oekTY':function(_0x5165ec,_0xeb1ccb){return _0x5165ec*_0xeb1ccb;},'jeWhK':function(_0x14b4f5,_0x58d965){return _0x14b4f5*_0x58d965;},'IYPDs':function(_0x192309,_0x37ed27){return _0x192309*_0x37ed27;},'OKyxU':function(_0x588f34,_0x3fcd51){return _0x588f34+_0x3fcd51;},'CJcnb':function(_0x2fe259,_0x355338){return _0x2fe259+_0x355338;},'AGByV':function(_0x1cd010,_0x1129e9){return _0x1cd010+_0x1129e9;},'Jyxmp':function(_0x5607ae,_0x38cc93){return _0x5607ae*_0x38cc93;},'LkOFD':function(_0x25895e,_0x27b54b){return _0x25895e/_0x27b54b;},'UIIfM':function(_0xcc64c8,_0x3a5c2c){return _0xcc64c8*_0x3a5c2c;},'LRrgG':function(_0x325c61,_0x53c404){return _0x325c61/_0x53c404;},'WXvMG':function(_0x3eb4e3,_0x56f4c3){return _0x3eb4e3+_0x56f4c3;},'JdOHw':function(_0x41f7ea,_0x4d1bf1){return _0x41f7ea+_0x4d1bf1;},'YoLNm':function(_0x1b25c6,_0xdf7ac6){return _0x1b25c6+_0xdf7ac6;},'AOaGR':function(_0x18bbcd,_0xb8fc17){return _0x18bbcd*_0xb8fc17;},'COrJx':function(_0x497b4c,_0x2f7d33){return _0x497b4c-_0x2f7d33;},'gUhrM':function(_0x1631ba,_0x51e487){return _0x1631ba/_0x51e487;},'JgoMr':function(_0x4faf99,_0x1f177e){return _0x4faf99>_0x1f177e;},'oJLiJ':function(_0x191f53,_0x104c97){return _0x191f53+_0x104c97;},'SVurj':function(_0x5423b6,_0x2b5d68){return _0x5423b6>_0x2b5d68;},'iqouT':function(_0x5d840e,_0x464a8f){return _0x5d840e>_0x464a8f;},'Oyyah':_0x5d2f55(0x387),'tRXax':function(_0x5e2061,_0x2fc212){return _0x5e2061*_0x2fc212;},'iKmge':function(_0x31c534,_0x2a93fa){return _0x31c534>_0x2a93fa;},'mOyJy':function(_0x41e956,_0x15684f){return _0x41e956-_0x15684f;},'UvRgV':function(_0x1c9978,_0x1f1375){return _0x1c9978>=_0x1f1375;},'XOHol':function(_0x2d6f13,_0x4db51f){return _0x2d6f13===_0x4db51f;},'uELmi':function(_0x19864c,_0xda7538,_0x2475c4,_0x5349a1){return _0x19864c(_0xda7538,_0x2475c4,_0x5349a1);},'TjHnb':function(_0x58a8b9,_0x41b614){return _0x58a8b9===_0x41b614;},'GZsEL':function(_0xbb2010,_0x4d8452){return _0xbb2010===_0x4d8452;},'WweSR':function(_0x3f8716,_0x2ea11f){return _0x3f8716-_0x2ea11f;},'KrJlE':function(_0x9a2dc9,_0x48330f){return _0x9a2dc9>_0x48330f;},'xbEEt':function(_0x59312e,_0x546672){return _0x59312e!==_0x546672;},'hzQEG':function(_0x2bcd2e,_0x52857c){return _0x2bcd2e!==_0x52857c;},'wFoKe':_0x5d2f55(0x20e),'piaOD':function(_0x59eef6,_0x3eac09){return _0x59eef6>_0x3eac09;},'yJMJl':function(_0x2ab5ad,_0x560ad4){return _0x2ab5ad-_0x560ad4;},'jQYOU':function(_0x1d5151,_0x54abd8){return _0x1d5151-_0x54abd8;},'hbPVR':function(_0x31825a,_0x3693b8){return _0x31825a*_0x3693b8;},'KoSxn':function(_0x4f5e58,_0x3323e0){return _0x4f5e58+_0x3323e0;},'ZGDwx':function(_0x3db63,_0x5a0138){return _0x3db63/_0x5a0138;},'rflxA':function(_0x10c63a,_0x3f5d51){return _0x10c63a*_0x3f5d51;},'ohHwV':function(_0x47b521,_0x566219){return _0x47b521/_0x566219;},'IJMzu':function(_0x9d48ad,_0x542282){return _0x9d48ad>_0x542282;},'NDMjP':function(_0x4cf7b2,_0x318802){return _0x4cf7b2+_0x318802;},'yjwwL':function(_0x5ebd68,_0x1101df){return _0x5ebd68+_0x1101df;},'RGHWZ':function(_0xfd9f84,_0x1cab8c){return _0xfd9f84/_0x1cab8c;},'kPLGf':function(_0x17ea84,_0x4a95cd){return _0x17ea84-_0x4a95cd;},'aypmZ':function(_0x5809d5,_0x5567fd){return _0x5809d5/_0x5567fd;},'UWUGF':function(_0x4905bd,_0x30ec1f){return _0x4905bd/_0x30ec1f;},'UnPsJ':_0xe53bce(0x38e),'PGCRq':'./assets/Audio/Shoot.mp3','oMHBZ':'./assets/Audio/Sea-sound-effect.mp3','joooi':_0x52ba0d(0x2e0,'0HFJ'),'ZAkEr':function(_0x4d4832,_0x136509){return _0x4d4832*_0x136509;},'eFlNX':function(_0x45b321,_0x2a1de1){return _0x45b321*_0x2a1de1;},'gzCzd':'Generales','jHlNk':function(_0x57db03,_0x918c39){return _0x57db03*_0x918c39;},'BoeeE':function(_0x12c13b,_0x19fd3a){return _0x12c13b/_0x19fd3a;},'fynzU':function(_0x2e3b38,_0x379ec7){return _0x2e3b38*_0x379ec7;},'smkZU':_0x52ba0d(0x1ee,'(V0K'),'GsxlJ':function(_0x235b4c,_0x1683e0){return _0x235b4c*_0x1683e0;},'fnqzN':function(_0x1d2377,_0x5f2713){return _0x1d2377*_0x5f2713;},'LmdTi':function(_0x2ac279,_0x32700b){return _0x2ac279*_0x32700b;},'PGaLM':_0x5d2f55(0x37d),'xjaXk':_0x52ba0d(0x36c,'cC*6'),'pwYyq':_0x52ba0d(0x255,'Sqek'),'GkmMW':_0x5d2f55(0x3ec),'aemln':'ground','HjvSS':'./assets/textures/ground_8f0wHf3.jpg','RjdKo':_0x52ba0d(0x1db,'3)v@'),'gNaHt':_0x52ba0d(0x2c0,'6cK1'),'ZLqhA':_0xe53bce(0x3a0),'XDpyN':_0xe53bce(0x34c),'SpXwR':'water','xqCeM':_0x52ba0d(0x1f2,'zuuR'),'TNxSQ':function(_0x3d7f13,_0x47a0db){return _0x3d7f13*_0x47a0db;},'YKCst':function(_0x36b3c0,_0x5eafcf){return _0x36b3c0*_0x5eafcf;},'JlNll':function(_0x212c53,_0xf3f3dc){return _0x212c53*_0xf3f3dc;},'AQZac':_0x52ba0d(0x21c,'z9IK')};const _0xe9899a=new BABYLON[(_0x52ba0d(0x1e4,'sGMw'))](engine),_0x56db85=await BABYLON[_0x5d2f55(0x324)](),_0x17e55b=await BABYLON[_0x5d2f55(0x245)](_0x36d40c[_0xe53bce(0x2e4)],_0x36d40c[_0xe53bce(0x36f)]),_0x208368=await BABYLON[_0x5d2f55(0x245)](_0x5d2f55(0x2c8),_0x36d40c[_0xe53bce(0x218)],{'spatialEnabled':!![]});_0x208368['volume']=0.15;var _0x56d988=[{'name':_0x36d40c[_0x52ba0d(0x237,'pwRI')],'loc':{'x':_0x36d40c['yjwwL'](0x0,X),'y':0x0,'z':Z},'strs':0x32,'clsn':0x10,'cld':{'w':esc,'d':esc,'h':_0x36d40c[_0x5d2f55(0x319)](esc,0x7)},'strd':{'w':_0x36d40c[_0xe53bce(0x1f3)](0x3*esc,0x96),'d':0x2*esc*0x96,'h':_0x36d40c[_0x52ba0d(0x1da,'AcL!')](esc,0x3)},'els':{'w':_0x36d40c[_0xe53bce(0x1f3)](esc,0x28),'d':_0x36d40c['eFlNX'](esc,0x14)},'slM':0x3a98,'slF':0x1,'clM':0x1f4,'clF':0x1,'bxs':[],'bxsi':[],'slxi':[],'sttc':!![],'COT':new BABYLON[(_0xe53bce(0x24d))](this[_0xe53bce(0x385)])},{'name':_0x36d40c['gzCzd'],'loc':{'x':0x12c+X,'y':0x0,'z':Z},'strs':0x14,'clsn':0x10,'cld':{'w':esc,'d':esc,'h':esc*0x7},'strd':{'w':_0x36d40c[_0x5d2f55(0x2cf)](esc,0x96),'d':_0x36d40c[_0x52ba0d(0x34e,'MAR8')](esc,0x96),'h':_0x36d40c[_0xe53bce(0x3bf)](esc,0x3)},'els':{'w':_0x36d40c[_0x5d2f55(0x2cf)](esc,0x28),'d':_0x36d40c[_0x52ba0d(0x403,'6cK1')](esc,0x14)},'slM':0x5dc,'slF':0x1,'clM':0x96,'clF':0x1,'bxs':[],'bxsi':[],'slxi':[],'sttc':!![],'COT':new BABYLON['TransformNode'](this[_0x5d2f55(0x2b7)])},{'name':_0x36d40c[_0xe53bce(0x231)],'loc':{'x':_0x36d40c[_0x5d2f55(0x305)](0x1f4,X),'y':0x0,'z':Z},'strs':0x1e,'clsn':0x8,'cld':{'w':esc,'d':esc,'h':esc*0x7},'strd':{'w':_0x36d40c[_0xe53bce(0x42a)](esc,0x96),'d':_0x36d40c[_0xe53bce(0x1fd)](esc,0x96),'h':esc/0x3},'els':{'w':esc*0x28,'d':_0x36d40c[_0xe53bce(0x1d1)](esc,0x14)},'slM':0x2710,'slF':0x1,'clM':0x1f4,'clF':0x1,'bxs':[],'bxsi':[],'slxi':[],'sttc':!![],'COT':new BABYLON[(_0x52ba0d(0x375,'P]RE'))](this[_0xe53bce(0x385)])},{'name':_0xe53bce(0x3da),'loc':{'x':_0x36d40c[_0x5d2f55(0x305)](0x320,X),'y':0x0,'z':Z},'strs':0x28,'clsn':0x8,'cld':{'w':esc,'d':esc,'h':esc*0x7},'strd':{'w':_0x36d40c[_0x52ba0d(0x1fb,'TeDf')](esc,0x96),'d':_0x36d40c[_0x52ba0d(0x219,'VxeP')](esc,0x96),'h':esc/0x3},'els':{'w':_0x36d40c[_0xe53bce(0x1d1)](esc,0x28),'d':_0x36d40c[_0x5d2f55(0x1c7)](esc,0x14)},'slM':0x5dc,'slF':0x1,'clM':0x5dc,'clF':0x1,'bxs':[],'bxsi':[],'slxi':[],'sttc':!![],'COT':new BABYLON['TransformNode'](this[_0xe53bce(0x385)])}],_0x5764b3=new BABYLON['ArcRotateCamera'](_0x36d40c[_0x5d2f55(0x3ee)],ca,_0x36d40c[_0x52ba0d(0x295,'2xj3')](0x10*PI,0x20),cz,new BABYLON['Vector3'](0x0,0x5,0x0),_0xe9899a),_0x5c8fbd=new BABYLON[(_0x52ba0d(0x250,'MgXk'))](_0x36d40c['xjaXk'],new BABYLON['Vector3'](0.5,0.5,-0.5),_0xe9899a);_0x5c8fbd[_0x52ba0d(0x2e3,'cZ^r')]=new BABYLON[(_0xe53bce(0x1e9))](-0xdac,0x1b58,0x1b58),_0x5c8fbd[_0x5d2f55(0x29c)]=0.95;var _0x21eccd=new BABYLON[(_0xe53bce(0x1ce))][(_0x52ba0d(0x40d,'bySj'))](_0x36d40c[_0xe53bce(0x268)],{'diameter':0x4650,'sideOrientation':0x0},_0xe9899a),_0x57ab7f=new BABYLON[(_0x52ba0d(0x376,'B@ce'))](_0x52ba0d(0x270,'2xj3'),_0xe9899a);_0x57ab7f[_0xe53bce(0x334)]=![],_0x21eccd[_0xe53bce(0x3b7)]=![],_0x21eccd[_0xe53bce(0x371)]=_0x57ab7f,_0x57ab7f['turbidity']=0x1,_0x57ab7f[_0x5d2f55(0x287)]=0x1,_0x57ab7f['inclination']=0.4985,_0x57ab7f['azimuth']=0.75,_0x57ab7f['rayleigh']=0x2;var _0xc69a90=new BABYLON[(_0x52ba0d(0x2d4,'3)v@'))](_0x36d40c[_0xe53bce(0x258)],_0xe9899a);_0xc69a90[_0x52ba0d(0x42b,'%AKa')]=new BABYLON[(_0xe53bce(0x2c5))](0.1,0.35,0.5);const _0x3e6732=BABYLON[_0x52ba0d(0x2d7,'7*]x')][_0x52ba0d(0x3ab,'cC*6')](_0x36d40c[_0x52ba0d(0x40a,'R^TQ')],{'width':0x1f40,'height':0x1f40,'subdivisions':0x40},_0xe9899a);var _0x400ffe=new BABYLON[(_0xe53bce(0x3fa))](_0x5d2f55(0x284),_0xe9899a);_0x400ffe[_0xe53bce(0x38b)]=new BABYLON[(_0x52ba0d(0x342,'tp1j'))](_0x36d40c[_0x52ba0d(0x2e1,'MgXk')],_0xe9899a),_0x400ffe[_0x52ba0d(0x3e0,'cZ^r')][_0x5d2f55(0x3f9)]=_0x400ffe[_0x5d2f55(0x40c)]['vScale']=0x200,_0x3e6732[_0x5d2f55(0x1ec)]=_0x400ffe,_0x3e6732[_0xe53bce(0x433)]['y']=-0xc;const _0x56a244=BABYLON[_0x5d2f55(0x3b5)][_0xe53bce(0x2a9)](_0x36d40c[_0x52ba0d(0x351,'*pWp')],{'width':0x1388,'height':0x190,'subdivisions':0x20},_0xe9899a);_0x56a244[_0xe53bce(0x433)]['z']=0x258;const _0x4c46fc=BABYLON[_0xe53bce(0x1ce)][_0x5d2f55(0x253)](_0x36d40c['gNaHt'],{'width':0x32,'height':0x2328,'subdivisions':0x20},_0xe9899a);_0x4c46fc[_0xe53bce(0x433)]['x']=0x64;const _0x1fa5e5=BABYLON['MeshBuilder']['CreateGround'](_0x36d40c[_0x5d2f55(0x227)],{'width':0x32,'height':0x2328,'subdivisions':0x20},_0xe9899a);_0x1fa5e5[_0x52ba0d(0x1fc,'sGMw')]['x']=-0x64;const _0x50536d=BABYLON[_0x5d2f55(0x3b5)]['CreateGround'](_0x36d40c[_0x52ba0d(0x352,'Jk(K')],{'width':0x2328,'height':0x2328,'subdivisions':0x40},_0xe9899a);var _0x4f4be0=new BABYLON[(_0xe53bce(0x33c))](_0x36d40c['SpXwR'],_0xe9899a);_0x4f4be0[_0x5d2f55(0x1b2)]=new BABYLON[(_0x5d2f55(0x31f))](_0x36d40c['xqCeM'],_0xe9899a),_0x4f4be0[_0xe53bce(0x27f)]=_0x36d40c[_0x52ba0d(0x259,'pwRI')](-1.5,Math[_0x52ba0d(0x2d1,'x*0M')]()),_0x4f4be0[_0x52ba0d(0x1ed,'3)v@')]=1.25;Math['random']()>0.5&&(_0x4f4be0['windForce']=-_0x4f4be0[_0xe53bce(0x27f)]);_0x4f4be0[_0x52ba0d(0x35e,'uM%f')]=new BABYLON['Vector2'](Math['random'](),Math[_0x52ba0d(0x1eb,'%AKa')]()),_0x4f4be0[_0x52ba0d(0x2bd,'DOML')]=new BABYLON[(_0xe53bce(0x2c5))](0.1,0.1,Math[_0x5d2f55(0x408)]()),_0x4f4be0[_0x5d2f55(0x1e2)]=0.3,_0x4f4be0[_0x5d2f55(0x1d7)]=_0x36d40c[_0x52ba0d(0x25c,'FACM')](2.5,Math[_0x5d2f55(0x408)]()),_0x4f4be0[_0x52ba0d(0x2be,'4(#F')]=_0x36d40c[_0xe53bce(0x2af)](2.5,Math[_0xe53bce(0x35a)]()),_0x4f4be0[_0x52ba0d(0x262,'I([#')](_0x3e6732),_0x4f4be0[_0x52ba0d(0x30a,'R^TQ')](_0x21eccd),_0x50536d[_0x5d2f55(0x1ec)]=_0x4f4be0,_0x50536d[_0x5d2f55(0x2f2)]['y']=-0xb,_0x50536d['position']['z']=0x0,_0x208368[_0x5d2f55(0x2a2)][_0x5d2f55(0x2b5)](_0x50536d),_0x208368[_0x5d2f55(0x38f)]=_0x36d40c[_0xe53bce(0x2af)](0x2,Math[_0x5d2f55(0x355)](_0x4f4be0[_0x52ba0d(0x2ec,'x*0M')])),_0x208368[_0x5d2f55(0x216)]({'loop':!![]});var _0x143840=new BABYLON[(_0x5d2f55(0x297))](''),_0x2ed176=new BABYLON[(_0x52ba0d(0x1ef,'(V0K'))]['GUI3DManager'](_0xe9899a),_0x5bedad=new BABYLON['GUI'][(_0xe53bce(0x3f4))]();_0x36d40c['IJMzu'](this[_0x5d2f55(0x3e6)],this[_0x52ba0d(0x2bb,'71f8')])?_0x5bedad[_0x5d2f55(0x1ea)]=![]:_0x5bedad[_0xe53bce(0x1c8)]=!![];_0x5bedad[_0xe53bce(0x2b4)]=0.10475,_0x2ed176[_0x52ba0d(0x2ba,'DOML')](_0x5bedad),_0x5bedad[_0x52ba0d(0x3d2,'B@ce')]['y']=0x0,_0x5bedad['linkToTransformNode'](_0x143840),_0x143840[_0x5d2f55(0x2f2)]['y']=0x5;var _0x24fb7a='',_0xbf023e=function(_0x58f386,_0x4ba0c9,_0x320004){var _0x1f4db8=_0x5d2f55,_0x1ff2b8=_0xe53bce,_0x238c0e=_0x52ba0d,_0x4d8ed9=new BABYLON[(_0x238c0e(0x24f,'MgXk'))][(_0x238c0e(0x363,'cC*6'))](_0x58f386);_0x5bedad[_0x238c0e(0x3d1,'VxeP')](_0x4d8ed9),_0x4d8ed9[_0x1ff2b8(0x372)]=_0x36d40c[_0x1f4db8(0x35d)];const _0x3f6001=new BABYLON[(_0x1ff2b8(0x30f))][(_0x1f4db8(0x211))]();_0x3f6001['color']='White',_0x3f6001[_0x1ff2b8(0x3d5)]=0x20;if(typeof _0x4ba0c9===_0x36d40c[_0x238c0e(0x3e8,'71f8')]){_0x36d40c[_0x238c0e(0x228,'B@ce')](_0x58f386,'0')&&(_0x320004=_0x36d40c[_0x1ff2b8(0x431)]);try{_0x3f6001['text']=_0x320004[_0x238c0e(0x21e,'71f8')](/_/g,'\x0a');}catch{_0x3f6001[_0x1ff2b8(0x2da)]=_0x320004;}_0x4d8ed9[_0x1f4db8(0x293)]=_0x3f6001,_0x4d8ed9[_0x1ff2b8(0x374)][_0x1f4db8(0x3de)](function(){var _0x488735=_0x1ff2b8,_0x559eaa=_0x238c0e,_0x2329ca=_0x1f4db8;_0x17e55b[_0x2329ca(0x369)]=0.25,_0x17e55b[_0x559eaa(0x3e5,'DOML')]=0x20,_0x17e55b['play'](),_0x24fb7a=_0x4d8ed9[_0x488735(0x385)],_0x36d40c[_0x2329ca(0x1dd)](_0x24fb7a,'0')&&(_0x24fb7a=_0x36d40c[_0x559eaa(0x3b8,'tWQV')]),clk=0x1;});}else _0x3f6001['text']=_0x4ba0c9;_0x4d8ed9[_0x238c0e(0x28f,'bySj')]=_0x3f6001;var _0x29f8c9=_0x4d8ed9[_0x1ff2b8(0x22e)];_0x29f8c9[_0x238c0e(0x3fb,'VxeP')]=0x1,_0x4d8ed9['content'][_0x1f4db8(0x407)]=0x1;};return _0x56d988[_0xe53bce(0x2c7)](_0x42d349=>{var _0x90125e=_0x5d2f55,_0x539912=_0x52ba0d,_0x2e6866=_0xe53bce;_0x42d349[_0x2e6866(0x1e3)]=[],_0x42d349[_0x2e6866(0x417)]=[],dh=_0x36d40c['vDUhp'](_0x42d349[_0x539912(0x3a9,'tWQV')]['h'],0x2);var _0x3b9c39=_0x56d988[_0x539912(0x3ca,'sGMw')](_0x42d349),_0x2274c6=new BABYLON[(_0x90125e(0x2e6))](0x0,dh,0x0);for(i=0x0;_0x36d40c[_0x90125e(0x429)](i,_0x42d349[_0x2e6866(0x386)]);i++){if(_0x36d40c[_0x539912(0x29b,'P]RE')](i,0x0)){var _0x7ba25={'width':_0x42d349[_0x2e6866(0x23f)]['w'],'height':_0x42d349[_0x539912(0x3ed,'VxeP')]['h'],'depth':_0x42d349[_0x539912(0x1f0,'(V0K')]['d'],'sideOrientation':BABYLON[_0x539912(0x1b6,'VKXY')]['DEFAULTSIDE']},_0x3a0921=new BABYLON[(_0x539912(0x2f4,'3)v@'))][(_0x2e6866(0x2ca))](_0x36d40c[_0x539912(0x336,'@8KV')](_0x36d40c[_0x2e6866(0x1b4)](_0x36d40c[_0x539912(0x31a,'%AKa')](_0x3b9c39,':'),i),'-F'),_0x7ba25,_0xe9899a);_0x3a0921[_0x539912(0x3a6,'0HFJ')]=_0x2274c6,_0x42d349[_0x2e6866(0x1e3)]['push'](_0x3a0921);}var _0x4afcac=0x0,_0x34a174=0x0,_0x52b161=0x0;for(c=0x0;c<_0x42d349[_0x2e6866(0x2a7)];c++){var _0x562fcc=_0x36d40c[_0x90125e(0x3cd)](Math[_0x2e6866(0x204)](_0x36d40c[_0x2e6866(0x30c)](c,0x4)),0x1),_0x2a783f=_0x36d40c[_0x2e6866(0x3f3)](_0x36d40c[_0x90125e(0x3cd)](0x1,_0x36d40c[_0x90125e(0x301)](0x1,0x4)),_0x36d40c[_0x2e6866(0x344)](_0x562fcc,0x4));switch(_0x4afcac){case 0x0:_0x34a174=_0x2a783f,_0x52b161=_0x2a783f;break;case 0x1:_0x34a174=-_0x2a783f,_0x52b161=_0x2a783f;break;case 0x2:_0x34a174=-_0x2a783f,_0x52b161=-_0x2a783f;break;case 0x3:_0x34a174=_0x2a783f,_0x52b161=-_0x2a783f;break;default:break;}var _0x4dff3b={'width':_0x42d349[_0x2e6866(0x405)]['w'],'height':_0x42d349[_0x2e6866(0x405)]['h'],'depth':_0x42d349[_0x539912(0x2dc,'Pnfk')]['d'],'sideOrientation':BABYLON[_0x2e6866(0x2a1)]['DEFAULTSIDE']};if(_0x36d40c[_0x539912(0x267,'x*0M')](c,0x0)){var _0x5b3676=_0x36d40c[_0x2e6866(0x240)]['split']('|'),_0x4e7c3c=0x0;while(!![]){switch(_0x5b3676[_0x4e7c3c++]){case'0':_0x1dd631[_0x2e6866(0x433)]=_0x2274c6['add'](new BABYLON[(_0x90125e(0x2e6))](colRlx,colRly,colRlz));continue;case'1':colRlx=_0x36d40c[_0x90125e(0x3a8)](_0x34a174,_0x36d40c[_0x90125e(0x2ab)](_0x42d349[_0x90125e(0x2c6)]['w'],0x2)-_0x36d40c[_0x90125e(0x3a8)](0x2,_0x42d349[_0x2e6866(0x405)]['w']));continue;case'2':colRly=_0x36d40c['eCUCo'](_0x36d40c[_0x2e6866(0x2d9)](i,_0x36d40c[_0x90125e(0x209)](_0x42d349[_0x2e6866(0x405)]['h'],_0x42d349[_0x539912(0x212,'DOML')]['h']))+_0x36d40c['Fcjrr'](_0x42d349[_0x2e6866(0x405)]['h'],0x2),_0x42d349[_0x539912(0x235,'B@ce')]['h']/0x2);continue;case'3':colRlz=_0x36d40c['IOWpS'](_0x52b161,_0x36d40c[_0x90125e(0x296)](_0x36d40c[_0x539912(0x1f6,'sGMw')](_0x42d349['strd']['d'],0x2),_0x36d40c['aOwug'](0x2,_0x42d349[_0x539912(0x321,'4(#F')]['d'])));continue;case'4':var _0x1dd631=new BABYLON['MeshBuilder'][(_0x90125e(0x289))](_0x36d40c['fNVrn'](_0x36d40c['fNVrn'](_0x36d40c[_0x2e6866(0x3d0)](_0x36d40c[_0x2e6866(0x3d0)](_0x3b9c39,':'),i),'-C'),c),_0x4dff3b,_0xe9899a);continue;}break;}}else{var _0x1dd631=_0x1dd631['clone'](_0x36d40c[_0x539912(0x418,'MgXk')](_0x36d40c[_0x2e6866(0x30e)](_0x3b9c39,':'),i)+'-C'+c);colRlx=_0x36d40c[_0x2e6866(0x328)](_0x34a174,_0x42d349['strd']['w']/0x2-_0x36d40c[_0x2e6866(0x247)](0x2,_0x42d349[_0x90125e(0x28c)]['w'])),colRlz=_0x36d40c['jeWhK'](_0x52b161,_0x36d40c[_0x90125e(0x296)](_0x42d349[_0x539912(0x212,'DOML')]['d']/0x2,_0x36d40c[_0x90125e(0x3b3)](0x2,_0x42d349[_0x539912(0x31c,'R^TQ')]['d']))),colRly=_0x36d40c[_0x90125e(0x217)](i*(_0x42d349[_0x90125e(0x28c)]['h']+_0x42d349['strd']['h']),_0x42d349['cld']['h']/0x2)+_0x36d40c[_0x539912(0x21d,'Jk(K')](_0x42d349[_0x2e6866(0x23f)]['h'],0x2),_0x1dd631[_0x539912(0x27c,'pwRI')]=_0x2274c6['add'](new BABYLON[(_0x2e6866(0x1e9))](colRlx,colRly,colRlz));}_0x42d349[_0x2e6866(0x1e3)][_0x539912(0x3e9,'cZ^r')](_0x1dd631);if(_0x36d40c[_0x539912(0x2c2,'fpf7')](c,0x4)){switch(c){case 0x0:case 0x1:var _0x1d5424={'width':_0x36d40c['yUSrI'](_0x42d349[_0x90125e(0x2c6)]['w'],_0x36d40c[_0x90125e(0x3b3)](_0x36d40c[_0x539912(0x275,'&o*Q')](0x1,0x8),_0x42d349[_0x90125e(0x28c)]['w'])),'depth':_0x36d40c[_0x539912(0x26a,'VxeP')](_0x42d349['cld']['d'],0x8),'height':_0x42d349[_0x539912(0x1d3,'Ryd7')]['h'],'sideOrientation':BABYLON[_0x90125e(0x31b)][_0x539912(0x33e,'R^TQ')]},_0x488e0f=new BABYLON[(_0x90125e(0x3b5))][(_0x539912(0x377,'I([#'))](_0x36d40c[_0x2e6866(0x414)](_0x36d40c['AGByV'](_0x36d40c['AGByV'](_0x3b9c39+':',i),'-W'),c),_0x1d5424,_0xe9899a);_0x488e0f[_0x2e6866(0x433)]=_0x2274c6['add'](new BABYLON['Vector3'](0x0,colRly,_0x36d40c[_0x539912(0x3cc,'uM%f')](_0x34a174,_0x36d40c['yUSrI'](_0x36d40c[_0x539912(0x299,'P]RE')](_0x42d349[_0x2e6866(0x23f)]['d'],0x2),_0x36d40c[_0x539912(0x432,'pwRI')](0.125,_0x42d349[_0x90125e(0x28c)]['w'])))));break;case 0x2:case 0x3:var _0x1d5424={'width':_0x36d40c[_0x2e6866(0x2fc)](_0x42d349[_0x539912(0x398,'6cK1')]['d'],0x8),'depth':_0x42d349['strd']['d']-_0x36d40c['UIIfM'](_0x36d40c['LRrgG'](0x1,0x8),_0x42d349[_0x90125e(0x28c)]['w']),'height':_0x42d349[_0x2e6866(0x405)]['h'],'sideOrientation':BABYLON['Mesh'][_0x539912(0x2b2,'Ryd7')]},_0x488e0f=new BABYLON['MeshBuilder'][(_0x2e6866(0x2ca))](_0x36d40c[_0x2e6866(0x1c5)](_0x36d40c[_0x2e6866(0x313)](_0x36d40c[_0x2e6866(0x399)](_0x3b9c39+':',i),'-W'),c),_0x1d5424,_0xe9899a);_0x488e0f[_0x2e6866(0x433)]=_0x2274c6[_0x90125e(0x3de)](new BABYLON[(_0x2e6866(0x1e9))](_0x36d40c['AOaGR'](_0x34a174,_0x36d40c['COrJx'](_0x36d40c['gUhrM'](_0x42d349[_0x90125e(0x2c6)]['w'],0x2),_0x36d40c[_0x539912(0x310,'TeDf')](0.125,_0x42d349[_0x90125e(0x28c)]['w']))),colRly,0x0));break;default:break;}_0xc69a90['alpha']=0.25,_0x488e0f[_0x539912(0x3b6,'FACM')]=_0xc69a90,_0x42d349['bxs'][_0x90125e(0x1d4)](_0x488e0f);}_0x4afcac++,_0x36d40c['JgoMr'](_0x4afcac,0x3)&&(_0x4afcac=0x0);}var _0x7ba25={'width':_0x42d349[_0x539912(0x333,'6cK1')]['w'],'height':_0x42d349[_0x2e6866(0x23f)]['h'],'depth':_0x42d349['strd']['d'],'sideOrientation':BABYLON['Mesh'][_0x539912(0x33d,'sGMw')]},_0x2637e3=_0x3a0921['clone'](_0x36d40c['oJLiJ'](_0x3b9c39+':',i)+'-S');dh=_0x36d40c[_0x539912(0x28e,'AcL!')](_0x36d40c[_0x539912(0x28e,'AcL!')](i*_0x36d40c['oJLiJ'](_0x42d349[_0x539912(0x321,'4(#F')]['h'],_0x42d349[_0x90125e(0x2c6)]['h']),_0x42d349['cld']['h']),_0x42d349['strd']['h']),_0x2637e3['position']=_0x3a0921[_0x2e6866(0x433)][_0x90125e(0x3de)](new BABYLON[(_0x539912(0x24c,'lAfm'))](0x0,dh,0x0)),_0x42d349[_0x539912(0x347,'8$7o')][_0x90125e(0x1d4)](_0x2637e3);}_0x42d349[_0x539912(0x41f,'uM%f')][_0x90125e(0x260)](_0x2a176a=>{var _0x50df0c=_0x90125e,_0x456ea8=_0x539912;_0x2a176a[_0x456ea8(0x349,'*pWp')]=_0x42d349[_0x50df0c(0x34d)];}),_0x42d349['COT'][_0x2e6866(0x433)]=new BABYLON['Vector3'](_0x42d349['loc']['x'],_0x42d349[_0x2e6866(0x2fb)]['y'],_0x42d349[_0x539912(0x200,'sGMw')]['z']);}),_0xe9899a[_0x52ba0d(0x2c1,'8$7o')](()=>{var _0x5e2276=_0x52ba0d,_0x49c240=_0x5d2f55,_0x401919=_0xe53bce;_0x56d988[0x1][_0x401919(0x21b)]['rotation']['y']+=0.015;_0x36d40c[_0x49c240(0x3c3)](_0x5764b3['beta'],PI/0x2)&&(_0x5764b3[_0x5e2276(0x361,'z9IK')]=PI/0x2);_0x36d40c['iqouT'](this[_0x5e2276(0x2ff,'@8KV')],this['outerHeight'])?(_0x5bedad[_0x49c240(0x1ea)]=![],whr=_0x36d40c[_0x5e2276(0x350,'2xj3')](this[_0x5e2276(0x41e,'cZ^r')],this[_0x49c240(0x242)]),cz=dvc,_0x143840[_0x5e2276(0x3d7,'VxeP')]['y']=0x5):(_0x5bedad[_0x49c240(0x1ea)]=!![],whr=_0x36d40c['gUhrM'](this[_0x5e2276(0x32d,'uM%f')],this['outerWidth']),cz=dvc,_0x143840[_0x49c240(0x2f2)]['x']=0x0);_0x57ab7f[_0x401919(0x291)]-=0.000555,_0x50536d[_0x49c240(0x29f)]['y']+=0.0005;if(_0x36d40c[_0x49c240(0x429)](_0x57ab7f[_0x401919(0x291)],_0x36d40c[_0x49c240(0x34a)](-0.4985,0.000255))){var _0x251ce4=_0x36d40c['Oyyah']['split']('|'),_0x11a48c=0x0;while(!![]){switch(_0x251ce4[_0x11a48c++]){case'0':_0x4f4be0['windForce']=_0x36d40c[_0x49c240(0x307)](-1.5,Math[_0x401919(0x35a)]());continue;case'1':_0x4f4be0[_0x49c240(0x220)]=2.5*Math[_0x401919(0x35a)]();continue;case'2':_0x36d40c[_0x5e2276(0x214,'4(#F')](Math[_0x401919(0x35a)](),0.5)&&(_0x4f4be0[_0x5e2276(0x1d8,'VKXY')]=-_0x4f4be0[_0x49c240(0x423)]);continue;case'3':_0x57ab7f[_0x5e2276(0x207,'FACM')]=_0x36d40c['mOyJy'](0.4985,0.000255*0x0);continue;case'4':_0x208368[_0x49c240(0x38f)]=0x2*Math[_0x401919(0x392)](_0x4f4be0[_0x49c240(0x423)]);continue;case'5':_0x4f4be0[_0x49c240(0x1d7)]=_0x36d40c[_0x401919(0x2db)](2.5,Math['random']());continue;}break;}}_0x5764b3[_0x401919(0x3d6)]<=cz&&(_0x5764b3[_0x401919(0x3d6)]=cz);_0x36d40c['UvRgV'](_0x5764b3[_0x5e2276(0x1f7,'2xj3')],cz)&&(_0x5764b3[_0x5e2276(0x2f0,'0HFJ')]=cz);if(_0x36d40c['XOHol'](clk,-0x1)){_0x5bedad[_0x401919(0x3e1)]=!![];for(let _0x2fb760 in e){try{lbl=e[_0x2fb760][0x0][_0x49c240(0x261)];}catch{lbl=_0x2fb760;}_0x36d40c[_0x49c240(0x33a)](_0xbf023e,_0x2fb760,e[_0x2fb760],lbl);}_0x5bedad[_0x49c240(0x3b0)]=![],enlen=en['length'],clk=0x0;}_0x36d40c['XOHol'](clk,0x0)&&(_0x36d40c[_0x49c240(0x368)](_0x24fb7a,'2')&&_0x36d40c[_0x5e2276(0x384,'BGnM')](lbl,'0')&&(_0x143840[_0x401919(0x433)]['z']-=0.01),_0x36d40c[_0x49c240(0x368)](_0x24fb7a,'3')&&lbl==='0'&&(_0x143840[_0x5e2276(0x2e8,'tWQV')]['z']+=0.01));if(_0x36d40c[_0x401919(0x2df)](clk,0x1)){_0x5bedad[_0x401919(0x3e2)][_0x401919(0x2c7)](_0xc0c2a8=>{var _0x14d5fd=_0x401919;_0xc0c2a8[_0x14d5fd(0x3af)]();});if((_0x36d40c[_0x49c240(0x290)](_0x24fb7a,_0x36d40c[_0x401919(0x431)])||_0x36d40c[_0x49c240(0x205)](_0x24fb7a,'0'))&&en[_0x401919(0x3bd)]>0x0&&_0x36d40c[_0x401919(0x22a)](mstxt['length'],0x0)){mstxt[_0x49c240(0x359)]();var _0x143f87=mstxt[_0x36d40c[_0x401919(0x1c1)](mstxt['length'],0x1)];en[_0x49c240(0x359)](),enlen=_0x36d40c[_0x401919(0x1c1)](en[_0x401919(0x3bd)],0x1),_0x36d40c[_0x49c240(0x251)](en[_0x5e2276(0x380,'(V0K')],0x0)&&(e=en[enlen][_0x143f87]),_0x36d40c[_0x49c240(0x205)](en['length'],0x0)&&(e=mn),_0x5bedad[_0x5e2276(0x2b3,'pwRI')]?_0x143840[_0x49c240(0x2f2)]['y']=0x5:_0x143840['position']['x']=0x0;}if(_0x36d40c[_0x401919(0x2e5)](_0x24fb7a,_0x36d40c['eQmYQ'])&&_0x36d40c[_0x5e2276(0x202,'@8KV')](_0x24fb7a,'0')){var _0x3797e3=_0x36d40c['wFoKe'][_0x5e2276(0x330,'*pWp')]('|'),_0x7e8d0b=0x0;while(!![]){switch(_0x3797e3[_0x7e8d0b++]){case'0':en[_0x5e2276(0x38d,'cC*6')](e);continue;case'1':e=en[enlen][_0x24fb7a];continue;case'2':mstxt[_0x401919(0x234)](_0x24fb7a);continue;case'3':_0x5bedad[_0x401919(0x1c8)]?_0x143840[_0x5e2276(0x272,'2xj3')]['y']=0x5:_0x143840[_0x401919(0x433)]['x']=0x0;continue;case'4':enlen=_0x36d40c[_0x401919(0x1c1)](en[_0x5e2276(0x2f1,'1pS1')],0x1);continue;}break;}}clk=-0x1;}}),_0xe9899a[_0x5d2f55(0x3dd)]=_0x36d40c[_0x5d2f55(0x2ce)],_0xe9899a[_0xe53bce(0x26c)][_0xe53bce(0x2bf)](_0x3ef756=>{var _0x5676f2=_0x5d2f55,_0x137ccc=_0xe53bce,_0x5939b1=_0x52ba0d;switch(_0x3ef756[_0x5939b1(0x2f7,'8$7o')]){case BABYLON[_0x137ccc(0x40f)]['POINTERDOWN']:strt=[_0xe9899a[_0x137ccc(0x2aa)],_0xe9899a['pointerY']];break;case BABYLON[_0x5676f2(0x286)][_0x5939b1(0x2b1,'DOML')]:strt=[],crrt=[],dfrc=[];break;case BABYLON[_0x137ccc(0x40f)]['POINTERMOVE']:_0x36d40c[_0x5676f2(0x3d4)](strt['length'],0x0)&&(crrt=[_0xe9899a[_0x5939b1(0x366,'cC*6')],_0xe9899a[_0x5676f2(0x37e)]],dfrc=[_0x36d40c['yJMJl'](crrt[0x0],strt[0x0]),_0x36d40c[_0x5676f2(0x2ee)](crrt[0x1],strt[0x1])],_0x36d40c[_0x137ccc(0x2ed)](Math[_0x137ccc(0x392)](dfrc[0x0]),Math[_0x5939b1(0x425,'R^TQ')](dfrc[0x1]))&&_0x5bedad[_0x137ccc(0x1c8)]===![]&&(_0x143840['position']['x']+=_0x36d40c[_0x5676f2(0x3f2)](_0x36d40c[_0x5939b1(0x25a,'lAfm')](dfrc[0x0],0x7d0),whr),_0x143840[_0x5939b1(0x1cf,'BGnM')]['x']>_0x36d40c['KoSxn'](0x0,_0x36d40c[_0x5676f2(0x1ff)](Object[_0x5939b1(0x357,'sGMw')](e)[_0x5939b1(0x2a3,'2J(4')],0x2))&&(_0x143840[_0x137ccc(0x433)]['x']=_0x36d40c[_0x5939b1(0x230,'71f8')](0x0,_0x36d40c[_0x5939b1(0x3e3,'8$7o')](Object[_0x5939b1(0x1ca,'Sqek')](e)['length'],0x2))),_0x36d40c[_0x5676f2(0x429)](_0x143840[_0x137ccc(0x433)]['x'],0x0-_0x36d40c[_0x5939b1(0x26e,'MAR8')](Object[_0x5676f2(0x1bf)](e)[_0x5676f2(0x2d8)],0x2))&&(_0x143840[_0x5939b1(0x2fd,'Jk(K')]['x']=0x0-_0x36d40c[_0x137ccc(0x31e)](Object['keys'](e)[_0x5939b1(0x1bb,'Ryd7')],0x2))),Math[_0x5939b1(0x210,'fpf7')](dfrc[0x0])<Math[_0x137ccc(0x392)](dfrc[0x1])&&_0x36d40c[_0x137ccc(0x397)](_0x5bedad['isVertical'],!![])&&(_0x143840[_0x5676f2(0x2f2)]['y']-=_0x36d40c[_0x5676f2(0x40b)](_0x36d40c['ohHwV'](dfrc[0x1],0x7d0),whr),_0x36d40c[_0x5939b1(0x2cb,'MAR8')](_0x143840['position']['y'],_0x36d40c['NDMjP'](0x5,Object[_0x5676f2(0x1bf)](e)[_0x5676f2(0x2d8)]/0x2))&&(_0x143840['position']['y']=_0x36d40c[_0x5676f2(0x305)](0x5,_0x36d40c[_0x5676f2(0x1d2)](Object['keys'](e)[_0x5939b1(0x339,'cC*6')],0x2))),_0x143840[_0x5676f2(0x2f2)]['y']<_0x36d40c['kPLGf'](0x5,_0x36d40c[_0x137ccc(0x1c9)](Object[_0x5939b1(0x233,'BGnM')](e)[_0x137ccc(0x3bd)],0x2))&&(_0x143840[_0x5939b1(0x1ba,'6cK1')]['y']=0x5-_0x36d40c[_0x5939b1(0x3f5,'zuuR')](Object[_0x5676f2(0x1bf)](e)[_0x5939b1(0x2a0,'Jk(K')],0x2))));break;case BABYLON[_0x137ccc(0x40f)]['POINTERWHEEL']:wheelSign=_0x36d40c['UWUGF'](_0x3ef756['event'][_0x137ccc(0x322)],Math[_0x137ccc(0x392)](_0x3ef756[_0x137ccc(0x24b)][_0x137ccc(0x322)]));switch(wheelSign){case 0x1:_0x143840[_0x137ccc(0x433)]['z']+=0.075;break;case-0x1:_0x143840[_0x137ccc(0x433)]['z']-=0.075;break;}if(_0x5bedad[_0x5939b1(0x23e,'&o*Q')]){}break;case BABYLON['PointerEventTypes'][_0x5676f2(0x239)]:break;case BABYLON['PointerEventTypes']['POINTERTAP']:break;case BABYLON[_0x5939b1(0x401,'cZ^r')]['POINTERDOUBLETAP']:break;}}),_0xe9899a;};createScene()['then'](_0x481692=>{var _0x598315=_0x5962ba;engine[_0x598315(0x25f)](function(){var _0x3a6f33=_0x598315;_0x481692&&_0x481692[_0x3a6f33(0x3c5)]();});}),window[_0x415060(0x1b1,'(V0K')](_0x5962ba(0x320),function(){var _0x118aac=_0x5962ba;engine[_0x118aac(0x320)]();});
+var s_c = {
+    i: String.fromCharCode(237),
+    o: String.fromCharCode(243),
+    n: String.fromCharCode(241),
+    a: String.fromCharCode(225),
+    e: String.fromCharCode(233),
+    u: String.fromCharCode(250),
+};
+
+var mn =
+{
+    1: {
+        0: { ttl: "Start_Inicio_Click" },
+        1: {
+            0: { ttl: "English" },
+            1: {
+                0: { ttl: "Products_and_Services" },
+                1: {
+                    0: { ttl: "General" },
+                    1: "Engineering\nDesign\nData",
+                    2: "Project\nEngineering\nPlan",
+                    3: "Project\nEquipment\nList",
+                    4: "Engineering\nDocument\nRegister"
+                },
+                2: {
+                    0: { ttl: "Process" },
+                    1: "Process\ndescription\nand\noperating\nphilosophy",
+                    2: "General\nspecification\nfor valves",
+                    3: "Process\nEquipment\nlist",
+                    4: "Heat and\nmaterial\nbalance",
+                    5: "Utility\nconsumption\nlist",
+                    6: "Equipment\nprocess\ndata sheets",
+                    7: "Piping and\nInstrumentation\nDiagrams\n(P&IDs)",
+                    8: "Cause and\neffect\ndiagrams",
+                    9: "Emergency\nshutdown\nblock\ndiagram",
+                    10: "ESD logic\ndiagrams",
+                    11: "Flare\nReport",
+                    12: "Process\nfluids\nlist",
+                    13: "Calculations\nnotes",
+                    14: "Operating\nmanual"
+
+                },
+                3: {
+                    0: { ttl: "Equipment" },
+                    1: "General\nspecification\nper\nequipment\ntype",
+                    2: "Pressure\nVessels\nDesign\nSpecification",
+                    3: "Equipment\nsupply\nspecification",
+                    4: "Mechanical\ndata\nsheet",
+                    5: "Heat\nexchanger\ncalculation\nsheet",
+                    6: "Vessel\nguide\ndrawing",
+                    7: "Material\nrequisition",
+                    8: "Technical\nbid\nevaluation"
+                },
+                4: {
+                    0: { ttl: "HSE" },
+                },
+                5: {
+                    0: { ttl: "Civil" },
+                    1: "Design\nspecification\n/ Basis of\ndesign",
+                    2: "Grading\nplan",
+                    3: "Foundation\ncalculation\nnote",
+                    4: "Foundation\ndrawing:\nReinforcement",
+                    5: "Foundation\ndrawing:\nFormwork",
+                    6: "Civil works\nspecifications",
+                    7: "Standard\ndrawings",
+                    8: "Drainage\ncalculation\nnote",
+                    9: "General\nUnderground\nNetworks\ndrawing",
+                    10: "Civil\nworks\ninstallation\ndrawings",
+                    11: "Architectural\ndrawings",
+                    12: "Building\ndetail\ndrawings",
+                    13: "Steel\nStructure\nCalculation\nnote",
+                    14: "Steel\nstructure\ndesign\ndrawings",
+                    15: "Civil\nMaterial\nTake-Off\n(MTO)",
+                    16: "Steel\nstructure\nstandard\ndrawings"
+                },
+                6: {
+                    0: { ttl: "Plant_Layout" },
+                    1: "Plant Layout\nDesign\nspecification\n/ Plant layout\nguidelines",
+                    2: "General\nPlot Plan\ndrawing",
+                    3: "Key plan",
+                    4: "Unit\nPlot Plan\ndrawing"
+                },
+                7: {
+                    0: { ttl: "Piping_Design" },
+                    1: "Piping\nDesign\nBasis",
+                    2: "Line\ndiagrams",
+                    3: "Piping\nlayout\ndrawings",
+                    4: "Piping\ngeneral\narrangement\ndrawings",
+                    5: "Piping\nisometric\ndrawings",
+                    6: "Line\nlist",
+                    7: "Piping\nMaterial\nTake-Off"
+                },
+                8: {
+                    0: { ttl: "Piping_Material" },
+                    1: "General\npiping\nspecification",
+                    2: "General\nspecification\nfor\nvalves",
+                    3: "Piping\nmaterial\nclasses\nspecifications",
+                    4: "Job\nSpecifications\nfor\nSupply",
+                    5: "Piping\nMaterial\nRequisition"
+                },
+                9: {
+                    0: { ttl: "Piping_Stress_Analysis" },
+                    1: "Piping\nflexibility\nand stress\nanalysis\ncriteria",
+                    2: "Piping\nstress\nanalysis\nCalculation\nnote",
+                    3: "Pipe\nsupport\nbooklet",
+                    4: "Job\nSpecifications\nfor\nSupply",
+                    5: "Pipe\nsupport\ndrawings"
+                },
+                10: {
+                    0: { ttl: "Material_and_Corrosion" },
+                    1: "Corrosion\ncontrol and\nmaterial\nselection\nreport",
+                    2: "Material\nselection\ndiagrams",
+                    3: "Cathodic\nprotection\nsystem\ndesign\nspecification",
+                    4: "Painting\nspecification",
+                    5: "Insulation\nspecification",
+                    6: "Insulation\nmaterial\ntake-off"
+                },
+                11: {
+                    0: { ttl: "Instruments_and_Control" },
+                    1: "System\nDesiqn\nSpecification\n/Desiqn basis\n/Philosophy",
+                    2: "System\narchitecture\ndrawing",
+                    3: "Instrument\nfunctional\ndiagram",
+                    4: "Control\nnarrative",
+                    5: "Mimic\ndisplay\ndrawings",
+                    6: "Safety\nIntegrity\nLevel (SIL)\nreview",
+                    7: "Instrument\nindex",
+                    8: "Instrument\ndata\nsheets",
+                    9: "Level\nsketches",
+                    10: "Main cable\nroutings and\nJunction Box\n(JB) location\ndrawings",
+                    11: "Instrument\nlocation &\nsecondary\ncable routing\ndrawings",
+                    12: "Cable\nrouting\ndrawings",
+                    13: "Cable\ncross\nsection\ndrawings",
+                    14: "Cable\nlist",
+                    15: "Instrument\nbulk material\ntake-off",
+                    16: "Junction\nbox\nwiring",
+                    17: "Typical\ninstallation\ndrawings",
+                    18: "Equipment\nlayout\ndrawings",
+                    19: "Telecom.\nsystems\ndesign\nspecification",
+                    20: "Telecom.\nequipment\nlayout\ndrawing",
+                    21: "Instrument\nloop\ndiagrams"
+                },
+                12: {
+                    0: { ttl: "Electricity" },
+                    1: "Electrical\ndesign\nspecification",
+                    2: "Electrical\nconsumer\nlist",
+                    3: "Electrical\nload\nsummary",
+                    4: "General\none line\ndiagram",
+                    5: "Equipment\ndata\nsheet",
+                    6: "General\nequipment\nspecification",
+                    7: "Equipment\nrequisition",
+                    8: "Switchgear\nsingle line\ndiagram",
+                    9: "Switchgear\ntypical\ndiagram",
+                    10: "Architecture\ndrawing",
+                    11: "Equipment\nlayout\ndrawings",
+                    12: "Lighting\nlayout\ndrawings",
+                    13: "Cable\nrouting\ndrawings",
+                    14: "Cable list",
+                    15: "Typical\ninstallation\ndrawings",
+                    16: "Electrical bulk\nMaterial\nTake-Off\n(MTO)",
+                    17: "Block\ndiagrams",
+                    18: "Trouble\nshooting\ndiagrams",
+                    19: "Electrical\ncalculations"
+                }
+            },
+            2: {
+                0: { ttl: "Experience" },
+                1: {
+                    0: { ttl: "Mining" },
+                    1: "Under\nConstruction"
+                },
+                2: {
+                    0: { ttl: "Oil_and_Gas" },
+                    1: "Under\nConstruction"
+                },
+                3: {
+                    0: { ttl: "Power_Generation" },
+                    1: {
+                        0: { ttl: "Up to 100 MW" },
+                        1: {
+                            0: { ttl: "Grid Back Up" },
+                            1: {
+                                0: { ttl: "Open Cycle_50 MW" },
+                                1: "Location:\nZulia\nState,\nVenezuela",
+                                2: "Company:\nPENTECH",
+                                3: "Date:\n2011-2012",
+                                4: "Role:\nPiping\nDesign\nLeader",
+                                5: "Scope:\nBOP\nDesign",
+                                6: "Qty:\n3 Units\nGE LM2500\n25 MW eu"
+                            }
+                        }
+                    },
+                    2: {
+                        0: { ttl: "More than_100 MW" },
+                        1: {
+                            0: { ttl: "New Plants" },
+                            1: {
+                                0: { ttl: "Open Cycle_150 MW" },
+                                1: "Location:\nCasanare\nDepartment,\nColombia",
+                                2: "Company:\nSINCO-\nSOLUCIONES\nDE I&C",
+                                3: "Date:\n2019-2020",
+                                4: "Role:\nCivil\nDesigner\nx1",
+                                5: "Scope:\nCivil\nDesign",
+                                6: "Qty:\n3 Units\nGE LM6000\n50 MW eu"
+                            },
+                            2: {
+                                0: { ttl: "Closed Cycle_250 MW" },
+                                1: "Location:\nBuenos Aires\nProvince,\nArgentina",
+                                2: "Company:\nBarker\nThermoelectric",
+                                3: "Date:\n2018-2019",
+                                4: "Roles:\nSite Civil\nEngineer\nx1",
+                                5: "Scope:\nSite Design\nModifications",
+                                6: "Qty:\n4 Units\nGE LM6000\n50 MW eu"
+
+                            },
+                            3: {
+                                0: { ttl: "Closed Cycle_450 MW" },
+                                1: "Location:\nZulia\nState,\nVenezuela",
+                                2: "Company:\nJANTESA",
+                                3: "Date:\n2009-2010",
+                                4: "Roles:\nPiping\nDesign\nx3",
+                                5: "Roles:\nElectrical\nDesign\nx1",
+                                7: "Scope:\nBOP,\nElectrical\nDesign",
+                                8: "Qty:\n2 Units\nSGT6-5000F\n150 MW eu"
+                            }
+
+                        }
+                    },
+
+
+                }
+            },
+            3: {
+                0: { ttl: "Contact" },
+                Email: "email:\nljv004ar@\ngmail.com",
+                Phone: "Phone:\n+541160423223"
+            }
+
+        },
+        2: {
+            0: { ttl: "Spanish" },
+            1: {
+                0: { ttl: "Productos_y_Servicios" },
+                1: {
+                    0: { ttl: "General" },
+                    1: "Levantamiento\n(Relevamiento)\nde Informaci" + s_c.o + "n\nde Ingenier" + s_c.i + "a",
+                    2: "Planificaci" + s_c.o + "n\nde Proyectos\nde Ingenier" + s_c.i + "a",
+                    3: "Lista de\nEquipos de\nProyectos",
+                    4: "Registro de\nDocumentos\nde Ingenier" + s_c.i + "a"
+                },
+                2: {
+                    0: { ttl: "Procesos" },
+                    1: "Descripci" + s_c.o + "n\nde Procesos y\nFilosof" + s_c.i + "a\nde Operaci" + s_c.o + "n",
+                    2: "Especificaciones\ngenerales\npara\nv" + s_c.a + "lvulas",
+                    3: "Lista de\nEquipos de\nProcesos",
+                    4: "Balances\nde Energia\ny Materia",
+                    5: "Lista de\nSistemas de\nServicios",
+                    6: "Hojas de\nDatos de\nEquipos de\nProcesos",
+                    7: "Diagramas\nde Tuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as) e\nInstrumentaci" + s_c.o + "n\n(P&IDs)",
+                    8: "Diagramas\nde Causa\ny Efecto",
+                    9: "Diagramas\nde Bloque de\nParo de\nEmergencia",
+                    10: "Diagranas\nde L" + s_c.o + "gica\nESD",
+                    11: "Reporte\nde Flare",
+                    12: "Lista de\nFluidos de\nProcesos",
+                    13: "Notas de\nC" + s_c.a + "lculo",
+                    14: "Manuales de\nOperaci" + s_c.o + "n"
+
+                },
+                3: {
+                    0: { ttl: "Equipos" },
+                    1: "Especificaciones\nGenerales\npor tipo\nde Equipo",
+                    2: "Especificaci" + s_c.o + "n\nde Dise" + s_c.n + "o\nde Recipientes\na Presi" + s_c.o + "n",
+                    3: "Especifiaci" + s_c.o + "n\nde Suministro\nde Equipos",
+                    4: "Hojas de\nDatos de\nEquipos\nMec" + s_c.a + "nicos",
+                    5: "Hoja de\nC" + s_c.a + "lculos de\nIntercambiadores\nde Calor",
+                    6: "Planos\nGu" + s_c.i + "a de\nRecipientes",
+                    7: "Requisiones\nde\nMateriales",
+                    8: "Evaluaci" + s_c.o + "n\nT" + s_c.e + "cnica de\nOfertas"
+                },
+                4: {
+                    0: { ttl: "SHA" },
+                },
+                5: {
+                    0: { ttl: "Civil" },
+                    1: "Especificaciones\n/ Bases de\nDise" + s_c.n + "o",
+                    2: "Planos de\nRelleno, Corte\ny Nivelaci" + s_c.o + "n",
+                    3: "Notas de\nC" + s_c.a + "lculo de\nFundaciones",
+                    4: "Planos de\nFundaciones:\nRefuerzos",
+                    5: "Planos de\nFundaciones:\nEncofrado",
+                    6: "Especificaciones\nde trabajos\nCiviles",
+                    7: "Planos\nEstandar",
+                    8: "Notas de\nC" + s_c.a + "lculo de\nDrenajes",
+                    9: "Planos\nGenerales\nde Redes\nSubterraneas",
+                    10: "Planos de\nInstalaci" + s_c.o + "n\nde Trabajos\nCiviles",
+                    11: "Planos de\nArquitectura",
+                    12: "Planos de\nDetalles de\nEdificaciones",
+                    13: "Notas de\nC" + s_c.a + "lculo de\nEstructuras\nde Acero",
+                    14: "Planos de\nDise" + s_c.n + "o de\nEstructuras\nde Acero",
+                    15: "Cuantificaci" + s_c.o + "n\nde Materiales\nCiviles (MTO)",
+                    16: "Planos\nEstandar de\nEstructuras\nde Acero"
+                },
+                6: {
+                    0: { ttl: "Arreglo_de_Planta" },
+                    1: "Especificaci" + s_c.o + "n\nde Dise" + s_c.n + "o/\nLineamientos de\nDisposici" + s_c.o + "n de\nPlanta",
+                    2: "Plano\nGeneral de\nDisposici" + s_c.o + "n\nde Planta",
+                    3: "Plano\nLlave",
+                    4: "Plano de\nDisposici" + s_c.o + "n\npor\nUnidad"
+                },
+                7: {
+                    0: { ttl: "Dise" + s_c.n + "o de\nTuber" + s_c.i + "as_(Ca" + s_c.n + "er" + s_c.i + "as)" },
+                    1: "Bases de\nDise" + s_c.n + "o de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                    2: "Diagramas\nde L" + s_c.i + "nea",
+                    3: "Planos de\nDisposici" + s_c.o + "n de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                    4: "Planos de\narreglos\ngenerales de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                    5: "Planos\nIsom" + s_c.e + "tricos de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                    6: "Lista de\nL" + s_c.i + "neas",
+                    7: "Cuantificaci" + s_c.o + "n\nde Materiales de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)"
+                },
+                8: {
+                    0: { ttl: "Materiales_de_Tuber" + s_c.i + "as_(Ca" + s_c.n + "er" + s_c.i + "as)" },
+                    1: "Especificaci" + s_c.o + "n\nGeneral de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                    2: "Especificaci" + s_c.o + "n\nGeneral de\nV" + s_c.a + "lvulas",
+                    3: "Especificaciones\nde Clases de\nMaterial de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                    4: "Especificaciones\nde Trabajo para\nsuministro",
+                    5: "Requisici" + s_c.o + "n de\nMateriales de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)"
+                },
+                9: {
+                    0: { ttl: "An" + s_c.a + "lisis de\nEsfuerzos en\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)" },
+                    1: "Criterios de\nFlexibilidad y\nEsfuerzos en\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                    2: "Notas de\nC" + s_c.a + "lculo de\nan" + s_c.a + "lisis de\nEsfuerzos en\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                    3: "Cuaderno de\nsoportes de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)",
+                    4: "Especificaciones\nde Trabajo para\nsuministro",
+                    5: "Planos de\nsoportes de\nTuber" + s_c.i + "as\n(Ca" + s_c.n + "er" + s_c.i + "as)"
+                },
+                10: {
+                    0: { ttl: "Materiales_y_Corrosión" },
+                    1: "Reporte de\nControl de\nCorrosi" + s_c.o + "n y\nselecci" + s_c.o + "n de\nmateriales",
+                    2: "Diagramas de\nselecci" + s_c.o + "n de\nMateriales",
+                    3: "Especificaci" + s_c.o + "n\nde dise" + s_c.n + "o\nde Sistemas\nde Protecci" + s_c.o + "n\nCat" + s_c.o + "dica",
+                    4: "Especificaci" + s_c.o + "n\nde Sistemas\nde Pintura y\nProtecci" + s_c.o + "n\nMec" + s_c.a + "nica",
+                    5: "Especificaci" + s_c.o + "n\nde Aislamiento\nT" + s_c.e + "rmico",
+                    6: "Cuantificaci" + s_c.o + "n\nde materiales\nde aislamiento"
+                },
+                11: {
+                    0: { ttl: "Instrumentos_y_Control" },
+                    1: "Especificaci" + s_c.o + "n\nde Dise" + s_c.n + "o /\nBases de\nDise" + s_c.n + "o /\nFilosof" + s_c.i + "a\ndel Sistema",
+                    2: "Planos de\nArquitectura\ndel Sistema",
+                    3: "Diagrama\nfuncional de\nInstrumentos",
+                    4: "Narrativa\nde Control",
+                    5: "Planos de\ndespliegue\nde Mimicos",
+                    6: "Revisi" + s_c.o + "n\nNivel de\nIntegridad\nde Seguridad\n(SIL)",
+                    7: "Indice de\nInsrtumentos",
+                    8: "Hojas de\nDatos de\nInstrumentos",
+                    9: "Bosquejos\nde Nivel",
+                    10: "Planos de\nrutas de cables\nprincipales y\nubicaci" + s_c.o + "n de\nCajas de\nConexi" + s_c.o + "n (JB)",
+                    11: "Planos de\nubicaci" + s_c.o + "n de\nInstrumentos y\nruta de cables\nsecundarios",
+                    12: "Planos de\nrutas de\ncables",
+                    13: "Planos de\nsecci" + s_c.o + "n\ntransversal\nde cables",
+                    14: "Lista de\nCables",
+                    15: "Cuantificaci" + s_c.o + "n\nde Materiales\nde Instrumentos\na granel",
+                    16: "Conexionado\nde Cajas de\nConexi" + s_c.o + "n (JB)",
+                    17: "Planos t" + s_c.i + "picos\nde instalaci" + s_c.o + "n",
+                    18: "Planos de\narreglo\nde Equipos",
+                    19: "Especificaciones\nde dise" + s_c.n + "o de\nsistemas de\ntelecom.",
+                    20: "Planos de\ndisposici" + s_c.o + "n\nde equipos\nde telecom.",
+                    21: "Diagramas\nde lazo de\nInstrumentos"
+                },
+                12: {
+                    0: { ttl: "Electricidad" },
+                    1: "Especificaci" + s_c.o + "n\nde dise" + s_c.n + "o\nElectrica",
+                    2: "Lista\nde consumo\nEl" + s_c.e + "ctrico",
+                    3: "Totalizaci" + s_c.o + "n\nde Carga\nEl" + s_c.e + "ctrica",
+                    4: "Diagrama\nunifilar\ngeneral",
+                    5: "Hojas\nde datos\nde Equipos",
+                    6: "Especificaci" + s_c.o + "n\ngeneral\nde Equipos",
+                    7: "Requisici" + s_c.o + "n\nde Equipos",
+                    8: "Diagramas\nunifilares de\nInterruptores",
+                    9: "Diagrama\nt" + s_c.i + "pico de\nInterruptores",
+                    10: "Plano de\nArquitectura",
+                    11: "Planos de\ndisposici" + s_c.o + "n\nde Equipos",
+                    12: "Planos de\ndisposici" + s_c.o + "n de\nIluminaci" + s_c.o + "n",
+                    13: "Planos de\nrutas\nde cables",
+                    14: "Lista de\nCables",
+                    15: "Planos\nT" + s_c.i + "picos de\ninstalaci" + s_c.o + "n",
+                    16: "Cuantificaci" + s_c.o + "n\nde material\nElectrico a\ngranel (MTO)",
+                    17: "Diagramas\nde Bloque",
+                    18: "Diagramas\nde Resoluci" + s_c.o + "n\nde Problemas\n(TroubleShooting)",
+                    19: "C" + s_c.a + "lculos\nEl" + s_c.e + "ctricos"
+                }
+            },
+            Experiencia: {
+                0: { ttl: "Experiencia" },
+                1: "En\nConstruccion"
+            },
+            Contacto: {
+                0: { ttl: "Contacto" },
+                Email: "ljv004ar@\ngmail.com",
+                Telefono: "Telefono:\n+541160423223"
+            }
+        },
+        3: {
+            0: { ttl: "German" },
+            1: "Under\nConstruction"
+        }
+    }/* ,
+    2: {
+        0: { ttl: "Zoom_In" }
+    },
+    3: {
+        0: { ttl: "Zoom_Out" },
+    } */
+};
+
+var PI = Math.PI;
+var clk = -1;
+
+var e = mn;
+var en = [];
+var mstxt = [];
+var enlen = 0;
+var dvc = 10;
+var cz = dvc;
+var ca = 3 * PI / 2;
+
+var esc = 0.75;
+
+const ua = navigator.userAgent;
+if (/mobile/i.test(ua)) {
+    dvc = 3.5;
+    //return 'Mobile';
+} else if (/tablet/i.test(ua)) {
+    dvc = 3.5;
+    //return 'Tablet';
+} else {
+    dvc = 5.5;
+    //return 'Desktop';
+}
+
+var strt = [];
+var crrt = [];
+var dfrc = [];
+var whr = 0;
+var X = -300;
+var Z = 600;
+var wheelSign = 0;
+
+var lbl = "";
+
+//(async function () {
+/*     if (!navigator.gpu) {
+        alert("Web GPU is not supported on your platform so far.");
+        return;
+    } */
+const canvas = document.getElementById("Vue0");
+//console.log(canvas.parentNode);
+const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false });
+//const engine = new BABYLON.WebGPUEngine(canvas);
+//await engine.initAsync();
+const createScene = async function () {
+
+    const scene = new BABYLON.Scene(engine);
+    //    (async () => {
+    const audioEngine = await BABYLON.CreateAudioEngineAsync();
+
+    const gunshot = await BABYLON.CreateSoundAsync("gunshot",
+        "./assets/Audio/Shoot.mp3"
+    );
+    const bounce = await BABYLON.CreateSoundAsync("bounce",
+        "./assets/Audio/Sea-sound-effect.mp3",
+        { spatialEnabled: true }
+    );
+    //await audioEngine.unlockAsync();
+
+
+    bounce.volume = 0.15;
+    //    });
+
+    var bldgs = [
+        {
+            name: "Productos y Servicios",
+            loc: { x: 0 + X, y: 0, z: Z },
+            strs: 50,
+            clsn: 16,
+            cld: { w: esc, d: esc, h: esc * 7 },
+            strd: { w: 3 * esc * 150, d: 2 * esc * 150, h: esc / 3 },
+            els: { w: esc * 40, d: esc * 20 },
+            slM: 15000,
+            slF: 1,
+            clM: 500,
+            clF: 1,
+            bxs: [],
+            bxsi: [],
+            slxi: [],
+            sttc: true,
+            COT: new BABYLON.TransformNode(this.name)
+
+        },
+        {
+            name: "Generales",
+            loc: { x: 300 + X, y: 0, z: Z },
+            strs: 20,
+            clsn: 16,
+            cld: { w: esc, d: esc, h: esc * 7 },
+            strd: { w: esc * 150, d: esc * 150, h: esc / 3 },
+            els: { w: esc * 40, d: esc * 20 },
+            slM: 1500,
+            slF: 1,
+            clM: 150,
+            clF: 1,
+            bxs: [],
+            bxsi: [],
+            slxi: [],
+            sttc: true,
+            COT: new BABYLON.TransformNode(this.name)
+        },
+        {
+            name: "Tercero",
+            loc: { x: 500 + X, y: 0, z: Z },
+            strs: 30,
+            clsn: 8,
+            cld: { w: esc, d: esc, h: esc * 7 },
+            strd: { w: esc * 150, d: esc * 150, h: esc / 3 },
+            els: { w: esc * 40, d: esc * 20 },
+            slM: 10000,
+            slF: 1,
+            clM: 500,
+            clF: 1,
+            bxs: [],
+            bxsi: [],
+            slxi: [],
+            sttc: true,
+            COT: new BABYLON.TransformNode(this.name)
+        },
+        {
+            name: "Cuarto",
+            loc: { x: 800 + X, y: 0, z: Z },
+            strs: 40,
+            clsn: 8,
+            cld: { w: esc, d: esc, h: esc * 7 },
+            strd: { w: esc * 150, d: esc * 150, h: esc / 3 },
+            els: { w: esc * 40, d: esc * 20 },
+            slM: 1500,
+            slF: 1,
+            clM: 1500,
+            clF: 1,
+            bxs: [],
+            bxsi: [],
+            slxi: [],
+            sttc: true,
+            COT: new BABYLON.TransformNode(this.name)
+        }
+    ];
+
+    //bldgs[0].test = new BABYLON.TransformNode(this.name);   Puede pasarse el arreglo de parametros y valores de los edificios para luego asignar los valores
+
+    //var camera = new BABYLON.ArcRotateCamera("camera", ca, 16 * PI / 32, cz, new BABYLON.Vector3(0, 1, 0), scene);
+    var camera = new BABYLON.ArcRotateCamera("camera", ca, 16 * PI / 32, cz, new BABYLON.Vector3(0, 5, 0), scene);
+    //scene.activeCameras.push(scene.activeCamera);
+    //camera.attachControl(canvas, true);
+    //camera.maxZ = 18000;
+    //camera.wheelDeltaPercentage = 0.01;
+
+    var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0.5, 0.5, -0.5), scene);
+    light.position = new BABYLON.Vector3(-3500, 7000, 7000);
+    light.intensity = 0.95;
+    //camera.zoomToMouseLocation = true;
+
+    var skyDome = new BABYLON.MeshBuilder.CreateSphere("Sky", { diameter: 18000, sideOrientation: 0 }, scene);
+
+    var skyMaterial = new BABYLON.SkyMaterial("skyMaterial", scene);
+    skyMaterial.backFaceCulling = false;
+    skyDome.isPickable = false;
+
+    skyDome.material = skyMaterial;
+    skyMaterial.turbidity = 1;
+    skyMaterial.luminance = 1;
+    skyMaterial.inclination = 0.4985;
+    skyMaterial.azimuth = 0.75;
+    //skyMaterial.useSunPosition = true;
+    //skyMaterial.sunPosition = new BABYLON.Vector3(-3500, 7500, 7000);
+    skyMaterial.rayleigh = 2;
+
+    var wallMat = new BABYLON.StandardMaterial("myMaterial", scene);
+
+    wallMat.diffuseColor = new BABYLON.Color3(0.1, 0.35, 0.5);
+
+    const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 8000, height: 8000, subdivisions: 64 }, scene);
+
+    var groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene);
+    groundMaterial.diffuseTexture = new BABYLON.Texture("./assets/textures/ground_8f0wHf3.jpg", scene);
+    groundMaterial.diffuseTexture.uScale = groundMaterial.diffuseTexture.vScale = 512;
+
+    ground.material = groundMaterial;
+    ground.position.y = -12;
+
+    const ground2 = BABYLON.MeshBuilder.CreateGround("ground2", { width: 5000, height: 400, subdivisions: 32 }, scene);
+    //ground2.material = wallMat;
+    ground2.position.z = 600;
+
+    const road1 = BABYLON.MeshBuilder.CreateGround("road1", { width: 50, height: 9000, subdivisions: 32 }, scene);
+    road1.position.x = 100;
+    const road2 = BABYLON.MeshBuilder.CreateGround("road2", { width: 50, height: 9000, subdivisions: 32 }, scene);
+    road2.position.x = -100;
+
+    const waterMesh = BABYLON.MeshBuilder.CreateGround("waterMesh", { width: 9000, height: 9000, subdivisions: 64 }, scene);
+    var water = new BABYLON.WaterMaterial("water", scene);
+    water.bumpTexture = new BABYLON.Texture("./assets/textures/504940-water-texture.jpg", scene);
+
+    // Water properties
+    water.windForce = -1.5 * Math.random();
+    water.waveHeight = 1.25;
+    if (Math.random() > 0.5) {
+        water.windForce = -water.windForce;
+    }
+    water.windDirection = new BABYLON.Vector2(Math.random(), Math.random());
+    water.waterColor = new BABYLON.Color3(0.1, 0.1, Math.random());
+    water.colorBlendFactor = 0.3;
+    water.bumpHeight = 2.5 * Math.random();
+    water.waveLength = 2.5 * Math.random();
+    water.addToRenderList(ground);
+    water.addToRenderList(skyDome);
+
+    waterMesh.material = water;
+    waterMesh.position.y = -11;
+    waterMesh.position.z = 0;
+    bounce.spatial.attach(waterMesh);
+    bounce.playbackRate = 2 * Math.abs(water.windForce);
+    bounce.play({ loop: true });
+
+
+    var anchor = new BABYLON.TransformNode("");
+
+    //camera.setTarget(anchor.position);
+
+    var manager = new BABYLON.GUI.GUI3DManager(scene);
+    var panel = new BABYLON.GUI.StackPanel3D();
+    if (this.outerWidth > this.outerHeight) {
+        panel.isVertical = false;
+    } else {
+        panel.isVertical = true;
+    }
+
+
+    //panel.radius = 5;
+    panel.margin = 0.10475;
+
+    manager.addControl(panel);
+
+    panel.position.y = 0;
+    //panel._columns = 1;
+    panel.linkToTransformNode(anchor);
+
+    anchor.position.y = 5;
+
+    var stxt = "";
+
+    var addButton = function (txt, value, lbl) {
+        //console.log(txt, value, lbl);
+        var button = new BABYLON.GUI.HolographicButton(txt);
+        panel.addControl(button);
+        button.backgroundColor = "Black";
+        //button.text.fontSize = 12;
+        const text1 = new BABYLON.GUI.TextBlock();
+        text1.color = "White";
+        text1.fontSize = 32;
+        if (typeof value === "object") {
+            //stxt = txt;
+
+            if (txt === "0") {
+                lbl = "Back";
+                //stxt = lbl
+            }
+
+            try {
+
+                text1.text = lbl.replace(/_/g, "\n");
+                //text1.text = txt.replace(/ñ/g, s_c.n);
+                //text0.text = text1.text;
+            }
+            catch {
+                text1.text = lbl;
+                //text0.text = text1.text;
+            }
+
+            //text1.text = txt;
+            button.content = text1;
+            //button.text = txt;
+            button.onPointerUpObservable.add(function () {
+                //console.log(button.text);
+                /* try {
+                   stxt = text1.text.replace(/\n/g, "_");
+               }
+               catch {
+                   stxt = text1.text;// = txt;
+               } */
+                //stxt = text1.text;
+                gunshot.volume = 0.25;
+                gunshot.playbackRate = 32;
+                //gunshot.pitch = 1;
+                gunshot.play();
+                stxt = button.name;
+                if (stxt === "0") {
+                    stxt = "Back";
+                }
+                //console.log("Devolviendo:", stxt, lbl);
+                clk = 1;
+                //camera.alpha = ca;
+                //return lbl;
+
+            });
+        } else {
+            //button.text = value;
+
+            text1.text = value;
+        }
+        button.content = text1;
+        var btnCnt = button.content;
+        //button.textWrapping = true;
+        //btnCnt.color = "Red";
+        btnCnt._scaleY = 1;
+        button.content._scaleX = 1;
+        //btnCnt._paddingTop.value=-125;
+        //button.content._currentMeassure.height = 60;
+        //button._clipContent=false;
+        //btnCnt.height = 0.075;
+        //console.log(button.content._height);
+
+
+    }
+
+
+    bldgs.forEach((bld) => {
+        bld.bxs = [];
+        bld.bxsi = [];
+        dh = bld.strd.h / 2;
+        var j = bldgs.indexOf(bld);
+        //var ipnt = new BABYLON.Vector3(bld.loc.x, bld.loc.y + dh, bld.loc.z);
+        var ipnt = new BABYLON.Vector3(0, dh, 0);
+
+
+
+        for (i = 0; i < bld.strs; i++) {
+            if (i === 0) {
+                var slbOpts = {
+                    width: bld.strd.w,
+                    height: bld.strd.h,
+                    depth: bld.strd.d,
+                    sideOrientation: BABYLON.Mesh.DEFAULTSIDE
+                };
+                var slb = new BABYLON.MeshBuilder.CreateBox(j + ":" + i + "-F", slbOpts, scene);
+                slb.position = ipnt;
+                bld.bxs.push(slb);
+
+            }
+            var ccntr = 0;
+            var clmx = 0;
+            var clmz = 0;
+            for (c = 0; c < bld.clsn; c++) {
+
+                var cn = Math.trunc(c / 4) + 1;
+                var clstp = 1 + 1 / 4 - (cn) / 4;
+                //  console.log(j, c, cn, clstp, -clstp);
+
+                //console.log(j, c, ccntr, cn, clstp, -clstp);
+
+                switch (ccntr) {
+                    case 0:
+                        clmx = clstp;
+                        clmz = clstp;
+                        break;
+                    case 1:
+                        clmx = -clstp;
+                        clmz = clstp;
+                        break;
+                    case 2:
+                        clmx = -clstp;
+                        clmz = -clstp;
+                        break;
+                    case 3:
+                        clmx = clstp;
+                        clmz = -clstp;
+                        break;
+                    default:
+                        break;
+                }
+                //console.log(j, c, ccntr, cn, clmx, clmz);
+
+                var colOpts = {
+                    width: bld.cld.w,
+                    height: bld.cld.h,
+                    depth: bld.cld.d,
+                    sideOrientation: BABYLON.Mesh.DEFAULTSIDE
+                }
+
+                if (c === 0) {
+                    var col = new BABYLON.MeshBuilder.CreateBox(j + ":" + i + "-C" + c, colOpts, scene);
+                    colRlx = clmx * (bld.strd.w / 2 - 2 * bld.cld.w);
+                    colRlz = clmz * (bld.strd.d / 2 - 2 * bld.cld.d);
+                    colRly = i * (bld.cld.h + bld.strd.h) + bld.cld.h / 2 + bld.strd.h / 2;
+                    col.position = ipnt.add(new BABYLON.Vector3(colRlx, colRly, colRlz));
+
+
+                } else {
+                    var col = col.clone(j + ":" + i + "-C" + c);
+                    colRlx = clmx * (bld.strd.w / 2 - 2 * bld.cld.w);
+                    colRlz = clmz * (bld.strd.d / 2 - 2 * bld.cld.d);
+                    colRly = i * (bld.cld.h + bld.strd.h) + bld.cld.h / 2 + bld.strd.h / 2;
+                    col.position = ipnt.add(new BABYLON.Vector3(colRlx, colRly, colRlz));
+                }
+
+                bld.bxs.push(col);
+
+                if (c < 4) {
+
+                    switch (c) {
+                        case 0:
+                        case 1:
+                            var walOpts = {
+                                width: bld.strd.w - 1 / 8 * bld.cld.w,
+                                depth: bld.cld.d / 8,
+                                height: bld.cld.h,
+                                sideOrientation: BABYLON.Mesh.DEFAULTSIDE
+                            }
+                            var wall = new BABYLON.MeshBuilder.CreateBox(j + ":" + i + "-W" + c, walOpts, scene);
+                            wall.position = ipnt.add(new BABYLON.Vector3(0, colRly, clmx * (bld.strd.d / 2 - 0.125 * bld.cld.w)));
+
+                            break;
+
+                        case 2:
+                        case 3:
+                            var walOpts = {
+                                width: bld.cld.d / 8,
+                                depth: bld.strd.d - 1 / 8 * bld.cld.w,
+                                height: bld.cld.h,
+                                sideOrientation: BABYLON.Mesh.DEFAULTSIDE
+                            }
+                            var wall = new BABYLON.MeshBuilder.CreateBox(j + ":" + i + "-W" + c, walOpts, scene);
+                            wall.position = ipnt.add(new BABYLON.Vector3(clmx * (bld.strd.w / 2 - 0.125 * bld.cld.w), colRly, 0));
+                            break;
+
+                        default:
+                            break;
+                    }
+                    wallMat.alpha = 0.25;
+
+                    wall.material = wallMat;
+
+                    bld.bxs.push(wall);
+
+                }
+                ccntr++;
+                if (ccntr > 3) {
+                    ccntr = 0;
+                }
+            }
+
+            var slbOpts = {
+                width: bld.strd.w,
+                height: bld.strd.h,
+                depth: bld.strd.d,
+                sideOrientation: BABYLON.Mesh.DEFAULTSIDE
+            }
+            var slb1 = slb.clone(j + ":" + i + "-S");
+            dh = i * (bld.cld.h + bld.strd.h) + bld.cld.h + bld.strd.h;
+            slb1.position = slb.position.add(new BABYLON.Vector3(0, dh, 0));
+            bld.bxs.push(slb1);
+
+        }
+        bld.bxs.forEach((itm) => {
+            itm.parent = bld.COT;
+        });
+        bld.COT.position = new BABYLON.Vector3(bld.loc.x, bld.loc.y, bld.loc.z)
+    });
+
+
+
+    /* if (BABYLON.VideoRecorder.IsSupported(engine)) {
+           var recorder = new BABYLON.VideoRecorder(engine);
+           recorder.startRecording("test.webm", 64);
+       } */
+    scene.registerBeforeRender(() => {
+        //bldgs[0].COT.rotation.y += 0.01;
+        //bldgs[0].COT.position.y += 0.5;
+        bldgs[1].COT.rotation.y += 0.0150;
+        if (camera.beta > PI / 2) {
+            camera.beta = PI / 2;
+        }
+
+        //camera.alpha -= 0.01;
+
+
+        if (this.outerWidth > this.outerHeight) {
+            panel.isVertical = false;
+            whr = this.outerWidth / this.outerHeight;
+            cz = dvc;
+            anchor.position.y = 5;
+        } else {
+            panel.isVertical = true;
+            whr = this.outerHeight / this.outerWidth;
+            cz = dvc;
+            anchor.position.x = 0;
+
+        }
+        skyMaterial.inclination -= 0.000555;
+        waterMesh.rotation.y += 0.0005;
+        //console.log(skyMaterial.inclination);
+        if (skyMaterial.inclination < (-0.4985 + 0.000255)) {
+            skyMaterial.inclination = 0.4985 - 0.000255 * 0;
+            water.windForce = -1.5 * Math.random();
+            water.waveLength = 2.5 * Math.random();
+            water.bumpHeight = 2.5 * Math.random();
+            bounce.playbackRate = 2 * Math.abs(water.windForce);
+
+            if (Math.random() > 0.5) {
+                water.windForce = -water.windForce;
+                //water.windDirection = -water.windDirection;
+            }
+        }
+
+        /* if (camera.beta >= PI / 2) { camera.beta = PI / 2; }
+        if (camera.beta <= PI / 2.5) { camera.beta = PI / 2.5; } */
+
+        /* if (camera.alpha >= 2 * 2.375 * PI / 2) { camera.alpha = 2 * 2.375 * PI / 2; }
+        if (camera.alpha <= 0.55 * 2.375 * PI / 2) { camera.alpha = 0.55 * 2.375 * PI / 2; } */
+        //  3 * PI / 2
+        if (camera.radius <= cz) { camera.radius = cz; }
+        if (camera.radius >= cz) { camera.radius = cz; }
+
+        if (clk === -1) {
+
+            panel.blockLayout = true;
+            //panel._columns = 24;
+
+            for (let key in e) {
+                //console.log(mn[key].lbl);
+                /*                 if (key === "PS7") {
+                                    console.log(e[key][0]["PS7"]);
+                                addButton(e[key][0]["PS7"], e[key]);
+                
+                                }else{ */
+                //console.log(key, e[key]);
+                try {
+                    lbl = e[key][0].ttl;
+                    //console.log(lbl);
+                } catch {
+                    lbl = key;
+                }
+                //console.log(key, e[key], lbl);
+                addButton(key, e[key], lbl);
+                //lbl = "";
+                //      }
+            }
+            panel.blockLayout = false;
+            //en.push(e);
+            //mstxt.push(" ");
+            enlen = en.length;
+            //console.log(e, enlen, mstxt)
+            clk = 0;
+            //lbl = "";
+            //stxt = "";
+            //console.log(panel, clmns);
+
+        }
+        if (clk === 0) {
+
+            //camera.zoomOnFactor = 1;
+            //camera.zoomOn(ground,true);
+
+            /* if (fcs === 0) {
+                camera.alpha = ca;
+            } */
+            //console.log("Devolviendo:", stxt, lbl);
+
+            //if (stxt === "1") {
+            if (stxt === "2" && lbl === "0") {
+                anchor.position.z -= 0.01;
+                //camera.position = anchor.position;
+            }
+            if (stxt === "3" && lbl === "0") {
+                anchor.position.z += 0.01;
+                //camera.position = anchor.position;
+            }
+            //}
+
+
+        }
+        if (clk === 1) {
+            //console.log(stxt);
+            panel.children.forEach(element => {
+                element.dispose();
+            });
+
+            /*             if (orn === 1 && panel._columns !== 1) {
+                            panel._columns = 1;
+                            ca = -ca;
+                            cz = -cz;
+                        }
+                        if (orn === 0 && panel._columns !== 26) {
+                            panel._columns = 26;
+                            ca = -ca;
+                            cz = -cz;
+                        } */
+
+            if ((stxt === "Back" || stxt === "0") && en.length > 0 && mstxt.length > 0) {
+                mstxt.pop();
+                var mtxt = mstxt[mstxt.length - 1];
+                /*                         if (mtxt) {
+                                            try {
+                                                text0.text = "LV Projects\n" + mtxt.replace(/_/g, "\n");
+                                            }
+                                            catch {
+                                                text0.text = "LV Projects\n" + mtxt;
+                                            }
+                                        } else {
+                                            text0.text = "LV Projects\n" + "";
+                                        } */
+                en.pop();
+                enlen = en.length - 1;
+                if (en.length > 0) {
+                    e = en[enlen][mtxt];
+                }
+                if (en.length === 0) {
+                    e = mn;
+                }
+                if (panel.isVertical) {
+                    anchor.position.y = 5;
+                } else {
+                    anchor.position.x = 0;
+                }
+                //console.log(e, enlen, mstxt);
+                //console.log(mstxt);
+            }
+            if (stxt !== "Back" && stxt !== "0") {
+                mstxt.push(stxt);
+                /*                         try {
+                                            text0.text = "LV Projects\n" + stxt.replace(/_/g, "\n");
+                                        }
+                                        catch {
+                                            text0.text = "LV Projects\n" + stxt;
+                                        } */
+                //text0.text = stxt;
+                en.push(e);
+                enlen = en.length - 1;
+                e = en[enlen][stxt];
+                //console.log(e);
+
+                if (panel.isVertical) {
+                    anchor.position.y = 5;
+                } else {
+                    anchor.position.x = 0;
+                }
+                //console.log(en, enlen, mstxt)
+                //console.log(mstxt)
+            }
+            clk = -1;
+            //console.log(mstxt)
+
+        }
+        //console.log(clk);
+
+        //clk = 0;
+
+
+
+
+    });
+
+    scene.defaultCursor = "grab";
+
+
+    scene.onPointerObservable.add((pointerInfo) => {
+        switch (pointerInfo.type) {
+            case BABYLON.PointerEventTypes.POINTERDOWN:
+                //text0.text = "POINTER DOWN";
+                strt = [scene.pointerX, scene.pointerY];
+                break;
+            case BABYLON.PointerEventTypes.POINTERUP:
+                /*                 crrt = [scene.pointerX, scene.pointerY];
+                                dfrc = [crrt[0] - strt[0], crrt[1] - strt[1]];
+                
+                                if ((Math.abs(dfrc[0]) > Math.abs(dfrc[1])) && panel.isVertical === false) {
+                                    //text0.text = "Horizontal";
+                                    anchor.position.x += dfrc[0] / 1000 * whr;
+                                }
+                                if ((Math.abs(dfrc[0]) < Math.abs(dfrc[1])) && panel.isVertical === true) {
+                                    //text0.text = "Vertical\n";
+                                    //text0.text += dfrc[0] + "," + dfrc[1];
+                                    anchor.position.y -= dfrc[1] / 1000 * whr;
+                                } */
+                strt = [];
+                crrt = [];
+                dfrc = [];
+                //text0.text = dfrc[0] + "," + dfrc[1];
+                //text0.text = "POINTER UP";
+                break;
+            case BABYLON.PointerEventTypes.POINTERMOVE:
+                if (strt.length > 0) {
+                    crrt = [scene.pointerX, scene.pointerY];
+                    dfrc = [crrt[0] - strt[0], crrt[1] - strt[1]];
+
+                    if ((Math.abs(dfrc[0]) > Math.abs(dfrc[1])) && panel.isVertical === false) {
+                        //text0.text = "Horizontal";
+                        anchor.position.x += dfrc[0] / 2000 * whr;
+                        if (anchor.position.x > 0 + Object.keys(e).length / 2) {
+                            anchor.position.x = 0 + Object.keys(e).length / 2;
+                        }
+                        if (anchor.position.x < 0 - Object.keys(e).length / 2) {
+                            anchor.position.x = 0 - Object.keys(e).length / 2;
+                        }
+                    }
+                    if ((Math.abs(dfrc[0]) < Math.abs(dfrc[1])) && panel.isVertical === true) {
+                        //text0.text = "Vertical\n";
+                        //text0.text += dfrc[0] + "," + dfrc[1];
+                        anchor.position.y -= dfrc[1] / 2000 * whr;
+                        if (anchor.position.y > 5 + Object.keys(e).length / 2) {
+                            anchor.position.y = 5 + Object.keys(e).length / 2;
+                        }
+                        if (anchor.position.y < 5 - Object.keys(e).length / 2) {
+                            anchor.position.y = 5 - Object.keys(e).length / 2;
+                        }
+                    }
+                    //text0.text = "POINTER MOVES";
+                    //text0.text = anchor.position.y;
+
+
+                }
+                break;
+            case BABYLON.PointerEventTypes.POINTERWHEEL:
+                //console.log(pointerInfo.event.wheelDelta);
+                wheelSign = pointerInfo.event.wheelDelta / Math.abs(pointerInfo.event.wheelDelta);
+                switch (wheelSign) {
+                    case 1:
+                        anchor.position.z += 0.075;
+                        //camera.position = anchor.position;
+                        break;
+                    case -1:
+                        anchor.position.z -= 0.075;
+                        //camera.position = anchor.position;
+                        break;
+                }
+                if (panel.isVertical) {
+                    // text0.text = "POINTER WHEEL";
+
+                }
+                //text0.text = "POINTER WHEEL";
+                break;
+            case BABYLON.PointerEventTypes.POINTERPICK:
+                //text0.text = "POINTER PICK";
+                break;
+            case BABYLON.PointerEventTypes.POINTERTAP:
+                //text0.text = "POINTER TAP";
+                break;
+            case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
+                //text0.text = "POINTER DOUBLE-TAP";
+                break;
+        }
+    })
+
+
+
+    return scene;
+};
+createScene().then((scene) => {
+    engine.runRenderLoop(function () {
+        if (scene) {
+            scene.render();
+        }
+    });
+});
+
+
+// Watch for browser/canvas resize events
+window.addEventListener("resize", function () {
+    engine.resize();
+
+    /*       if (this.outerWidth > this.outerHeight) {
+              orn = 0
+          } else {
+              orn = 1;
+          } */
+
+});
+
+
+
+
+//})();
