@@ -468,7 +468,7 @@ const createScene = async function () {
         "./assets/Audio/Sea-sound-effect.mp3",
         { spatialEnabled: true }
     );
-    //await audioEngine.unlockAsync();
+    await audioEngine.unlockAsync();
 
 
     bounce.volume = 0.15;
