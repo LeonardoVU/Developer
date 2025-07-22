@@ -4378,6 +4378,7 @@ export class AdvancedDynamicTexture extends DynamicTexture {
     private _cursorChanged;
     private _defaultMousePointerId;
     private _rootChildrenHaveChanged;
+    private _adjustToEngineHardwareScalingLevel;
     /** @internal */
     _capturedPointerIds: Set<number>;
     /** @internal */
@@ -4438,6 +4439,13 @@ export class AdvancedDynamicTexture extends DynamicTexture {
      * If set to true, the POINTERTAP event type will be used for "click", instead of POINTERUP
      */
     usePointerTapForClickEvent: boolean;
+    /**
+     * If set to true, the renderScale will be adjusted automatically to the engine's hardware scaling
+     * If this is set to true, manually setting the renderScale will be ignored
+     * This is useful when the engine's hardware scaling is set to a value other than 1
+     */
+    get adjustToEngineHardwareScalingLevel(): boolean;
+    set adjustToEngineHardwareScalingLevel(value: boolean);
     /**
      * Gets or sets a number used to scale rendering size (2 means that the texture will be twice bigger).
      * Useful when you want more antialiasing
@@ -4607,6 +4615,7 @@ export class AdvancedDynamicTexture extends DynamicTexture {
      * Release all resources
      */
     dispose(): void;
+    private _alreadyRegisteredForRender;
     private _onResize;
     /** @internal */
     _getGlobalViewport(): Viewport;
@@ -5327,8 +5336,8 @@ declare module "babylonjs-gui/2D/controls/statics" {
  * Forcing an export so that this code will execute
  * @internal
  */
-const name = "Statics";
-export { name };
+const Name = "Statics";
+export { Name as name };
 
 }
 declare module "babylonjs-gui/2D/controls/stackPanel" {
@@ -5388,8 +5397,9 @@ export class StackPanel extends Container {
      * Serializes the current control
      * @param serializationObject defined the JSON serialized object
      * @param force force serialization even if isSerializable === false
+     * @param allowCanvas defines if the control is allowed to use a Canvas2D object to serialize
      */
-    serialize(serializationObject: any, force: boolean): void;
+    serialize(serializationObject: any, force: boolean, allowCanvas: boolean): void;
     /**
      * @internal
      */
@@ -6657,8 +6667,9 @@ export class Grid extends Container {
      * Serializes the current control
      * @param serializationObject defined the JSON serialized object
      * @param force force serialization even if isSerializable === false
+     * @param allowCanvas defines if the control is allowed to use a Canvas2D object to serialize
      */
-    serialize(serializationObject: any, force: boolean): void;
+    serialize(serializationObject: any, force: boolean, allowCanvas: boolean): void;
     /**
      * @internal
      */
@@ -8176,8 +8187,9 @@ export class Button extends Rectangle {
      * Serializes the current button
      * @param serializationObject defines the JSON serialized object
      * @param force force serialization even if isSerializable === false
+     * @param allowCanvas defines if the control is allowed to use a Canvas2D object to serialize
      */
-    serialize(serializationObject: any, force: boolean): void;
+    serialize(serializationObject: any, force: boolean, allowCanvas: boolean): void;
     /**
      * @internal
      */
@@ -8966,9 +8978,9 @@ export class NodeRenderGraphGUIBlock extends NodeRenderGraphBlock {
      */
     getClassName(): string;
     /**
-     * Gets the destination input component
+     * Gets the target input component
      */
-    get destination(): NodeRenderGraphConnectionPoint;
+    get target(): NodeRenderGraphConnectionPoint;
     /**
      * Gets the output component
      */
@@ -8986,12 +8998,12 @@ import { FrameGraphTask } from "babylonjs/FrameGraph/frameGraphTask";
  */
 export class FrameGraphGUITask extends FrameGraphTask {
     /**
-     * The destination texture to render the GUI to.
+     * The target texture to render the GUI to.
      */
-    destinationTexture: FrameGraphTextureHandle;
+    targetTexture: FrameGraphTextureHandle;
     /**
      * The output texture of the task.
-     * This is the same texture as the destination texture, but the handles are different!
+     * This is the same texture as the target texture, but the handles are different!
      */
     readonly outputTexture: FrameGraphTextureHandle;
     get disabled(): boolean;
@@ -12952,6 +12964,7 @@ declare module BABYLON.GUI {
         private _cursorChanged;
         private _defaultMousePointerId;
         private _rootChildrenHaveChanged;
+        private _adjustToEngineHardwareScalingLevel;
         /** @internal */
         _capturedPointerIds: Set<number>;
         /** @internal */
@@ -13012,6 +13025,13 @@ declare module BABYLON.GUI {
          * If set to true, the POINTERTAP event type will be used for "click", instead of POINTERUP
          */
         usePointerTapForClickEvent: boolean;
+        /**
+         * If set to true, the renderScale will be adjusted automatically to the engine's hardware scaling
+         * If this is set to true, manually setting the renderScale will be ignored
+         * This is useful when the engine's hardware scaling is set to a value other than 1
+         */
+        get adjustToEngineHardwareScalingLevel(): boolean;
+        set adjustToEngineHardwareScalingLevel(value: boolean);
         /**
          * Gets or sets a number used to scale rendering size (2 means that the texture will be twice bigger).
          * Useful when you want more antialiasing
@@ -13181,6 +13201,7 @@ declare module BABYLON.GUI {
          * Release all resources
          */
         dispose(): void;
+        private _alreadyRegisteredForRender;
         private _onResize;
         /** @internal */
         _getGlobalViewport(): BABYLON.Viewport;
@@ -13874,7 +13895,7 @@ declare module BABYLON.GUI {
      * Forcing an export so that this code will execute
      * @internal
      */
-    const name = "Statics";
+    const Name = "Statics";
 
 
     /**
@@ -13929,8 +13950,9 @@ declare module BABYLON.GUI {
          * Serializes the current control
          * @param serializationObject defined the JSON serialized object
          * @param force force serialization even if isSerializable === false
+         * @param allowCanvas defines if the control is allowed to use a Canvas2D object to serialize
          */
-        serialize(serializationObject: any, force: boolean): void;
+        serialize(serializationObject: any, force: boolean, allowCanvas: boolean): void;
         /**
          * @internal
          */
@@ -15096,8 +15118,9 @@ declare module BABYLON.GUI {
          * Serializes the current control
          * @param serializationObject defined the JSON serialized object
          * @param force force serialization even if isSerializable === false
+         * @param allowCanvas defines if the control is allowed to use a Canvas2D object to serialize
          */
-        serialize(serializationObject: any, force: boolean): void;
+        serialize(serializationObject: any, force: boolean, allowCanvas: boolean): void;
         /**
          * @internal
          */
@@ -16541,8 +16564,9 @@ declare module BABYLON.GUI {
          * Serializes the current button
          * @param serializationObject defines the JSON serialized object
          * @param force force serialization even if isSerializable === false
+         * @param allowCanvas defines if the control is allowed to use a Canvas2D object to serialize
          */
-        serialize(serializationObject: any, force: boolean): void;
+        serialize(serializationObject: any, force: boolean, allowCanvas: boolean): void;
         /**
          * @internal
          */
@@ -17267,9 +17291,9 @@ declare module BABYLON.GUI {
          */
         getClassName(): string;
         /**
-         * Gets the destination input component
+         * Gets the target input component
          */
-        get destination(): BABYLON.NodeRenderGraphConnectionPoint;
+        get target(): BABYLON.NodeRenderGraphConnectionPoint;
         /**
          * Gets the output component
          */
@@ -17283,12 +17307,12 @@ declare module BABYLON.GUI {
      */
     export class FrameGraphGUITask extends BABYLON.FrameGraphTask {
         /**
-         * The destination texture to render the GUI to.
+         * The target texture to render the GUI to.
          */
-        destinationTexture: BABYLON.FrameGraphTextureHandle;
+        targetTexture: BABYLON.FrameGraphTextureHandle;
         /**
          * The output texture of the task.
-         * This is the same texture as the destination texture, but the handles are different!
+         * This is the same texture as the target texture, but the handles are different!
          */
         readonly outputTexture: BABYLON.FrameGraphTextureHandle;
         get disabled(): boolean;

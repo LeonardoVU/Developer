@@ -3,6 +3,392 @@ declare module ADDONS {
 
 
     /**
+     * Abstract Node class from Babylon.js
+     */
+    export interface INodeLike {
+        getWorldMatrix(): BABYLON.IMatrixLike;
+    }
+    /**
+     * Class used to render text using MSDF (Multi-channel Signed Distance Field) technique
+     * Thanks a lot to the work of Bhushan_Wagh and zb_sj for their amazing work on MSDF for Babylon.js
+     * #6RLCWP#16
+     * Star wars scroller: #6RLCWP#29
+     * With metrics: #6RLCWP#35
+     * Thickness: #IABMEZ#3
+     * Solar system: #9YCDYC#9
+     * Stroke: #6RLCWP#37
+     */
+    export class TextRenderer implements BABYLON.IDisposable {
+        private readonly _useVAO;
+        private _engine;
+        private _shaderLanguage;
+        private _vertexBuffers;
+        private _spriteBuffer;
+        private _worldBuffer;
+        private _uvBuffer;
+        private _drawWrapperBase;
+        private _vertexArrayObject;
+        private _font;
+        private _charMatrices;
+        private _charUvs;
+        private _isDirty;
+        private _baseLine;
+        private _scalingMatrix;
+        private _fontScaleMatrix;
+        private _offsetMatrix;
+        private _translationMatrix;
+        private _baseMatrix;
+        private _scaledMatrix;
+        private _localMatrix;
+        private _finalMatrix;
+        private _lineMatrix;
+        private _parentWorldMatrix;
+        /**
+         * Gets or sets the color of the text
+         */
+        color: BABYLON.IColor4Like;
+        /**
+         * Gets or sets the color of the stroke around the text
+         */
+        strokeColor: BABYLON.IColor4Like;
+        /**
+         * Gets or sets the width of the stroke around the text (inset)
+         */
+        strokeInsetWidth: number;
+        /**
+         * Gets or sets the width of the stroke around the text (outset)
+         */
+        strokeOutsetWidth: number;
+        /**
+         * Gets or sets the thickness of the text (0 means as defined in the font)
+         * Value must be between -0.5 and 0.5
+         */
+        thicknessControl: number;
+        private _parent;
+        /**
+         * Gets or sets the parent of the text renderer
+         */
+        get parent(): BABYLON.Nullable<INodeLike>;
+        set parent(value: BABYLON.Nullable<INodeLike>);
+        private _transformMatrix;
+        /**
+         * Gets or sets the transform matrix of the text renderer
+         * It will be applied in that order:
+         * parent x transform x paragraph world
+         */
+        get transformMatrix(): BABYLON.IMatrixLike;
+        set transformMatrix(value: BABYLON.IMatrixLike);
+        /**
+         * Gets or sets if the text is billboarded
+         */
+        isBillboard: boolean;
+        /**
+         * Gets or sets if the text is screen projected
+         * This will work only if the text is billboarded
+         */
+        isBillboardScreenProjected: boolean;
+        /**
+         * Gets the number of characters in the text renderer
+         */
+        get characterCount(): number;
+        /**
+         * Gets or sets if the text renderer should ignore the depth buffer
+         * Default is false
+         */
+        ignoreDepthBuffer: boolean;
+        private constructor();
+        private _resizeBuffers;
+        private _setShaders;
+        /**
+         * Add a paragraph of text to the renderer
+         * @param text define the text to add
+         * @param options define the options to use for the paragraph (optional)
+         * @param worldMatrix define the world matrix to use for the paragraph (optional)
+         */
+        addParagraph(text: string, options?: Partial<ParagraphOptions>, worldMatrix?: BABYLON.IMatrixLike): void;
+        /**
+         * Render the text using the provided view and projection matrices
+         * @param viewMatrix define the view matrix to use
+         * @param projectionMatrix define the projection matrix to use
+         */
+        render(viewMatrix: BABYLON.IMatrixLike, projectionMatrix: BABYLON.IMatrixLike): void;
+        /**
+         * Release associated resources
+         */
+        dispose(): void;
+        /**
+         * Creates a new TextRenderer instance asynchronously
+         * @param font define the font asset to use
+         * @param engine define the engine to use
+         * @returns a promise that resolves to the created TextRenderer instance
+         */
+        static CreateTextRendererAsync(font: FontAsset, engine: BABYLON.AbstractEngine): Promise<TextRenderer>;
+    }
+
+
+    /** @internal */
+    export type ParagraphOptions = {
+        maxWidth: number;
+        lineHeight: number;
+        letterSpacing: number;
+        tabSize: number;
+        whiteSpace: "pre-line";
+        textAlign: "left" | "right" | "center";
+        translate: BABYLON.IVector2Like | undefined;
+    };
+    /** @internal */
+    export var DefaultParagraphOptions: ParagraphOptions;
+
+
+
+
+    /**
+     * Class representing a font asset for SDF (Signed Distance Field) rendering.
+     */
+    export class FontAsset implements BABYLON.IDisposable {
+        private readonly _chars;
+        private readonly _charsRegex;
+        private readonly _kernings;
+        /** @internal */
+        readonly _font: SdfFont;
+        /**
+         * Gets the font scale value
+         */
+        readonly scale: number;
+        /**
+         * Gets the list of used textures
+         */
+        readonly textures: BABYLON.Texture[];
+        /**
+         * Creates a new FontAsset instance.
+         * @param definitionData defines the font data in JSON format.
+         * @param textureUrl defines the url of the texture to use for the font.
+         * @param scene defines the hosting scene.
+         */
+        constructor(definitionData: string, textureUrl: string, scene?: BABYLON.Scene);
+        dispose(): void;
+        private _updateFallbacks;
+        /** @internal */
+        _getChar(charCode: number): BMFontChar;
+        /** @internal */
+        _getKerning(first: number, second: number): number;
+        /** @internal */
+        _unsupportedChars(text: string): string;
+    }
+
+
+    /** @internal */
+    export var msdfVertexShaderWGSL: {
+        name: string;
+        shader: string;
+    };
+
+
+    /** @internal */
+    export var msdfPixelShaderWGSL: {
+        name: string;
+        shader: string;
+    };
+
+
+    /** @internal */
+    export var msdfVertexShader: {
+        name: string;
+        shader: string;
+    };
+
+
+    /** @internal */
+    export var msdfPixelShader: {
+        name: string;
+        shader: string;
+    };
+
+
+    /** @internal */
+    export class SdfTextParagraph {
+        readonly text: string;
+        readonly fontAsset: FontAsset;
+        readonly options: ParagraphOptions;
+        get lineHeight(): number;
+        readonly paragraph: string;
+        readonly lines: SdfTextLine[];
+        readonly width: number;
+        readonly height: number;
+        readonly glyphs: SdfGlyph[];
+        constructor(text: string, fontAsset: FontAsset, options?: Partial<ParagraphOptions>);
+        private _computeMetrics;
+        private _breakLines;
+        private _collapse;
+        private _wrap;
+    }
+
+
+    /** @internal */
+    export type SdfTextLine = {
+        text: string;
+        glyphs: SdfGlyph[];
+        start: number;
+        end: number;
+        width: number;
+    };
+
+
+
+
+    /** @internal */
+    export type SdfGlyph = {
+        char: BMFontChar;
+        /** index of the line */
+        line: number;
+        /** position within the line */
+        position: number;
+        x: number;
+        y: number;
+    };
+
+
+    export type SdfFontDistanceField = {
+        fieldType: "sdf" | "msdf";
+        distanceRange: number;
+    };
+    export type SdfFont = BMFont & {
+        distanceField: SdfFontDistanceField;
+    };
+
+
+    /**
+     * Holds information on how the font was generated.
+     */
+    export type BMFontInfo = {
+        /** The name of the font */
+        face: string;
+        /** The size of the font */
+        size: number;
+        /** The font is bold */
+        bold: number;
+        /** The font is italic */
+        italic: number;
+        /** The charset of the font */
+        charset: string[];
+        /** The charset is unicode  */
+        unicode: number;
+        /** The font height stretch in percentage. 100% means no stretch. */
+        stretchH: number;
+        /** Set to 1 if smoothing was turned on. */
+        smooth: number;
+        /** The supersampling level used. 1 means no supersampling was used. */
+        aa: number;
+        /** The padding for each character (up, right, down, left). */
+        padding: [number, number, number, number];
+        /** The spacing for each character (horizontal, vertical). */
+        spacing: [number, number];
+        /**
+         * The outline thickness for the characters.
+         *
+         * @remark missing in msdf-bmfont-xml
+         */
+        outline?: number;
+    };
+    /**
+     * Holds information common to all characters.
+     */
+    export type BMFontCommon = {
+        /** Distance in pixels between each line of text */
+        lineHeight: number;
+        /** The number of pixels from the absolute top of the line to the base of the characters */
+        base: number;
+        /** The width of the texture, normally used to scale the x pos of the character image */
+        scaleW: number;
+        /** The height of the texture, normally used to scale the y pos of the character image */
+        scaleH: number;
+        /** The number of pages in the font */
+        pages: number;
+        /** Set to 1 if the monochrome characters have been packed into each of the texture channels. In this case alphaChnl describes what is stored in each channel. */
+        packed: number;
+        /** Set to 0 if the channel holds the glyph data, 1 if it holds the outline, 2 if it holds the glyph and the outline, 3 if its set to zero, and 4 if its set to one. */
+        alphaChnl: number;
+        /** Set to 0 if the channel holds the glyph data, 1 if it holds the outline, 2 if it holds the glyph and the outline, 3 if its set to zero, and 4 if its set to one. */
+        redChnl: number;
+        /** Set to 0 if the channel holds the glyph data, 1 if it holds the outline, 2 if it holds the glyph and the outline, 3 if its set to zero, and 4 if its set to one. */
+        greenChnl: number;
+        /** Set to 0 if the channel holds the glyph data, 1 if it holds the outline, 2 if it holds the glyph and the outline, 3 if its set to zero, and 4 if its set to one. */
+        blueChnl: number;
+    };
+    /** Name of a texture file. There is one for each page in the font. */
+    export type BMFontPages = {
+        [id: number]: string;
+    } & Array<string>;
+    /**
+     * Describes a single character in the font
+     */
+    export type BMFontChar = {
+        /** Character id (charCode) */
+        id: number;
+        /** Left position of the character image in the texture. */
+        x: number;
+        /** Right position of the character image in the texture */
+        y: number;
+        /** Width of the chracter image in the texture */
+        width: number;
+        /** Height of the chracter image in the texture */
+        height: number;
+        /** Horizontal offset to be applied on screen */
+        xoffset: number;
+        /** Vertical offset to be applied on screen */
+        yoffset: number;
+        /** Horizontal advance after the character */
+        xadvance: number;
+        /** Page index where the character image is found */
+        page: number;
+        /** Texture channel where the chracter image is found
+         * - 1 = blue
+         * - 2 = green
+         * - 3 = red
+         * - 8 = alpha
+         * - 15 = all channels
+         */
+        chnl: number;
+    } & BMFontCharExtra;
+    /**
+     * additional context from msdf-bmfont-xml
+     */
+    export type BMFontCharExtra = {
+        /** index of opentype.js glyph */
+        index: number;
+        /** actual character*/
+        char: string;
+    };
+    /**
+     * The kerning information is used to adjust the distance between certain characters, e.g. some characters should be placed closer to each other than others.
+     */
+    export type BMFontKerning = {
+        /** The first character id. */
+        first: number;
+        /** The second character id. */
+        second: number;
+        /** How much the x position should be adjusted when drawing the second character immediately following the first. */
+        amount: number;
+    };
+    /**
+     * Compatible with [msdf-bmfont-xml](https://github.com/soimy/msdf-bmfont-xml)
+     * @see https://www.angelcode.com/products/bmfont/doc/file_format.html
+     */
+    export type BMFont = {
+        /** {@inheritDoc BMFontInfo} */
+        info: BMFontInfo;
+        /** {@inheritDoc BMFontCommon} */
+        common: BMFontCommon;
+        /** {@inheritDoc BMFontPages} */
+        pages: BMFontPages;
+        /** {@inheritDoc BMFontChar} */
+        chars: BMFontChar[];
+        /** {@inheritDoc BMFontKerning} */
+        kernings: BMFontKerning[];
+    };
+
+
+    /**
      * BABYLON.Behavior for any content that can capture pointer events, i.e. bypass the Babylon pointer event handling
      * and receive pointer events directly.  It will register the capture triggers and negotiate the capture and
      * release of pointer events.  Curerntly this applies only to HtmlMesh
@@ -77,7 +463,7 @@ declare module ADDONS {
      */
     export const requestRelease: (requestId: string | null) => void;
     /**
-     * Relase pointer events from the current owner
+     * Release pointer events from the current owner
      */
     export const releaseCurrent: () => void;
    }
@@ -145,8 +531,8 @@ declare module ADDONS {
             height: number;
         };
         protected _setSize(width: number, height: number): void;
-        protected _getCameraCSSMatrix(matrix: BABYLON.Matrix): string;
-        protected _getHtmlContentCSSMatrix(matrix: BABYLON.Matrix, useRightHandedSystem: boolean): string;
+        protected _getCameraCssMatrix(matrix: BABYLON.Matrix): string;
+        protected _getHtmlContentCssMatrix(matrix: BABYLON.Matrix, useRightHandedSystem: boolean): string;
         protected _getTransformationMatrix(htmlMesh: HtmlMesh, useRightHandedSystem: boolean): BABYLON.Matrix;
         protected _renderHtmlMesh(htmlMesh: HtmlMesh, useRightHandedSystem: boolean): void;
         protected _render(scene: BABYLON.Scene, camera: BABYLON.Camera): void;
@@ -165,8 +551,8 @@ declare module ADDONS {
      * the HTML content so that it matches the camera and mesh orientation.  The class supports interactions in editable and non-editable mode.
      * In non-editable mode (the default), events are passed to the HTML content when the pointer is over the mask (and not occluded by other meshes
      * in the scene).
-     * #HVHYJC#5
-     * #B17TC7#112
+     * @see https://playground.babylonjs.com/#HVHYJC#5
+     * @see https://playground.babylonjs.com/#B17TC7#112
      */
     export class HtmlMesh extends BABYLON.Mesh {
         /**
@@ -258,7 +644,7 @@ declare module ADDONS {
         protected _doSetEnabled(enabled: boolean): void;
         protected _updateScaleIfNecessary(): void;
         protected _createMask(): void;
-        protected _setElementZIndex(zIndex: number): void;
+        protected _setElementzIndex(zIndex: number): void;
         /**
          * Callback used by the PointerEventsCaptureBehavior to capture pointer events
          */

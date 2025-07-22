@@ -2,6 +2,7 @@
 declare module BABYLON {
     interface IGraphEditorProps {
         globalState: GlobalState;
+        onReady?: () => Promise<void>;
     }
     interface IGraphEditorState {
         showPreviewPopUp: boolean;
@@ -16,6 +17,7 @@ declare module BABYLON {
         private _draggedItem;
         private _rootRef;
         private _onErrorMessageObserver;
+        private _workbenchRef;
         componentDidMount(): void;
         componentWillUnmount(): void;
         addToolControls: (evt: KeyboardEvent) => void;
@@ -53,7 +55,7 @@ declare module BABYLON {
     interface IPortalProps {
         globalState: GlobalState;
     }
-    export class Portal extends React.Component<IPortalProps> {
+    export class Portal extends React.Component<React.PropsWithChildren<IPortalProps>> {
         render(): React.ReactPortal;
     }
 
@@ -179,7 +181,7 @@ declare module BABYLON {
         private _backgroundColor;
         private _outlines;
         keys: KeyboardManager;
-        private _fromPG;
+        private _fromPg;
         /** DO NOT USE: in the process of removing */
         blockKeyboardEvents: boolean;
         onOutlineChangedObservable: Observable<void>;
@@ -377,7 +379,7 @@ declare module BABYLON {
     }
     export class GizmoWrapper extends React.Component<IGizmoWrapperProps> {
         observer: Nullable<Observer<void>>;
-        componentWillMount(): void;
+        componentDidMount(): void;
         componentWillUnmount(): void;
         render(): import("react/jsx-runtime").JSX.Element;
     }
@@ -627,6 +629,7 @@ declare module BABYLON {
         private _onSelectionChangedObservable;
         private _onDraggingEndObservable;
         private _onDraggingStartObservable;
+        private _thisRef;
         /** flag flipped onDragEnter if dragOver is already true
          * prevents dragLeave from immediately setting dragOver to false
          * required to make dragging work as expected
@@ -718,7 +721,7 @@ declare module BABYLON {
         onPopup?: () => void;
         onClose?: () => void;
     }
-    export class SceneExplorerComponent extends React.Component<ISceneExplorerComponentProps, {
+    export class SceneExplorerComponent extends React.Component<React.PropsWithChildren<ISceneExplorerComponentProps>, {
         filter: Nullable<string>;
         selectedEntity: any;
         scene: Nullable<Scene>;
@@ -1076,7 +1079,7 @@ declare module BABYLON {
         private _onFontsParsedObserver;
         private _onControlVisibilityChangedObservers;
         constructor(props: ICommonControlPropertyGridComponentProps);
-        componentWillMount(): void;
+        componentDidMount(): void;
         private _checkFontsInLayout;
         private _addFont;
         private _getTransformedReferenceCoordinate;
@@ -1151,6 +1154,7 @@ declare module BABYLON {
     export class LogComponent extends React.Component<ILogComponentProps, {
         logs: LogEntry[];
     }> {
+        private _consoleRef;
         constructor(props: ILogComponentProps);
         componentDidMount(): void;
         componentDidUpdate(): void;
@@ -1182,6 +1186,16 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param target document or shadow root to copy styles to
      */
     export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
+    /**
+     * Merges classNames by array of strings or conditions
+     * @param classNames Array of className strings or truthy conditions
+     * @returns A concatenated string, suitable for the className attribute
+     */
+    export function MergeClassNames(classNames: ClassNameCondition[]): string;
+    /**
+     * className (replicating React type) or a tuple with the second member being any truthy value ["className", true]
+     */
+    type ClassNameCondition = string | undefined | [string, any];
 
 
 
@@ -1317,6 +1331,38 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         className: string;
         babylonNamespace: string;
     };
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        /**
+     * Used by both particleSystem and alphaBlendModes
+     */
+    export var CommonBlendModes: {
+        label: string;
+        value: number;
+    }[];
+    /**
+     * Used to populated the blendMode dropdown in our various tools (Node Editor, Inspector, etc.)
+     * The below ParticleSystem consts were defined before new Engine alpha blend modes were added, so we have to reference
+     * the ParticleSystem.FOO consts explicitly (as the underlying var values are different - they get mapped to engine consts within baseParticleSystem.ts)
+     */
+    export var BlendModeOptions: {
+        label: string;
+        value: number;
+    }[];
+    /**
+     * Used to populated the alphaMode dropdown in our various tools (Node Editor, Inspector, etc.)
+     */
+    export var AlphaModeOptions: {
+        label: string;
+        value: number;
+    }[];
 
 
 
@@ -1791,7 +1837,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props defines the split container properties
      * @returns the split container component
      */
-    export var SplitContainer: React.FC<ISplitContainerProps>;
+    export var SplitContainer: React.FC<React.PropsWithChildren<ISplitContainerProps>>;
 
 
 
@@ -1816,7 +1862,17 @@ declare module BABYLON {
 declare module BABYLON.GuiEditor.SharedUIComponents {
         export const IsFramePortData: (variableToCheck: any) => variableToCheck is BABYLON.GuiEditor.SharedUIComponents.FramePortData;
     export const RefreshNode: (node: BABYLON.GuiEditor.SharedUIComponents.GraphNode, visitedNodes?: Set<BABYLON.GuiEditor.SharedUIComponents.GraphNode>, visitedLinks?: Set<BABYLON.GuiEditor.SharedUIComponents.NodeLink>, canvas?: BABYLON.GuiEditor.SharedUIComponents.GraphCanvasComponent) => void;
-    export const BuildFloatUI: (container: HTMLDivElement, document: Document, displayName: string, isInteger: boolean, source: any, propertyName: string, onChange: () => void, min?: number, max?: number, visualPropertiesRefresh?: Array<() => void>) => void;
+    export const BuildFloatUI: (container: HTMLDivElement, document: Document, displayName: string, isInteger: boolean, source: any, propertyName: string, onChange: () => void, min?: number, max?: number, visualPropertiesRefresh?: Array<() => void>, additionalClassName?: string) => void;
+    export function GetListOfAcceptedTypes<T extends Record<string, string | number>>(types: T, allValue: number, autoDetectValue: number, port: {
+        acceptedConnectionPointTypes: number[];
+        excludedConnectionPointTypes: number[];
+        type: number;
+    }, skips?: number[]): string[];
+    export function GetConnectionErrorMessage<T extends Record<string, string | number>>(sourceType: number, types: T, allValue: number, autoDetectValue: number, port: {
+        acceptedConnectionPointTypes: number[];
+        excludedConnectionPointTypes: number[];
+        type: number;
+    }, skips?: number[]): string;
 
 
 
@@ -1864,7 +1920,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         exportData: (data: any, frame?: Nullable<BABYLON.GuiEditor.SharedUIComponents.GraphFrame>) => string;
         isElbowConnectionAllowed: (nodeA: BABYLON.GuiEditor.SharedUIComponents.FrameNodePort | BABYLON.GuiEditor.SharedUIComponents.NodePort, nodeB: BABYLON.GuiEditor.SharedUIComponents.FrameNodePort | BABYLON.GuiEditor.SharedUIComponents.NodePort) => boolean;
         isDebugConnectionAllowed: (nodeA: BABYLON.GuiEditor.SharedUIComponents.FrameNodePort | BABYLON.GuiEditor.SharedUIComponents.NodePort, nodeB: BABYLON.GuiEditor.SharedUIComponents.FrameNodePort | BABYLON.GuiEditor.SharedUIComponents.NodePort) => boolean;
-        applyNodePortDesign: (data: BABYLON.GuiEditor.SharedUIComponents.IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+        applyNodePortDesign: (data: BABYLON.GuiEditor.SharedUIComponents.IPortData, element: HTMLElement, imgHost: HTMLImageElement, pip: HTMLDivElement) => boolean;
         getPortColor: (portData: BABYLON.GuiEditor.SharedUIComponents.IPortData) => string;
         storeEditorData: (serializationObject: any, frame?: Nullable<BABYLON.GuiEditor.SharedUIComponents.GraphFrame>) => void;
         getEditorDataMap: () => {
@@ -1938,7 +1994,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         node: BABYLON.GuiEditor.SharedUIComponents.GraphNode;
         protected _element: HTMLDivElement;
         protected _portContainer: HTMLElement;
-        protected _img: HTMLImageElement;
+        protected _imgHost: HTMLImageElement;
         protected _pip: HTMLDivElement;
         protected _stateManager: BABYLON.GuiEditor.SharedUIComponents.StateManager;
         protected _portLabelElement: Element;
@@ -2025,6 +2081,7 @@ declare module BABYLON {
 declare module BABYLON.GuiEditor.SharedUIComponents {
         export class GraphNode {
         content: BABYLON.GuiEditor.SharedUIComponents.INodeData;
+        private static _IdGenerator;
         private _visual;
         private _headerContainer;
         private _headerIcon;
@@ -2056,11 +2113,11 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         private _onUpdateRequiredObserver;
         private _onHighlightNodeObserver;
         private _ownerCanvas;
-        private _isSelected;
         private _displayManager;
         private _isVisible;
         private _enclosingFrameId;
         private _visualPropertiesRefresh;
+        private _lastClick;
         addClassToVisual(className: string): void;
         removeClassFromVisual(className: string): void;
         get isCollapsed(): boolean;
@@ -2080,10 +2137,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         get height(): number;
         get id(): number;
         get name(): string;
-        get isSelected(): boolean;
         get enclosingFrameId(): number;
         set enclosingFrameId(value: number);
-        set isSelected(value: boolean);
         setIsSelected(value: boolean, marqueeSelection: boolean): void;
         get rootElement(): HTMLDivElement;
         constructor(content: BABYLON.GuiEditor.SharedUIComponents.INodeData, stateManager: BABYLON.GuiEditor.SharedUIComponents.StateManager);
@@ -2095,6 +2150,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         private _refreshFrames;
         _refreshLinks(): void;
         refresh(): void;
+        private _expand;
+        private _searchMiddle;
         private _onDown;
         cleanAccumulation(useCeil?: boolean): void;
         private _onUp;
@@ -2110,6 +2167,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
          * Expand the node
          */
         expand(): void;
+        private _portUICount;
+        private _buildInputPorts;
         appendVisual(root: HTMLDivElement, owner: BABYLON.GuiEditor.SharedUIComponents.GraphCanvasComponent): void;
         dispose(): void;
     }
@@ -2315,6 +2374,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         private _candidateLinkedHasMoved;
         private _x;
         private _y;
+        private _lastx;
+        private _lasty;
         private _zoom;
         private _selectedNodes;
         private _selectedLink;
@@ -2328,6 +2389,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         private _frames;
         private _nodeDataContentList;
         private _altKeyIsPressed;
+        private _shiftKeyIsPressed;
         private _multiKeyIsPressed;
         private _oldY;
         _frameIsMoving: boolean;
@@ -2616,6 +2678,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         isActive?: boolean;
         setIsActive?: (value: boolean) => void;
         canBeActivated?: boolean;
+        onInputCountChanged?: () => void;
     }
 
 
@@ -2708,8 +2771,8 @@ declare module BABYLON {
 declare module BABYLON.GuiEditor.SharedUIComponents {
         interface IVector3LineComponentProps {
         label: string;
-        target: any;
-        propertyName: string;
+        target?: any;
+        propertyName?: string;
         step?: number;
         onChange?: (newvalue: Vector3) => void;
         useEuler?: boolean;
@@ -2718,6 +2781,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         icon?: string;
         iconLabel?: string;
         lockObject: BABYLON.GuiEditor.SharedUIComponents.LockObject;
+        directValue?: Vector3;
+        additionalCommands?: JSX.Element[];
     }
     export class Vector3LineComponent extends React.Component<IVector3LineComponentProps, {
         isExpanded: boolean;
@@ -2739,7 +2804,9 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         updateStateX(value: number): void;
         updateStateY(value: number): void;
         updateStateZ(value: number): void;
-        onCopyClick(): void;
+        onCopyClick(): string;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -2827,6 +2894,33 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
+        interface ITextureButtonLineProps {
+        label: string;
+        scene: Scene;
+        onClick: (file: File) => void;
+        onLink: (texture: BaseTexture) => void;
+        accept: string;
+    }
+    interface ITextureButtonLineState {
+        isOpen: boolean;
+    }
+    export class TextureButtonLine extends React.Component<ITextureButtonLineProps, ITextureButtonLineState> {
+        private static _IdGenerator;
+        private _id;
+        private _uploadInputRef;
+        constructor(props: ITextureButtonLineProps);
+        onChange(evt: any): void;
+        render(): import("react/jsx-runtime").JSX.Element;
+    }
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
         interface ITextLineComponentProps {
         label?: string;
         value?: string;
@@ -2839,11 +2933,15 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         icon?: string;
         iconLabel?: string;
         tooltip?: string;
+        onCopy?: true | (() => string);
     }
     export class TextLineComponent extends React.Component<ITextLineComponentProps> {
         constructor(props: ITextLineComponentProps);
         onLink(): void;
-        renderContent(): import("react/jsx-runtime").JSX.Element | null;
+        copyFn(): (() => string) | undefined;
+        renderContent(isLink: boolean, tooltip: string): import("react/jsx-runtime").JSX.Element | null;
+        renderOriginal(isLink: boolean, tooltip: string): import("react/jsx-runtime").JSX.Element;
+        renderFluent(isLink: boolean, tooltip: string): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -2899,6 +2997,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         updateValue(value: string, valueToValidate?: string): void;
         incrementValue(amount: number): void;
         onKeyDown(event: React.KeyboardEvent): void;
+        renderFluent(value: string, placeholder: string, step: number): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(value: string, placeholder: string, step: number): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -2960,6 +3060,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         onInput(newValueString: any): void;
         prepareDataToRead(value: number): number;
         onCopyClick(): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3003,7 +3105,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         label: string;
         target: any;
         propertyName: string;
-        options: IInspectableOptions[];
+        options: readonly IInspectableOptions[];
         noDirectUpdate?: boolean;
         onSelect?: (value: number | string) => void;
         extractValue?: (target: any) => number | string;
@@ -3029,7 +3131,9 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         raiseOnPropertyChanged(newValue: number, previousValue: number): void;
         setValue(value: string | number): void;
         updateValue(valueString: string): void;
-        onCopyClick(): void;
+        onCopyClickStr(): string;
+        private _renderFluent;
+        private _renderOriginal;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3086,6 +3190,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
     }
     export class MessageLineComponent extends React.Component<IMessageLineComponentProps> {
         constructor(props: IMessageLineComponentProps);
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3174,6 +3280,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         constructor(props: ILineWithFileButtonComponentProps);
         onChange(evt: any): void;
         switchExpandedState(): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3199,6 +3307,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         switchExpandedState(): void;
         renderHeader(): import("react/jsx-runtime").JSX.Element;
         componentDidMount(): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3269,25 +3379,6 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export interface IIconButtonLineComponentProps {
-        icon: string;
-        onClick: () => void;
-        tooltip: string;
-        active?: boolean;
-    }
-    export class IconButtonLineComponent extends React.Component<IIconButtonLineComponentProps> {
-        constructor(props: IIconButtonLineComponentProps);
-        render(): import("react/jsx-runtime").JSX.Element;
-    }
-
-
-
-}
-declare module BABYLON {
-
-
-}
-declare module BABYLON.GuiEditor.SharedUIComponents {
         export interface ISelectedLineContainer {
         selectedLineContainerTitles: Array<string>;
         selectedLineContainerTitlesNoFocus: Array<string>;
@@ -3334,6 +3425,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         updateValue(valueString: string, raisePropertyChanged: boolean): void;
         lock(): void;
         unlock(): void;
+        onCopyClick(): void;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3390,6 +3482,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         incrementValue(amount: number, processStep?: boolean): void;
         onKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void;
         onCopyClick(): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3409,7 +3503,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         iconLabel?: string;
     }
     export class FileMultipleButtonLineComponent extends React.Component<IFileMultipleButtonLineComponentProps> {
-        private static _IDGenerator;
+        private static _IdGenerator;
         private _id;
         private _uploadInputRef;
         constructor(props: IFileMultipleButtonLineComponentProps);
@@ -3433,11 +3527,13 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         iconLabel?: string;
     }
     export class FileButtonLine extends React.Component<IFileButtonLineProps> {
-        private static _IDGenerator;
+        private static _IdGenerator;
         private _id;
         private _uploadInputRef;
         constructor(props: IFileButtonLineProps);
         onChange(evt: any): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3449,7 +3545,7 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export interface IDraggableLineWithButtonComponent {
+        export type DraggableLineWithButtonProps = {
         format: string;
         data: string;
         tooltip: string;
@@ -3457,11 +3553,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         onIconClick: (value: string) => void;
         iconTitle: string;
         lenSuffixToRemove?: number;
-    }
-    export class DraggableLineWithButtonComponent extends React.Component<IDraggableLineWithButtonComponent> {
-        constructor(props: IDraggableLineWithButtonComponent);
-        render(): import("react/jsx-runtime").JSX.Element;
-    }
+    };
+    export var DraggableLineWithButtonComponent: React.FunctionComponent<DraggableLineWithButtonProps>;
 
 
 
@@ -3471,15 +3564,8 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export interface IButtonLineComponentProps {
-        format: string;
-        data: string;
-        tooltip: string;
-    }
-    export class DraggableLineComponent extends React.Component<IButtonLineComponentProps> {
-        constructor(props: IButtonLineComponentProps);
-        render(): import("react/jsx-runtime").JSX.Element;
-    }
+        type DraggableLineComponentProps = Omit<BABYLON.GuiEditor.SharedUIComponents.DraggableLineProps, "label">;
+    export var DraggableLineComponent: React.FunctionComponent<DraggableLineComponentProps>;
 
 
 
@@ -3509,9 +3595,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         constructor(props: IColorPickerLineProps);
         syncPositions(): void;
         shouldComponentUpdate(nextProps: IColorPickerLineProps, nextState: IColorPickerComponentState): boolean;
-        getHexString(props?: Readonly<IColorPickerLineProps> & Readonly<{
-            children?: React.ReactNode | undefined;
-        }>): string;
+        getHexString(props?: Readonly<IColorPickerLineProps>): string;
         componentDidUpdate(): void;
         componentDidMount(): void;
         render(): import("react/jsx-runtime").JSX.Element;
@@ -3544,9 +3628,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
     export class ColorLine extends React.Component<IColorLineProps, IColorLineComponentState> {
         constructor(props: IColorLineProps);
         shouldComponentUpdate(nextProps: IColorLineProps, nextState: IColorLineComponentState): boolean;
-        getValue(props?: Readonly<IColorLineProps> & Readonly<{
-            children?: React.ReactNode | undefined;
-        }>): Color4;
+        getValue(props?: Readonly<IColorLineProps>): Color4;
         setColorFromString(colorString: string): void;
         setColor(newColor: Color4): void;
         switchExpandState(): void;
@@ -3557,6 +3639,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         private _convertToColor;
         private _toColor3;
         onCopyClick(): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3618,7 +3702,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         label?: string;
         target?: any;
         propertyName?: string;
-        isSelected?: () => boolean;
+        isSelected?: boolean | (() => boolean);
         onSelect?: (value: boolean) => void;
         onValueChanged?: () => void;
         onPropertyChangedObservable?: Observable<BABYLON.GuiEditor.SharedUIComponents.PropertyChangedEvent>;
@@ -3645,6 +3729,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         }): boolean;
         onChange(): void;
         onCopyClick(): void;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3665,6 +3751,8 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
     }
     export class ButtonLineComponent extends React.Component<IButtonLineComponentProps> {
         constructor(props: IButtonLineComponentProps);
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3684,8 +3772,765 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
     }
     export class BooleanLineComponent extends React.Component<IBooleanLineComponentProps> {
         constructor(props: IBooleanLineComponentProps);
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type TextareaProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<string> & {
+        placeholder?: string;
+    };
+    /**
+     * This is a texarea box that stops propagation of change/keydown events
+     * @param props
+     * @returns
+     */
+    export var Textarea: React.FunctionComponent<any>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type SyncedSliderProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<number> & {
+        /** Minimum value for the slider */
+        min?: number;
+        /** Maximum value for the slider */
+        max?: number;
+        /** Step size for the slider */
+        step?: number;
+        /** When true, onChange is only called when the user releases the slider, not during drag */
+        notifyOnlyOnRelease?: boolean;
+    };
+    /**
+     * Component which synchronizes a slider and an input field, allowing the user to change the value using either control
+     * @param props
+     * @returns SyncedSlider component
+     */
+    export var SyncedSliderInput: React.FunctionComponent<SyncedSliderProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type SwitchProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<boolean>;
+    /**
+     * This is a primitive fluent boolean switch component whose only knowledge is the shared styling across all tools
+     * @param props
+     * @returns Switch component
+     */
+    export var Switch: React.FunctionComponent<SwitchProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type SpinButtonProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<number> & {
+        precision?: number;
+        step?: number;
+        min?: number;
+        max?: number;
+    };
+    export var SpinButton: React.FunctionComponent<SpinButtonProps>;
+    export var SpinButtonPropertyLine: React.FunctionComponent<SpinButtonProps & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type SearchProps = {
+        onChange: (val: string) => void;
+        placeholder?: string;
+    };
+    export const SearchBox: (props: SearchProps) => import("react/jsx-runtime").JSX.Element;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type MessageBarProps = {
+        message: string;
+        title: string;
+        docLink?: string;
+        intent: "info" | "success" | "warning" | "error";
+    };
+    export var MessageBar: React.FunctionComponent<MessageBarProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        /**
+     * Represents an item in a list
+     */
+    export type ListItem<T = any> = {
+        /** Unique identifier for the item */
+        id: number;
+        /** The data associated with the item */
+        data: T;
+        /** Value to use for sorting the list */
+        sortBy: number;
+    };
+    type ListProps<T = any> = {
+        items: ListItem<T>[];
+        renderItem: (item: ListItem<T>, index: number) => React.ReactNode;
+        onDelete: (item: ListItem<T>, index: number) => void;
+        onAdd: (item?: ListItem<T>) => void;
+        addButtonLabel?: string;
+    };
+    /**
+     * For cases where you may want to add / remove items from a list via a trash can button / copy button, this HOC can be used
+     * @returns A React component that renders a list of items with add/delete functionality
+     * @param props - The properties for the List component
+     */
+    export var List: React.FunctionComponent<ListProps<any>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+    
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type InputProps<T extends string | number> = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<T> & {
+        step?: number;
+        placeholder?: string;
+        min?: number;
+        max?: number;
+    };
+    export var NumberInput: React.FunctionComponent<InputProps<number>>;
+    export var TextInput: React.FunctionComponent<InputProps<string>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        /**
+     * Component wrapper for FactorGradient that provides slider inputs for factor1, factor2, and gradient step
+     * @param props - Component props containing FactorGradient value and change handler
+     * @returns A React component
+     */
+    export var FactorGradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<FactorGradient>>;
+    /**
+     * Component wrapper for Color3Gradient that provides color picker and gradient step slider
+     * @param props - Component props containing Color3Gradient value and change handler
+     * @returns A React component
+     */
+    export var Color3GradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<Color3Gradient>>;
+    /**
+     * Component wrapper for BABYLON.ColorGradient that provides color pickers for color1, color2, and gradient step slider
+     * @param props - Component props containing BABYLON.ColorGradient value and change handler
+     * @returns A React component
+     */
+    export var Color4GradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<BABYLON.ColorGradient>>;
+    /**
+     * Component wrapper for GradientBlockColorStep that provides color picker and step slider
+     * @param props - Component props containing GradientBlockColorStep value and change handler
+     * @returns A React component
+     */
+    export var ColorStepGradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<GradientBlockColorStep>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type DropdownOptionValue = string | number;
+    export type AcceptedDropdownValue = Nullable<DropdownOptionValue> | undefined;
+    export type DropdownOption = {
+        /**
+         * Defines the visible part of the option
+         */
+        label: string;
+        /**
+         * Defines the value part of the option
+         */
+        value: DropdownOptionValue;
+    };
+    export type DropdownProps<V extends AcceptedDropdownValue> = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<V> & {
+        options: readonly DropdownOption[];
+        includeNullAs?: "null" | "undefined";
+    };
+    /**
+     * Renders a fluent UI dropdown component for the options passed in, and an additional 'Not Defined' option if null is set to true
+     * This component can handle both null and undefined values
+     * @param props
+     * @returns dropdown component
+     */
+    export var Dropdown: React.FunctionComponent<DropdownProps<AcceptedDropdownValue>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type DraggableLineProps = {
+        format: string;
+        data: string;
+        tooltip: string;
+        label: string;
+        onDelete?: () => void;
+    };
+    export var DraggableLine: React.FunctionComponent<DraggableLineProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type ColorPickerProps<C extends Color3 | Color4> = {
+        isLinearMode?: boolean;
+    } & BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<C>;
+    export var ColorPickerPopup: React.FunctionComponent<ColorPickerProps<Color3 | Color4>>;
+    type HsvKey = "h" | "s" | "v";
+    export type InputHexProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<Color3 | Color4> & {
+        label?: string;
+        linearHex?: boolean;
+        isLinearMode?: boolean;
+    };
+    /**
+     * Component which displays the passed in color's HEX value, either in linearSpace (if linearHex is true) or in gamma space
+     * When the hex color is changed by user, component calculates the new Color3/4 value and calls onChange
+     *
+     * Component uses the isLinearMode boolean to display an informative label regarding linear / gamma space
+     * @param props - The properties for the InputHexField component.
+     * @returns
+     */
+    export var InputHexField: React.FunctionComponent<InputHexProps>;
+    type InputHsvFieldProps = {
+        color: Color3 | Color4;
+        label: string;
+        hsvKey: HsvKey;
+        onChange: (color: Color3 | Color4) => void;
+        max: number;
+        scale?: number;
+    };
+    /**
+     * In the HSV (Hue, Saturation, Value) color model, Hue (H) ranges from 0 to 360 degrees, representing the color's position on the color wheel.
+     * Saturation (S) ranges from 0 to 100%, indicating the intensity or purity of the color, with 0 being shades of gray and 100 being a fully saturated color.
+     * Value (V) ranges from 0 to 100%, representing the brightness of the color, with 0 being black and 100 being the brightest.
+     * @param props - The properties for the InputHsvField component.
+     */
+    export var InputHsvField: React.FunctionComponent<InputHsvFieldProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type CheckboxProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<boolean>;
+    /**
+     * This is a primitive fluent checkbox that can both read and write checked state
+     * @param props
+     * @returns Checkbox component
+     */
+    export var Checkbox: React.FunctionComponent<CheckboxProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type ButtonProps = {
+        onClick: () => void;
+        icon?: any;
+        label: string;
+        disabled?: boolean;
+    };
+    export var Button: React.FunctionComponent<ButtonProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type AccordionSectionProps = {
+        title: string;
+        collapseByDefault?: boolean;
+    };
+    export var AccordionSection: React.FunctionComponent<React.PropsWithChildren<AccordionSectionProps>>;
+    export var Accordion: React.FunctionComponent<React.PropsWithChildren>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type PaneProps = {
+        title: string;
+        icon?: any;
+    };
+    export var Pane: React.FunctionComponent<React.PropsWithChildren<PaneProps>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type GradientListProps<T extends FactorGradient | Color3Gradient | BABYLON.ColorGradient> = {
+        label: string;
+        gradients: Nullable<Array<T>>;
+        addGradient: (step?: T) => void;
+        removeGradient: (step: T) => void;
+        onChange: (newGradient: T) => void;
+    };
+    export var FactorGradientList: React.FunctionComponent<GradientListProps<FactorGradient>>;
+    export var Color3GradientList: React.FunctionComponent<GradientListProps<Color3Gradient>>;
+    export var Color4GradientList: React.FunctionComponent<GradientListProps<BABYLON.ColorGradient>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type ToolHostProps = {
+        /**
+         * Allows host to pass in a theme
+         */
+        customTheme?: any;
+        /**
+         * Can be set to true to disable the copy button in the tool's property lines. Default is false (copy enabled)
+         */
+        disableCopy?: boolean;
+        /**
+         * Name of the tool displayed in the UX
+         */
+        toolName: string;
+    };
+    export var ToolContext: import("react").Context<{
+        readonly useFluent: boolean;
+        readonly disableCopy: boolean;
+        readonly toolName: string;
+    }>;
+    /**
+     * For tools which are ready to move over the fluent, wrap the root of the tool (or the panel which you want fluentized) with this component
+     * Today we will only enable fluent if the URL has the `newUX` query parameter is truthy
+     * @param props
+     * @returns
+     */
+    export var FluentToolWrapper: React.FunctionComponent<React.PropsWithChildren<ToolHostProps>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type FileUploadLineProps = Omit<BABYLON.GuiEditor.SharedUIComponents.ButtonProps, "onClick"> & {
+        onClick: (files: FileList) => void;
+        accept: string;
+    };
+    export var FileUploadLine: React.FunctionComponent<FileUploadLineProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        /**
+     * Wraps a button with a label in a line container
+     * @param props Button props plus a label
+     * @returns A button inside a line
+     */
+    export var ButtonLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.ButtonProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type TensorPropertyLineProps<V extends Vector3 | Vector4 | Quaternion> = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<V> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & {
+        /**
+         * If passed, all sliders will use this for the min value
+         */
+        min?: number;
+        /**
+         * If passed, all sliders will use this for the max value
+         */
+        max?: number;
+        /**
+         * If passed, the UX will use the conversion functions to display/update values
+         */
+        valueConverter?: {
+            /**
+             * Will call from(val) before displaying in the UX
+             */
+            from: (val: number) => number;
+            /**
+             * Will call to(val) before calling onChange
+             */
+            to: (val: number) => number;
+        };
+    };
+    type RotationVectorPropertyLineProps = TensorPropertyLineProps<Vector3> & {
+        /**
+         * Display angles as degrees instead of radians
+         */
+        useDegrees?: boolean;
+    };
+    export var RotationVectorPropertyLine: React.FunctionComponent<RotationVectorPropertyLineProps>;
+    type QuaternionPropertyLineProps = TensorPropertyLineProps<Quaternion> & {
+        /**
+         * Display angles as degrees instead of radians
+         */
+        useDegrees?: boolean;
+    };
+    export var QuaternionPropertyLine: React.FunctionComponent<QuaternionPropertyLineProps>;
+    export var Vector3PropertyLine: React.FunctionComponent<TensorPropertyLineProps<Vector3>>;
+    export var Vector4PropertyLine: React.FunctionComponent<TensorPropertyLineProps<Vector4>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type TextProps = {
+        value: string;
+        tooltip?: string;
+    };
+    /**
+     * Wraps text in a property line
+     * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and TextProps
+     * @returns property-line wrapped text
+     */
+    export var TextPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & TextProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type SyncedSliderPropertyProps = BABYLON.GuiEditor.SharedUIComponents.SyncedSliderProps & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps;
+    /**
+     * Renders a simple wrapper around the SyncedSliderInput
+     * @param props
+     * @returns
+     */
+    export var SyncedSliderPropertyLine: import("react").ForwardRefExoticComponent<SyncedSliderPropertyProps & import("react").RefAttributes<HTMLDivElement>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        /**
+     * Wraps a switch in a property line
+     * @param props - The properties for the switch and property line
+     * @returns A React element representing the property line with a switch
+     */
+    export var SwitchPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & BABYLON.GuiEditor.SharedUIComponents.SwitchProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type PropertyLineProps = {
+        /**
+         * The name of the property to display in the property line.
+         */
+        label: string;
+        /**
+         * Optional description for the property, shown on hover of the info icon
+         */
+        description?: string;
+        /**
+         * Optional function returning a string to copy to clipboard.
+         */
+        onCopy?: () => string;
+        /**
+         * Link to the documentation for this property, available from the info icon either linked from the description (if provided) or default 'docs' text
+         */
+        docLink?: string;
+    } & ({
+        expandedContent?: undefined;
+        expandByDefault?: never;
+    } | {
+        /**
+         * If supplied, an 'expand' icon will be shown which, when clicked, renders this component within the property line.
+         */
+        expandedContent: JSX.Element;
+        /**
+         * If true, the expanded content will be shown by default.
+         */
+        expandByDefault?: boolean;
+    });
+    export var LineContainer: import("react").ForwardRefExoticComponent<Omit<React.PropsWithChildren<React.HTMLProps<HTMLDivElement>>, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
+    export type BaseComponentProps<T> = {
+        /**
+         * The value of the property to be displayed and modified.
+         */
+        value: T;
+        /**
+         * Callback function to handle changes to the value
+         */
+        onChange: (value: T) => void;
+        /**
+         * Optional flag to disable the component, preventing any interaction.
+         */
+        disabled?: boolean;
+        /**
+         * Optional class name to apply custom styles to the component.
+         */
+        className?: string;
+    };
+    /**
+     * A reusable component that renders a property line with a label and child content, and an optional description, copy button, and expandable section.
+     *
+     * @param props - The properties for the PropertyLine component.
+     * @returns A React element representing the property line.
+     *
+     */
+    export var PropertyLine: import("react").ForwardRefExoticComponent<React.PropsWithChildren<PropertyLineProps> & import("react").RefAttributes<HTMLDivElement>>;
+    export var PlaceholderPropertyLine: React.FunctionComponent<BaseComponentProps<any> & PropertyLineProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type LinkProps = {
+        value: string;
+        tooltip?: string;
+        onLink?: () => void;
+        url?: string;
+    };
+    /**
+     * Wraps a link in a property line
+     * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and LinkProps
+     * @returns property-line wrapped link
+     */
+    export var LinkPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & LinkProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        /**
+     * Wraps a text input in a property line
+     * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and BABYLON.GuiEditor.SharedUIComponents.InputProps
+     * @returns property-line wrapped input component
+     */
+    export var TextInputPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.InputProps<string> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+    /**
+     * Wraps a number input in a property line
+     * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and BABYLON.GuiEditor.SharedUIComponents.InputProps
+     * @returns property-line wrapped input component
+     */
+    export var NumberInputPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.InputProps<number> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        /**
+     * Wraps a hex input in a property line
+     * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and BABYLON.GuiEditor.SharedUIComponents.InputHexProps
+     * @returns property-line wrapped input hex component
+     */
+    export var HexPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.InputHexProps & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type DropdownPropertyLineProps<V extends BABYLON.GuiEditor.SharedUIComponents.AcceptedDropdownValue> = Omit<BABYLON.GuiEditor.SharedUIComponents.DropdownProps<V>, "includeNullAs"> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps;
+    /**
+     * Dropdown component for explicitly defined number values.
+     * If value can be undefined, use OptionalNumberDropdownPropertyLine instead.
+     * If value can be null, use NullableNumberDropdownPropertyLine instead.
+     */
+    export var NumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<number>>;
+    /**
+     * Dropdown component for explicitly defined string values.
+     * If value can be undefined, use OptionalStringDropdownPropertyLine instead.
+     * If value can be null, use NullableStringDropdownPropertyLine instead.
+     */
+    export var StringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<string>>;
+    /**
+     * Dropdown component for Nullable<number> values.
+     */
+    export var NullableNumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<Nullable<number>>>;
+    /**
+     * Dropdown component for Nullable<string> values.
+     */
+    export var NullableStringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<Nullable<string>>>;
+    /**
+     * Dropdown component for number | undefined values
+     */
+    export var OptionalNumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<number | undefined>>;
+    /**
+     * Dropdown component for string | undefined values
+     */
+    export var OptionalStringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<string | undefined>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type ColorPropertyLineProps = BABYLON.GuiEditor.SharedUIComponents.ColorPickerProps<Color3 | Color4> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps;
+    export var Color3PropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.ColorPickerProps<Color3> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+    export var Color4PropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.ColorPickerProps<Color4> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        /**
+     * Wraps a checkbox in a property line
+     * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and BABYLON.GuiEditor.SharedUIComponents.CheckboxProps
+     * @returns property-line wrapped checkbox
+     */
+    export var CheckboxPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & BABYLON.GuiEditor.SharedUIComponents.CheckboxProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        /**
+     * Displays an icon indicating enabled (green check) or disabled (red cross) state
+     * @param props - The properties for the PropertyLine, including the boolean value to display.
+     * @returns A PropertyLine component with a PresenceBadge indicating the boolean state.
+     */
+    export var BooleanBadgePropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & {
+        value: boolean;
+    }>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        /**
+     * A wrapper component for the property tab that provides a consistent layout and styling.
+     * It uses a Pane and an Accordion to organize the content, so its direct children
+     * must have 'title' props to be compatible with the Accordion structure.
+     * @param props The props to pass to the component.
+     * @returns The rendered component.
+     */
+    export var PropertyTabComponentBase: React.FunctionComponent<React.PropsWithChildren>;
 
 
 
@@ -3788,7 +4633,7 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export type ButtonProps = {
+        export type ButtonComponentProps = {
         disabled?: boolean;
         active?: boolean;
         onClick?: () => void;
@@ -3797,7 +4642,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         title?: string;
         backgroundColor?: string;
     };
-    export var Button: React.FC<ButtonProps>;
+    export var ButtonComponent: React.FC<React.PropsWithChildren<ButtonComponentProps>>;
 
 
 
@@ -3887,7 +4732,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props
      * @returns
      */
-    export const NodeRenderer: (props: INodeRendererProps) => import("react/jsx-runtime").JSX.Element;
+    export const NodeRenderer: (props: React.PropsWithChildren<INodeRendererProps>) => import("react/jsx-runtime").JSX.Element;
 
 
 
@@ -3906,7 +4751,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props properties
      * @returns graph node container element
      */
-    export var GraphNodesContainer: React.FC<IGraphContainerProps>;
+    export var GraphNodesContainer: React.FC<React.PropsWithChildren<IGraphContainerProps>>;
 
 
 
@@ -3927,7 +4772,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         highlighted?: boolean;
         parentContainerId: string;
     }
-    export var SingleGraphNode: React.FC<IGraphNodeProps>;
+    export var SingleGraphNode: React.FC<React.PropsWithChildren<IGraphNodeProps>>;
 
 
 
@@ -3951,7 +4796,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props
      * @returns
      */
-    export var GraphLinesContainer: React.FC<IGraphLinesContainerProps>;
+    export var GraphLinesContainer: React.FC<React.PropsWithChildren<IGraphLinesContainerProps>>;
 
 
 
@@ -4037,7 +4882,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props
      * @returns
      */
-    export var GraphContainer: React.FC<IGraphContainerProps>;
+    export var GraphContainer: React.FC<React.PropsWithChildren<IGraphContainerProps>>;
 
 
 
@@ -4089,7 +4934,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * drag the handle in a node and drop it in another node to create a connection.
      * @returns connector element
      */
-    export var GraphConnectorHandler: React.FC<IGraphConnectorHandlerProps>;
+    export var GraphConnectorHandler: React.FC<React.PropsWithChildren<IGraphConnectorHandlerProps>>;
 
 
 
@@ -4173,7 +5018,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         iconLabel?: string;
     }
     export class FileButtonLineComponent extends React.Component<IFileButtonLineComponentProps> {
-        private static _IDGenerator;
+        private static _IdGenerator;
         private _id;
         private _uploadInputRef;
         constructor(props: IFileButtonLineComponentProps);
@@ -4211,54 +5056,9 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         constructor(props: IColorPickerLineComponentProps);
         syncPositions(): void;
         shouldComponentUpdate(nextProps: IColorPickerLineComponentProps, nextState: IColorPickerComponentState): boolean;
-        getHexString(props?: Readonly<IColorPickerLineComponentProps> & Readonly<{
-            children?: React.ReactNode | undefined;
-        }>): string;
+        getHexString(props?: Readonly<IColorPickerLineComponentProps>): string;
         componentDidUpdate(): void;
         componentDidMount(): void;
-        render(): import("react/jsx-runtime").JSX.Element;
-    }
-
-
-
-}
-declare module BABYLON {
-
-
-}
-declare module BABYLON.GuiEditor.SharedUIComponents {
-        export interface IColorLineComponentProps {
-        label: string;
-        target: any;
-        propertyName: string;
-        onPropertyChangedObservable: Observable<BABYLON.GuiEditor.SharedUIComponents.PropertyChangedEvent>;
-        onChange?: () => void;
-        isLinear?: boolean;
-        icon?: string;
-        iconLabel?: string;
-        disableAlpha?: boolean;
-        lockObject: BABYLON.GuiEditor.SharedUIComponents.LockObject;
-    }
-    interface IColorLineComponentState {
-        isExpanded: boolean;
-        color: Color4;
-    }
-    export class ColorLineComponent extends React.Component<IColorLineComponentProps, IColorLineComponentState> {
-        constructor(props: IColorLineComponentProps);
-        shouldComponentUpdate(nextProps: IColorLineComponentProps, nextState: IColorLineComponentState): boolean;
-        getValue(props?: Readonly<IColorLineComponentProps> & Readonly<{
-            children?: React.ReactNode | undefined;
-        }>): Color4;
-        setColorFromString(colorString: string): void;
-        setColor(newColor: Color4): void;
-        switchExpandState(): void;
-        updateStateR(value: number): void;
-        updateStateG(value: number): void;
-        updateStateB(value: number): void;
-        updateStateA(value: number): void;
-        copyToClipboard(): void;
-        private _convertToColor;
-        private _toColor3;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -4608,7 +5408,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props properties
      * @returns drop zone element
      */
-    export var FlexibleDropZone: React.FC<IFlexibleDropZoneProps>;
+    export var FlexibleDropZone: React.FC<React.PropsWithChildren<IFlexibleDropZoneProps>>;
 
 
 
@@ -4636,7 +5436,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props properties
      * @returns DragHandler element
      */
-    export var FlexibleDragHandler: React.FC<IFlexibleDragHandlerProps>;
+    export var FlexibleDragHandler: React.FC<React.PropsWithChildren<IFlexibleDragHandlerProps>>;
 
 
 
@@ -4661,7 +5461,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props
      * @returns
      */
-    export var FlexibleColumn: React.FC<IFlexibleColumnProps>;
+    export var FlexibleColumn: React.FC<React.PropsWithChildren<IFlexibleColumnProps>>;
 
 
 
@@ -4870,7 +5670,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         artboardColor?: string;
         artboardColorPickerColor?: string;
     }
-    export var CommandBarComponent: React.FC<ICommandBarComponentProps>;
+    export var CommandBarComponent: React.FC<React.PropsWithChildren<ICommandBarComponentProps>>;
 
 
 

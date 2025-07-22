@@ -3,6 +3,18 @@ declare module BABYLON {
 
 
     /**
+     * Matrix that converts handedness on the X-axis. Used to convert from LH to RH and vice versa.
+     * @internal
+     */
+    export var ConvertHandednessMatrix: Matrix;
+    /**
+     * Checks if a node is a "noop" transform node, usually inserted by the glTF loader to correct handedness.
+     * @internal
+     */
+    export function IsNoopNode(node: Node, useRightHandedSystem: boolean): boolean;
+
+
+    /**
      * Class for generating STL data from a Babylon scene.
      */
     export class STLExport {
@@ -50,6 +62,25 @@ declare module BABYLON {
 
 
 
+    export var DefaultTranslation: Vector3;
+    export var DefaultRotation: Quaternion;
+    export var DefaultScale: Vector3;
+    /**
+     * Get the information necessary for enumerating a vertex buffer.
+     * @param vertexBuffer the vertex buffer to enumerate
+     * @param meshes the meshes that use the vertex buffer
+     * @returns the information necessary to enumerate the vertex buffer
+     */
+    export function GetVertexBufferInfo(vertexBuffer: VertexBuffer, meshes: AbstractMesh[]): {
+        byteOffset: number;
+        byteStride: number;
+        componentCount: number;
+        type: number;
+        count: number;
+        normalized: boolean;
+        totalVertices: number;
+        kind: string;
+    };
     export function GetAccessorElementCount(accessorType: BABYLON.GLTF2.AccessorType): number;
     export function FloatsNeed16BitInteger(floatArray: FloatArray): boolean;
     export function IsStandardVertexAttribute(type: string): boolean;
@@ -59,29 +90,35 @@ declare module BABYLON {
     export function IsTriangleFillMode(fillMode: number): boolean;
     export function NormalizeTangent(tangent: Vector4 | Vector3): void;
     export function ConvertToRightHandedPosition(value: Vector3): Vector3;
+    /** @internal */
+    export function ConvertToRightHandedTransformMatrix(matrix: Matrix): Matrix;
+    /**
+     * Converts, in-place, a left-handed quaternion to a right-handed quaternion via a change of basis.
+     * @param value the unit quaternion to convert
+     * @returns the converted quaternion
+     */
     export function ConvertToRightHandedRotation(value: Quaternion): Quaternion;
-    export function ConvertToRightHandedNode(value: BABYLON.GLTF2.INode): void;
     /**
-     * Rotation by 180 as glTF has a different convention than Babylon.
+     * Pre-multiplies a 180-degree Y rotation to the quaternion, in order to match glTF's flipped forward direction for cameras.
      * @param rotation Target camera rotation.
-     * @returns Ref to camera rotation.
      */
-    export function ConvertCameraRotationToGLTF(rotation: Quaternion): Quaternion;
-    export function RotateNode180Y(node: BABYLON.GLTF2.INode): void;
+    export function Rotate180Y(rotation: Quaternion): void;
     /**
-     * Collapses GLTF parent and node into a single node. This is useful for removing nodes that were added by the GLTF importer.
-     * @param node Target parent node.
-     * @param parentNode Original GLTF node (Light or Camera).
+     * Collapses GLTF parent and node into a single node, ignoring scaling.
+     * This is useful for removing nodes that were added by the GLTF importer.
+     * @param node Original GLTF node (Light or Camera).
+     * @param parentNode Target parent node.
      */
-    export function CollapseParentNode(node: BABYLON.GLTF2.INode, parentNode: BABYLON.GLTF2.INode): void;
+    export function CollapseChildIntoParent(node: BABYLON.GLTF2.INode, parentNode: BABYLON.GLTF2.INode): void;
     /**
-     * Sometimes the GLTF Importer can add extra transform nodes (for lights and cameras). This checks if a parent node was added by the GLTF Importer. If so, it should be removed during serialization.
-     * @param babylonNode Original GLTF node (Light or Camera).
-     * @param parentBabylonNode Target parent node.
-     * @returns True if the parent node was added by the GLTF importer.
+     * Checks whether a camera or light node is candidate for collapsing with its parent node.
+     * This is useful for roundtrips, as the glTF Importer parents a new node to
+     * lights and cameras to store their original transformation information.
+     * @param babylonNode Babylon light or camera node.
+     * @param parentBabylonNode Target Babylon parent node.
+     * @returns True if the two nodes can be merged, false otherwise.
      */
-    export function IsParentAddedByImporter(babylonNode: Node, parentBabylonNode: Node): boolean;
-    export function IsNoopNode(node: Node, useRightHandedSystem: boolean): boolean;
+    export function IsChildCollapsible(babylonNode: ShadowLight | TargetCamera, parentBabylonNode: Node): boolean;
     /**
      * Converts an IndicesArray into either Uint32Array or Uint16Array, only copying if the data is number[].
      * @param indices input array to be converted
@@ -103,7 +140,7 @@ declare module BABYLON {
      * @param defaultValues a partial object with default values
      * @returns object with default values omitted
      */
-    export function OmitDefaultValues<T extends Object>(object: T, defaultValues: Partial<T>): T;
+    export function OmitDefaultValues<T extends object>(object: T, defaultValues: Partial<T>): T;
 
 
     /**
@@ -127,9 +164,10 @@ declare module BABYLON {
          */
         shouldExportAnimation?(animation: Animation): boolean;
         /**
-         * Function used to extract the part of node's metadata that will be exported into glTF node extras
+         * Function to extract the part of the scene or node's `metadata` that will populate the corresponding
+         * glTF object's `extras` field. If not defined, `node.metadata.gltf.extras` will be used.
          * @param metadata source metadata to read from
-         * @returns the data to store to glTF node extras
+         * @returns the data to store into the glTF extras field
          */
         metadataSelector?(metadata: any): any;
         /**
@@ -190,7 +228,7 @@ declare module BABYLON {
         influence: number;
         name: string;
     }
-    export function BuildMorphTargetBuffers(morphTarget: MorphTarget, mesh: Mesh, bufferManager: BufferManager, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], convertToRightHanded: boolean): IMorphTargetData;
+    export function BuildMorphTargetBuffers(morphTarget: MorphTarget, mesh: AbstractMesh, bufferManager: BufferManager, bufferViews: BABYLON.GLTF2.IBufferView[], accessors: BABYLON.GLTF2.IAccessor[], convertToRightHanded: boolean): IMorphTargetData;
 
 
     /**
@@ -279,7 +317,12 @@ declare module BABYLON {
         private _convertSpecGlossFactorsToMetallicRoughnessAsync;
         exportPBRMaterialAsync(babylonPBRMaterial: PBRBaseMaterial, mimeType: BABYLON.GLTF2.ImageMimeType, hasUVs: boolean): Promise<number>;
         private _setMetallicRoughnessPbrMaterialAsync;
-        private _getPixelsFromTexture;
+        /**
+         * Get the RGBA pixel data from a texture
+         * @param babylonTexture
+         * @returns an array buffer promise containing the pixel data
+         */
+        private _getPixelsFromTextureAsync;
         exportTextureAsync(babylonTexture: BaseTexture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BABYLON.GLTF2.ITextureInfo>>;
         private _exportTextureInfoAsync;
         private _exportImage;
@@ -399,8 +442,8 @@ declare module BABYLON {
         readonly _materialNeedsUVsSet: Set<Material>;
         private static readonly _ExtensionNames;
         private static readonly _ExtensionFactories;
-        private _applyExtension;
-        private _applyExtensions;
+        private _ApplyExtension;
+        private _ApplyExtensions;
         _extensionsPreExportTextureAsync(context: string, babylonTexture: Texture, mimeType: BABYLON.GLTF2.ImageMimeType): Promise<Nullable<BaseTexture>>;
         _extensionsPostExportNodeAsync(context: string, node: BABYLON.GLTF2.INode, babylonNode: Node, nodeMap: Map<Node, number>, convertToRightHanded: boolean): Promise<Nullable<BABYLON.GLTF2.INode>>;
         _extensionsPostExportMaterialAsync(context: string, material: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<Nullable<BABYLON.GLTF2.IMaterial>>;
@@ -1058,7 +1101,6 @@ declare module BABYLON {
          */
         postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
         private _isExtensionEnabled;
-        private _hasTexturesExtension;
         /**
          * After exporting a material
          * @param context GLTF context of the material
@@ -1210,6 +1252,27 @@ declare module BABYLON {
 
 
     /**
+     * @internal
+     */
+    export class EXT_materials_diffuse_roughness implements IGLTFExporterExtensionV2 {
+        /** Name of this extension */
+        readonly name = "EXT_materials_diffuse_roughness";
+        /** Defines whether this extension is enabled */
+        enabled: boolean;
+        /** Defines whether this extension is required */
+        required: boolean;
+        private _exporter;
+        private _wasUsed;
+        constructor(exporter: GLTFExporter);
+        dispose(): void;
+        /** @internal */
+        get wasUsed(): boolean;
+        postExportMaterialAdditionalTextures?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): BaseTexture[];
+        postExportMaterialAsync?(context: string, node: BABYLON.GLTF2.IMaterial, babylonMaterial: Material): Promise<BABYLON.GLTF2.IMaterial>;
+    }
+
+
+    /**
      * Options for the USDZ export
      */
     export interface IUSDZExportOptions {
@@ -1252,9 +1315,9 @@ declare module BABYLON {
      * @param options options to configure the export
      * @param meshPredicate predicate to filter the meshes to export
      * @returns a uint8 array containing the USDZ file
-     * #H2G5XW#6 - Simple sphere
-     * #H2G5XW#7 - Red sphere
-     * #5N3RWK#5 - Boombox
+     * @see [Simple sphere](https://playground.babylonjs.com/#H2G5XW#6)
+     * @see [Red sphere](https://playground.babylonjs.com/#H2G5XW#7)
+     * @see [Boombox](https://playground.babylonjs.com/#5N3RWK#5)
      */
     export function USDZExportAsync(scene: Scene, options: Partial<IUSDZExportOptions>, meshPredicate?: (m: Mesh) => boolean): Promise<Uint8Array>;
 

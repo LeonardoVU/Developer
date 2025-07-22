@@ -139,7 +139,7 @@ export interface IGLTFLoaderData {
     /**
      * The object that represents the glTF JSON.
      */
-    json: Object;
+    json: object;
     /**
      * The BIN chunk of a binary glTF.
      */
@@ -525,7 +525,7 @@ export class GLTFFileLoader extends GLTFLoaderOptions implements IDisposable, IS
     /**
      * @internal
      */
-    directLoad(scene: Scene, data: string): Promise<Object>;
+    directLoad(scene: Scene, data: string): Promise<object>;
     /**
      * The callback that allows custom handling of the root url based on the response url.
      * @param rootUrl the original root url
@@ -596,6 +596,7 @@ export * from "babylonjs-loaders/glTF/2.0/glTFLoader";
 export * from "babylonjs-loaders/glTF/2.0/glTFLoaderExtension";
 export * from "babylonjs-loaders/glTF/2.0/glTFLoaderExtensionRegistry";
 export * from "babylonjs-loaders/glTF/2.0/glTFLoaderInterfaces";
+export * from "babylonjs-loaders/glTF/2.0/glTFLoaderAnimation";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/index";
 
 }
@@ -1078,24 +1079,26 @@ export abstract class AnimationPropertyInfo {
     constructor(type: number, name: string, getValue: GetValueFn, getStride: (target: any) => number);
     protected _buildAnimation(name: string, fps: number, keys: any[]): Animation;
     /** @internal */
-    abstract buildAnimations(target: any, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
+    abstract buildAnimations(target: any, name: string, fps: number, keys: any[]): {
+        babylonAnimatable: IAnimatable;
+        babylonAnimation: Animation;
+    }[];
 }
 /** @internal */
 export class TransformNodeAnimationPropertyInfo extends AnimationPropertyInfo {
     /** @internal */
-    buildAnimations(target: INode, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
+    buildAnimations(target: INode, name: string, fps: number, keys: any[]): {
+        babylonAnimatable: IAnimatable;
+        babylonAnimation: Animation;
+    }[];
 }
 /** @internal */
 export class WeightAnimationPropertyInfo extends AnimationPropertyInfo {
-    buildAnimations(target: INode, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
+    buildAnimations(target: INode, name: string, fps: number, keys: any[]): {
+        babylonAnimatable: IAnimatable;
+        babylonAnimation: Animation;
+    }[];
 }
-/** @internal */
-export const nodeAnimationData: {
-    translation: TransformNodeAnimationPropertyInfo[];
-    rotation: TransformNodeAnimationPropertyInfo[];
-    scale: TransformNodeAnimationPropertyInfo[];
-    weights: WeightAnimationPropertyInfo[];
-};
 
 }
 declare module "babylonjs-loaders/glTF/2.0/glTFLoader" {
@@ -1123,6 +1126,7 @@ import { AssetContainer } from "babylonjs/assetContainer";
 import { AnimationPropertyInfo } from "babylonjs-loaders/glTF/2.0/glTFLoaderAnimation";
 import { IObjectInfo } from "babylonjs/ObjectModel/objectModelInterfaces";
 import { GLTFExtensionFactory } from "babylonjs-loaders/glTF/2.0/glTFLoaderExtensionRegistry";
+import { IInterpolationPropertyInfo } from "babylonjs/FlowGraph/typeDefinitions";
 export { GLTFFileLoader };
 interface IWithMetadata {
     metadata: any;
@@ -1176,6 +1180,8 @@ export class GLTFLoader implements IGLTFLoader {
     _disableInstancedMesh: number;
     /** @internal */
     _allMaterialsDirtyRequired: boolean;
+    /** @internal */
+    _skipStartAnimationStep: boolean;
     private readonly _parent;
     private readonly _extensions;
     private _disposed;
@@ -1333,7 +1339,7 @@ export class GLTFLoader implements IGLTFLoader {
      * @param onLoad Called for each animation loaded
      * @returns A void promise that resolves when the load is complete
      */
-    _loadAnimationChannelFromTargetInfoAsync(context: string, animationContext: string, animation: IAnimation, channel: IAnimationChannel, targetInfo: IObjectInfo<AnimationPropertyInfo[]>, onLoad: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): Promise<void>;
+    _loadAnimationChannelFromTargetInfoAsync(context: string, animationContext: string, animation: IAnimation, channel: IAnimationChannel, targetInfo: IObjectInfo<IInterpolationPropertyInfo[]>, onLoad: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): Promise<void>;
     private _loadAnimationSamplerAsync;
     /**
      * Loads a glTF buffer.
@@ -1527,38 +1533,300 @@ export class GLTFLoader implements IGLTFLoader {
 }
 
 }
-declare module "babylonjs-loaders/glTF/2.0/Extensions/interactivityUtils" {
-export const gltfToFlowGraphTypeMap: {
-    [key: string]: string;
-};
-export const gltfTypeToBabylonType: any;
-
-}
-declare module "babylonjs-loaders/glTF/2.0/Extensions/interactivityPathToObjectConverter" {
-import { IGLTF } from "babylonjs-loaders/glTF/2.0/glTFLoaderInterfaces";
+declare module "babylonjs-loaders/glTF/2.0/Extensions/objectModelMapping" {
+import { TransformNode } from "babylonjs/Meshes/transformNode";
+import { IAnimation, ICamera, IGLTF, IKHRLightsPunctual_Light, IMaterial, IMesh, INode } from "babylonjs-loaders/glTF/2.0/glTFLoaderInterfaces";
+import { Vector3 } from "babylonjs/Maths/math.vector";
+import { Matrix, Quaternion, Vector2 } from "babylonjs/Maths/math.vector";
+import { Color3 } from "babylonjs/Maths/math.color";
+import { Color4 } from "babylonjs/Maths/math.color";
+import { PBRMaterial } from "babylonjs/Materials/PBR/pbrMaterial";
+import { Light } from "babylonjs/Lights/light";
+import { Nullable } from "babylonjs/types";
+import { IEXTLightsImageBased_LightImageBased } from "babylonjs-gltf2interface";
+import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
+import { IInterpolationPropertyInfo, IObjectAccessor } from "babylonjs/FlowGraph/typeDefinitions";
 import { GLTFPathToObjectConverter } from "babylonjs-loaders/glTF/2.0/Extensions/gltfPathToObjectConverter";
-import { IObjectAccessor } from "babylonjs/FlowGraph/typeDefinitions";
-/**
- * Class to convert an interactivity pointer path to a smart object
- */
-export class InteractivityPathToObjectConverter extends GLTFPathToObjectConverter<IObjectAccessor> {
-    constructor(gltf: IGLTF);
+import { AnimationGroup } from "babylonjs/Animations/animationGroup";
+import { Mesh } from "babylonjs/Meshes/mesh";
+export interface IGLTFObjectModelTree {
+    cameras: IGLTFObjectModelTreeCamerasObject;
+    nodes: IGLTFObjectModelTreeNodesObject;
+    materials: IGLTFObjectModelTreeMaterialsObject;
+    extensions: IGLTFObjectModelTreeExtensionsObject;
+    animations: {
+        length: IObjectAccessor<IAnimation[], AnimationGroup[], number>;
+        __array__: {};
+    };
+    meshes: {
+        length: IObjectAccessor<IMesh[], (Mesh | undefined)[], number>;
+        __array__: {};
+    };
 }
-
+export interface IGLTFObjectModelTreeNodesObject<GLTFTargetType = INode, BabylonTargetType = TransformNode> {
+    length: IObjectAccessor<GLTFTargetType[], BabylonTargetType[], number>;
+    __array__: {
+        __target__: boolean;
+        translation: IObjectAccessor<GLTFTargetType, BabylonTargetType, Vector3>;
+        rotation: IObjectAccessor<GLTFTargetType, BabylonTargetType, Quaternion>;
+        scale: IObjectAccessor<GLTFTargetType, BabylonTargetType, Vector3>;
+        matrix: IObjectAccessor<GLTFTargetType, BabylonTargetType, Matrix>;
+        globalMatrix: IObjectAccessor<GLTFTargetType, BabylonTargetType, Matrix>;
+        weights: {
+            length: IObjectAccessor<GLTFTargetType, BabylonTargetType, number>;
+            __array__: {
+                __target__: boolean;
+            } & IObjectAccessor<GLTFTargetType, BabylonTargetType, number>;
+        } & IObjectAccessor<GLTFTargetType, BabylonTargetType, number[]>;
+        extensions: {
+            EXT_lights_ies?: {
+                multiplier: IObjectAccessor<INode, Light, number>;
+                color: IObjectAccessor<INode, Light, Color3>;
+            };
+        };
+    };
 }
-declare module "babylonjs-loaders/glTF/2.0/Extensions/interactivityFunctions" {
-import { IKHRInteractivity } from "babylonjs-gltf2interface";
-import { ISerializedFlowGraph } from "babylonjs/FlowGraph/typeDefinitions";
+export interface IGLTFObjectModelTreeCamerasObject {
+    __array__: {
+        __target__: boolean;
+        orthographic: {
+            xmag: IObjectAccessor<ICamera, ICamera, Vector2>;
+            ymag: IObjectAccessor<ICamera, ICamera, Vector2>;
+            zfar: IObjectAccessor<ICamera, ICamera, number>;
+            znear: IObjectAccessor<ICamera, ICamera, number>;
+        };
+        perspective: {
+            yfov: IObjectAccessor<ICamera, ICamera, number>;
+            zfar: IObjectAccessor<ICamera, ICamera, number>;
+            znear: IObjectAccessor<ICamera, ICamera, number>;
+            aspectRatio: IObjectAccessor<ICamera, ICamera, Nullable<number>>;
+        };
+    };
+}
+export interface IGLTFObjectModelTreeMaterialsObject {
+    __array__: {
+        __target__: boolean;
+        pbrMetallicRoughness: {
+            baseColorFactor: IObjectAccessor<IMaterial, PBRMaterial, Color4>;
+            metallicFactor: IObjectAccessor<IMaterial, PBRMaterial, Nullable<number>>;
+            roughnessFactor: IObjectAccessor<IMaterial, PBRMaterial, Nullable<number>>;
+            baseColorTexture: {
+                extensions: {
+                    KHR_texture_transform: ITextureDefinition;
+                };
+            };
+            metallicRoughnessTexture: {
+                extensions: {
+                    KHR_texture_transform: ITextureDefinition;
+                };
+            };
+        };
+        emissiveFactor: IObjectAccessor<IMaterial, PBRMaterial, Color3>;
+        normalTexture: {
+            scale: IObjectAccessor<IMaterial, PBRMaterial, number>;
+            extensions: {
+                KHR_texture_transform: ITextureDefinition;
+            };
+        };
+        occlusionTexture: {
+            strength: IObjectAccessor<IMaterial, PBRMaterial, number>;
+            extensions: {
+                KHR_texture_transform: ITextureDefinition;
+            };
+        };
+        emissiveTexture: {
+            extensions: {
+                KHR_texture_transform: ITextureDefinition;
+            };
+        };
+        extensions: {
+            KHR_materials_anisotropy: {
+                anisotropyStrength: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                anisotropyRotation: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                anisotropyTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+            };
+            KHR_materials_clearcoat: {
+                clearcoatFactor: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                clearcoatRoughnessFactor: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                clearcoatTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+                clearcoatNormalTexture: {
+                    scale: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+                clearcoatRoughnessTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+            };
+            KHR_materials_dispersion: {
+                dispersion: IObjectAccessor<IMaterial, PBRMaterial, number>;
+            };
+            KHR_materials_emissive_strength: {
+                emissiveStrength: IObjectAccessor<IMaterial, PBRMaterial, number>;
+            };
+            KHR_materials_ior: {
+                ior: IObjectAccessor<IMaterial, PBRMaterial, number>;
+            };
+            KHR_materials_iridescence: {
+                iridescenceFactor: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                iridescenceIor: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                iridescenceThicknessMinimum: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                iridescenceThicknessMaximum: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                iridescenceTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+                iridescenceThicknessTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+            };
+            KHR_materials_sheen: {
+                sheenColorFactor: IObjectAccessor<IMaterial, PBRMaterial, Color3>;
+                sheenRoughnessFactor: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                sheenColorTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+                sheenRoughnessTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+            };
+            KHR_materials_specular: {
+                specularFactor: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                specularColorFactor: IObjectAccessor<IMaterial, PBRMaterial, Color3>;
+                specularTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+                specularColorTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+            };
+            KHR_materials_transmission: {
+                transmissionFactor: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                transmissionTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+            };
+            KHR_materials_diffuse_transmission: {
+                diffuseTransmissionFactor: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                diffuseTransmissionTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+                diffuseTransmissionColorFactor: IObjectAccessor<IMaterial, PBRMaterial, Nullable<Color3>>;
+                diffuseTransmissionColorTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+            };
+            KHR_materials_volume: {
+                thicknessFactor: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                attenuationColor: IObjectAccessor<IMaterial, PBRMaterial, Color3>;
+                attenuationDistance: IObjectAccessor<IMaterial, PBRMaterial, number>;
+                thicknessTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+            };
+        };
+    };
+}
+interface ITextureDefinition {
+    offset: IObjectAccessor<IMaterial, PBRMaterial, Vector2>;
+    rotation: IObjectAccessor<IMaterial, PBRMaterial, number>;
+    scale: IObjectAccessor<IMaterial, PBRMaterial, Vector2>;
+}
+export interface IGLTFObjectModelTreeMeshesObject {
+}
+export interface IGLTFObjectModelTreeExtensionsObject {
+    KHR_lights_punctual: {
+        lights: {
+            length: IObjectAccessor<IKHRLightsPunctual_Light[], Light[], number>;
+            __array__: {
+                __target__: boolean;
+                color: IObjectAccessor<IKHRLightsPunctual_Light, Light, Color3>;
+                intensity: IObjectAccessor<IKHRLightsPunctual_Light, Light, number>;
+                range: IObjectAccessor<IKHRLightsPunctual_Light, Light, number>;
+                spot: {
+                    innerConeAngle: IObjectAccessor<IKHRLightsPunctual_Light, Light, number>;
+                    outerConeAngle: IObjectAccessor<IKHRLightsPunctual_Light, Light, number>;
+                };
+            };
+        };
+    };
+    EXT_lights_ies: {
+        lights: {
+            length: IObjectAccessor<IKHRLightsPunctual_Light[], Light[], number>;
+        };
+    };
+    EXT_lights_image_based: {
+        lights: {
+            __array__: {
+                __target__: boolean;
+                intensity: IObjectAccessor<IEXTLightsImageBased_LightImageBased, BaseTexture, number>;
+                rotation: IObjectAccessor<IEXTLightsImageBased_LightImageBased, BaseTexture, Quaternion>;
+            };
+            length: IObjectAccessor<IEXTLightsImageBased_LightImageBased[], BaseTexture[], number>;
+        };
+    };
+}
 /**
- * @internal
- * Converts a glTF Interactivity Extension to a serialized flow graph.
- * @param gltf the interactivity data
- * @returns a serialized flow graph
+ * get a path-to-object converter for the given glTF tree
+ * @param gltf the glTF tree to use
+ * @returns a path-to-object converter for the given glTF tree
  */
-export function convertGLTFToSerializedFlowGraph(gltf: IKHRInteractivity): ISerializedFlowGraph;
+export function GetPathToObjectConverter(gltf: IGLTF): GLTFPathToObjectConverter<unknown, unknown, unknown>;
+/**
+ * This function will return the object accessor for the given key in the object model
+ * If the key is not found, it will return undefined
+ * @param key the key to get the mapping for, for example /materials/\{\}/emissiveFactor
+ * @returns an object accessor for the given key, or undefined if the key is not found
+ */
+export function GetMappingForKey(key: string): IObjectAccessor | undefined;
+/**
+ * Set interpolation for a specific key in the object model
+ * @param key the key to set, for example /materials/\{\}/emissiveFactor
+ * @param interpolation the interpolation elements array
+ */
+export function SetInterpolationForKey(key: string, interpolation?: IInterpolationPropertyInfo[]): void;
+/**
+ * This will ad a new object accessor in the object model at the given key.
+ * Note that this will NOT change the typescript types. To do that you will need to change the interface itself (extending it in the module that uses it)
+ * @param key the key to add the object accessor at. For example /cameras/\{\}/perspective/aspectRatio
+ * @param accessor the object accessor to add
+ */
+export function AddObjectAccessorToKey<GLTFTargetType = any, BabylonTargetType = any, BabylonValueType = any>(key: string, accessor: IObjectAccessor<GLTFTargetType, BabylonTargetType, BabylonValueType>): void;
+export {};
 
 }
 declare module "babylonjs-loaders/glTF/2.0/Extensions/index" {
+export * from "babylonjs-loaders/glTF/2.0/Extensions/objectModelMapping";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/EXT_lights_image_based";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/EXT_mesh_gpu_instancing";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/EXT_meshopt_compression";
@@ -1581,6 +1849,7 @@ export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_materials_transmission"
 export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_materials_diffuse_transmission";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_materials_volume";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_materials_dispersion";
+export * from "babylonjs-loaders/glTF/2.0/Extensions/EXT_materials_diffuse_roughness";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_mesh_quantization";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_texture_basisu";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_texture_transform";
@@ -1592,24 +1861,37 @@ export * from "babylonjs-loaders/glTF/2.0/Extensions/MSFT_minecraftMesh";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/MSFT_sRGBFactors";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_node_visibility";
+export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_node_selectability";
+export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_node_hoverability";
 export * from "babylonjs-loaders/glTF/2.0/Extensions/ExtrasAsMetadata";
+export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity/index";
 
 }
 declare module "babylonjs-loaders/glTF/2.0/Extensions/gltfPathToObjectConverter" {
 import { IObjectInfo, IPathToObjectConverter } from "babylonjs/ObjectModel/objectModelInterfaces";
 import { IGLTF } from "babylonjs-loaders/glTF/2.0/glTFLoaderInterfaces";
+import { IObjectAccessor } from "babylonjs/FlowGraph/typeDefinitions";
+/**
+ * Adding an exception here will break traversing through the glTF object tree.
+ * This is used for properties that might not be in the glTF object model, but are optional and have a default value.
+ * For example, the path /nodes/\{\}/extensions/KHR_node_visibility/visible is optional - the object can be deferred without the object fully existing.
+ */
+export const OptionalPathExceptionsList: {
+    regex: RegExp;
+}[];
 /**
  * A converter that takes a glTF Object Model JSON Pointer
  * and transforms it into an ObjectAccessorContainer, allowing
  * objects referenced in the glTF to be associated with their
  * respective Babylon.js objects.
  */
-export class GLTFPathToObjectConverter<T> implements IPathToObjectConverter<T> {
+export class GLTFPathToObjectConverter<T, BabylonType, BabylonValue> implements IPathToObjectConverter<IObjectAccessor<T, BabylonType, BabylonValue>> {
     private _gltf;
     private _infoTree;
     constructor(_gltf: IGLTF, _infoTree: any);
     /**
      * The pointer string is represented by a [JSON pointer](https://datatracker.ietf.org/doc/html/rfc6901).
+     * See also https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/ObjectModel.adoc#core-pointers
      * <animationPointer> := /<rootNode>/<assetIndex>/<propertyPath>
      * <rootNode> := "nodes" | "materials" | "meshes" | "cameras" | "extensions"
      * <assetIndex> := <digit> | <name>
@@ -1621,6 +1903,7 @@ export class GLTFPathToObjectConverter<T> implements IPathToObjectConverter<T> {
      *
      * Examples:
      *  - "/nodes/0/rotation"
+     * - "/nodes.length"
      *  - "/materials/2/emissiveFactor"
      *  - "/materials/2/pbrMetallicRoughness/baseColorFactor"
      *  - "/materials/2/extensions/KHR_materials_emissive_strength/emissiveStrength"
@@ -1628,7 +1911,7 @@ export class GLTFPathToObjectConverter<T> implements IPathToObjectConverter<T> {
      * @param path The path to convert
      * @returns The object and info associated with the path
      */
-    convert(path: string): IObjectInfo<T>;
+    convert(path: string): IObjectInfo<IObjectAccessor<T, BabylonType, BabylonValue>>;
 }
 
 }
@@ -1664,7 +1947,7 @@ export class MSFT_sRGBFactors implements IGLTFLoaderExtension {
     constructor(loader: GLTFLoader);
     /** @internal */
     dispose(): void;
-    /** @internal */
+    /** @internal*/
     loadMaterialPropertiesAsync(context: string, material: IMaterial, babylonMaterial: Material): Nullable<Promise<void>>;
 }
 
@@ -2016,6 +2299,39 @@ export class KHR_node_visibility implements IGLTFLoaderExtension {
 }
 
 }
+declare module "babylonjs-loaders/glTF/2.0/Extensions/KHR_node_selectability" {
+import { GLTFLoader } from "babylonjs-loaders/glTF/2.0/glTFLoader";
+import { IGLTFLoaderExtension } from "babylonjs-loaders/glTF/2.0/glTFLoaderExtension";
+module "babylonjs-loaders/glTF/glTFFileLoader" {
+    interface GLTFLoaderExtensionOptions {
+        /**
+         * Defines options for the KHR_selectability extension.
+         */
+        ["KHR_node_selectability"]: {};
+    }
+}
+/**
+ * Loader extension for KHR_selectability
+ */
+export class KHR_node_selectability implements IGLTFLoaderExtension {
+    /**
+     * The name of this extension.
+     */
+    readonly name: string;
+    /**
+     * Defines whether this extension is enabled.
+     */
+    enabled: boolean;
+    private _loader;
+    /**
+     * @internal
+     */
+    constructor(loader: GLTFLoader);
+    onReady(): Promise<void>;
+    dispose(): void;
+}
+
+}
 declare module "babylonjs-loaders/glTF/2.0/Extensions/KHR_node_hoverability" {
 import { GLTFLoader } from "babylonjs-loaders/glTF/2.0/glTFLoader";
 import { IGLTFLoaderExtension } from "babylonjs-loaders/glTF/2.0/glTFLoaderExtension";
@@ -2153,6 +2469,10 @@ module "babylonjs-loaders/glTF/glTFFileLoader" {
          * Defines options for the KHR_materials_variants extension.
          */
         ["KHR_materials_variants"]: Partial<{
+            /**
+             * Specifies the name of the variant that should be selected by default.
+             */
+            defaultVariant: string;
             /**
              * Defines a callback that will be called if material variants are loaded.
              * @experimental
@@ -2834,6 +3154,7 @@ export class KHR_lights implements IGLTFLoaderExtension {
 declare module "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity" {
 import { GLTFLoader } from "babylonjs-loaders/glTF/2.0/glTFLoader";
 import { IGLTFLoaderExtension } from "babylonjs-loaders/glTF/2.0/glTFLoaderExtension";
+import { Scene } from "babylonjs/scene";
 module "babylonjs-loaders/glTF/glTFFileLoader" {
     interface GLTFLoaderExtensionOptions {
         /**
@@ -2862,8 +3183,13 @@ export class KHR_interactivity implements IGLTFLoaderExtension {
      */
     constructor(_loader: GLTFLoader);
     dispose(): void;
-    onReady(): void;
+    onReady(): Promise<void>;
 }
+/**
+ * @internal
+ * populates the object model with the interactivity extension
+ */
+export function _AddInteractivityObjectModel(scene: Scene): void;
 
 }
 declare module "babylonjs-loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression" {
@@ -2917,305 +3243,6 @@ export class KHR_draco_mesh_compression implements IGLTFLoaderExtension {
 
 }
 declare module "babylonjs-loaders/glTF/2.0/Extensions/KHR_animation_pointer.data" {
-import { Animation } from "babylonjs/Animations/animation";
-import { ICamera, IKHRLightsPunctual_Light, IMaterial } from "babylonjs-loaders/glTF/2.0/glTFLoaderInterfaces";
-import { IAnimatable } from "babylonjs/Animations/animatable.interface";
-import { AnimationPropertyInfo } from "babylonjs-loaders/glTF/2.0/glTFLoaderAnimation";
-class CameraAnimationPropertyInfo extends AnimationPropertyInfo {
-    /** @internal */
-    buildAnimations(target: ICamera, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
-}
-class MaterialAnimationPropertyInfo extends AnimationPropertyInfo {
-    /** @internal */
-    buildAnimations(target: IMaterial, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
-}
-class LightAnimationPropertyInfo extends AnimationPropertyInfo {
-    /** @internal */
-    buildAnimations(target: IKHRLightsPunctual_Light, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
-}
-/** @internal */
-export const animationPointerTree: {
-    nodes: {
-        __array__: {
-            translation: import("babylonjs-loaders/glTF/2.0/glTFLoaderAnimation").TransformNodeAnimationPropertyInfo[];
-            rotation: import("babylonjs-loaders/glTF/2.0/glTFLoaderAnimation").TransformNodeAnimationPropertyInfo[];
-            scale: import("babylonjs-loaders/glTF/2.0/glTFLoaderAnimation").TransformNodeAnimationPropertyInfo[];
-            weights: import("babylonjs-loaders/glTF/2.0/glTFLoaderAnimation").WeightAnimationPropertyInfo[];
-            __target__: boolean;
-        };
-    };
-    materials: {
-        __array__: {
-            __target__: boolean;
-            pbrMetallicRoughness: {
-                baseColorFactor: MaterialAnimationPropertyInfo[];
-                metallicFactor: MaterialAnimationPropertyInfo[];
-                roughnessFactor: MaterialAnimationPropertyInfo[];
-                baseColorTexture: {
-                    extensions: {
-                        KHR_texture_transform: {
-                            scale: MaterialAnimationPropertyInfo[];
-                            offset: MaterialAnimationPropertyInfo[];
-                            rotation: MaterialAnimationPropertyInfo[];
-                        };
-                    };
-                };
-                metallicRoughnessTexture: {
-                    extensions: {
-                        KHR_texture_transform: {
-                            scale: MaterialAnimationPropertyInfo[];
-                            offset: MaterialAnimationPropertyInfo[];
-                            rotation: MaterialAnimationPropertyInfo[];
-                        };
-                    };
-                };
-            };
-            emissiveFactor: MaterialAnimationPropertyInfo[];
-            normalTexture: {
-                scale: MaterialAnimationPropertyInfo[];
-                extensions: {
-                    KHR_texture_transform: {
-                        scale: MaterialAnimationPropertyInfo[];
-                        offset: MaterialAnimationPropertyInfo[];
-                        rotation: MaterialAnimationPropertyInfo[];
-                    };
-                };
-            };
-            occlusionTexture: {
-                strength: MaterialAnimationPropertyInfo[];
-                extensions: {
-                    KHR_texture_transform: {
-                        scale: MaterialAnimationPropertyInfo[];
-                        offset: MaterialAnimationPropertyInfo[];
-                        rotation: MaterialAnimationPropertyInfo[];
-                    };
-                };
-            };
-            emissiveTexture: {
-                extensions: {
-                    KHR_texture_transform: {
-                        scale: MaterialAnimationPropertyInfo[];
-                        offset: MaterialAnimationPropertyInfo[];
-                        rotation: MaterialAnimationPropertyInfo[];
-                    };
-                };
-            };
-            extensions: {
-                KHR_materials_anisotropy: {
-                    anisotropyStrength: MaterialAnimationPropertyInfo[];
-                    anisotropyRotation: MaterialAnimationPropertyInfo[];
-                    anisotropyTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                };
-                KHR_materials_clearcoat: {
-                    clearcoatFactor: MaterialAnimationPropertyInfo[];
-                    clearcoatRoughnessFactor: MaterialAnimationPropertyInfo[];
-                    clearcoatTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                    clearcoatNormalTexture: {
-                        scale: MaterialAnimationPropertyInfo[];
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                    clearcoatRoughnessTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                };
-                KHR_materials_dispersion: {
-                    dispersion: MaterialAnimationPropertyInfo[];
-                };
-                KHR_materials_emissive_strength: {
-                    emissiveStrength: MaterialAnimationPropertyInfo[];
-                };
-                KHR_materials_ior: {
-                    ior: MaterialAnimationPropertyInfo[];
-                };
-                KHR_materials_iridescence: {
-                    iridescenceFactor: MaterialAnimationPropertyInfo[];
-                    iridescenceIor: MaterialAnimationPropertyInfo[];
-                    iridescenceThicknessMinimum: MaterialAnimationPropertyInfo[];
-                    iridescenceThicknessMaximum: MaterialAnimationPropertyInfo[];
-                    iridescenceTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                    iridescenceThicknessTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                };
-                KHR_materials_sheen: {
-                    sheenColorFactor: MaterialAnimationPropertyInfo[];
-                    sheenRoughnessFactor: MaterialAnimationPropertyInfo[];
-                    sheenColorTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                    sheenRoughnessTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                };
-                KHR_materials_specular: {
-                    specularFactor: MaterialAnimationPropertyInfo[];
-                    specularColorFactor: MaterialAnimationPropertyInfo[];
-                    specularTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                    specularColorTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                };
-                KHR_materials_transmission: {
-                    transmissionFactor: MaterialAnimationPropertyInfo[];
-                    transmissionTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                };
-                KHR_materials_volume: {
-                    attenuationColor: MaterialAnimationPropertyInfo[];
-                    attenuationDistance: MaterialAnimationPropertyInfo[];
-                    thicknessFactor: MaterialAnimationPropertyInfo[];
-                    thicknessTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                };
-                KHR_materials_diffuse_transmission: {
-                    diffuseTransmissionFactor: MaterialAnimationPropertyInfo[];
-                    diffuseTransmissionTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                    diffuseTransmissionColorFactor: MaterialAnimationPropertyInfo[];
-                    diffuseTransmissionColorTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-    cameras: {
-        __array__: {
-            __target__: boolean;
-            orthographic: {
-                xmag: CameraAnimationPropertyInfo[];
-                ymag: CameraAnimationPropertyInfo[];
-                zfar: CameraAnimationPropertyInfo[];
-                znear: CameraAnimationPropertyInfo[];
-            };
-            perspective: {
-                yfov: CameraAnimationPropertyInfo[];
-                zfar: CameraAnimationPropertyInfo[];
-                znear: CameraAnimationPropertyInfo[];
-            };
-        };
-    };
-    extensions: {
-        KHR_lights_punctual: {
-            lights: {
-                __array__: {
-                    __target__: boolean;
-                    color: LightAnimationPropertyInfo[];
-                    intensity: LightAnimationPropertyInfo[];
-                    range: LightAnimationPropertyInfo[];
-                    spot: {
-                        innerConeAngle: LightAnimationPropertyInfo[];
-                        outerConeAngle: LightAnimationPropertyInfo[];
-                    };
-                };
-            };
-        };
-        EXT_lights_ies: {
-            lights: {
-                __array__: {
-                    __target__: boolean;
-                    color: LightAnimationPropertyInfo[];
-                    multiplier: LightAnimationPropertyInfo[];
-                };
-            };
-        };
-    };
-};
 export {};
 
 }
@@ -3226,6 +3253,7 @@ import { Nullable } from "babylonjs/types";
 import { Animation } from "babylonjs/Animations/animation";
 import { IAnimatable } from "babylonjs/Animations/animatable.interface";
 import { IAnimation, IAnimationChannel } from "babylonjs-loaders/glTF/2.0/glTFLoaderInterfaces";
+import "babylonjs-loaders/glTF/2.0/Extensions/KHR_animation_pointer.data";
 module "babylonjs-loaders/glTF/glTFFileLoader" {
     interface GLTFLoaderExtensionOptions {
         /**
@@ -3476,6 +3504,52 @@ export class EXT_mesh_gpu_instancing implements IGLTFLoaderExtension {
 }
 
 }
+declare module "babylonjs-loaders/glTF/2.0/Extensions/EXT_materials_diffuse_roughness" {
+import { Nullable } from "babylonjs/types";
+import { Material } from "babylonjs/Materials/material";
+import { IMaterial } from "babylonjs-loaders/glTF/2.0/glTFLoaderInterfaces";
+import { IGLTFLoaderExtension } from "babylonjs-loaders/glTF/2.0/glTFLoaderExtension";
+import { GLTFLoader } from "babylonjs-loaders/glTF/2.0/glTFLoader";
+module "babylonjs-loaders/glTF/glTFFileLoader" {
+    interface GLTFLoaderExtensionOptions {
+        /**
+         * Defines options for the EXT_materials_diffuse_roughness extension.
+         */
+        ["EXT_materials_diffuse_roughness"]: {};
+    }
+}
+/**
+ * [Specification](https://github.com/KhronosGroup/glTF/blob/fdee35425ae560ea378092e38977216d63a094ec/extensions/2.0/Khronos/EXT_materials_diffuse_roughness/README.md)
+ * @experimental
+ */
+export class EXT_materials_diffuse_roughness implements IGLTFLoaderExtension {
+    /**
+     * The name of this extension.
+     */
+    readonly name: string;
+    /**
+     * Defines whether this extension is enabled.
+     */
+    enabled: boolean;
+    /**
+     * Defines a number that determines the order the extensions are applied.
+     */
+    order: number;
+    private _loader;
+    /**
+     * @internal
+     */
+    constructor(loader: GLTFLoader);
+    /** @internal */
+    dispose(): void;
+    /**
+     * @internal
+     */
+    loadMaterialPropertiesAsync(context: string, material: IMaterial, babylonMaterial: Material): Nullable<Promise<void>>;
+    private _loadDiffuseRoughnessPropertiesAsync;
+}
+
+}
 declare module "babylonjs-loaders/glTF/2.0/Extensions/EXT_lights_image_based" {
 import { Nullable } from "babylonjs/types";
 import { BaseTexture } from "babylonjs/Materials/Textures/baseTexture";
@@ -3569,6 +3643,476 @@ export class EXT_lights_ies implements IGLTFLoaderExtension {
      */
     loadNodeAsync(context: string, node: INode, assign: (babylonTransformNode: TransformNode) => void): Nullable<Promise<TransformNode>>;
 }
+
+}
+declare module "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity/interactivityGraphParser" {
+import { IKHRInteractivity_Graph } from "babylonjs-gltf2interface";
+import { IGLTF } from "babylonjs-loaders/glTF/2.0/glTFLoaderInterfaces";
+import { IGLTFToFlowGraphMapping } from "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity/declarationMapper";
+import { ISerializedFlowGraph, ISerializedFlowGraphBlock } from "babylonjs/FlowGraph/typeDefinitions";
+import { FlowGraphTypes } from "babylonjs/FlowGraph/flowGraphRichTypes";
+export interface InteractivityEvent {
+    eventId: string;
+    eventData?: {
+        eventData: boolean;
+        id: string;
+        type: string;
+        value?: any;
+    }[];
+}
+export const gltfTypeToBabylonType: {
+    [key: string]: {
+        length: number;
+        flowGraphType: FlowGraphTypes;
+        elementType: "number" | "boolean";
+    };
+};
+export class InteractivityGraphToFlowGraphParser {
+    private _interactivityGraph;
+    private _gltf;
+    _animationTargetFps: number;
+    /**
+     * Note - the graph should be rejected if the same type is defined twice.
+     * We currently don't validate that.
+     */
+    private _types;
+    private _mappings;
+    private _staticVariables;
+    private _events;
+    private _internalEventsCounter;
+    private _nodes;
+    constructor(_interactivityGraph: IKHRInteractivity_Graph, _gltf: IGLTF, _animationTargetFps?: number);
+    get arrays(): {
+        types: {
+            length: number;
+            flowGraphType: FlowGraphTypes;
+            elementType: "number" | "boolean";
+        }[];
+        mappings: {
+            flowGraphMapping: IGLTFToFlowGraphMapping;
+            fullOperationName: string;
+        }[];
+        staticVariables: {
+            type: FlowGraphTypes;
+            value: any[];
+        }[];
+        events: InteractivityEvent[];
+        nodes: {
+            blocks: ISerializedFlowGraphBlock[];
+            fullOperationName: string;
+        }[];
+    };
+    private _parseTypes;
+    private _parseDeclarations;
+    private _parseVariables;
+    private _parseVariable;
+    private _parseEvents;
+    private _parseNodes;
+    private _getEmptyBlock;
+    private _parseNodeConfiguration;
+    private _parseNodeConnections;
+    private _createNewSocketConnection;
+    private _connectFlowGraphNodes;
+    getVariableName(index: number): string;
+    serializeToFlowGraph(): ISerializedFlowGraph;
+}
+
+}
+declare module "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity/index" {
+export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity/declarationMapper";
+export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity/interactivityGraphParser";
+export * from "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity/flowGraphGLTFDataProvider";
+
+}
+declare module "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity/flowGraphGLTFDataProvider" {
+import { IFlowGraphBlockConfiguration } from "babylonjs/FlowGraph/flowGraphBlock";
+import { FlowGraphBlock } from "babylonjs/FlowGraph/flowGraphBlock";
+import { IGLTF } from "babylonjs-loaders/glTF/2.0/glTFLoaderInterfaces";
+import { FlowGraphDataConnection } from "babylonjs/FlowGraph/flowGraphDataConnection";
+import { AnimationGroup } from "babylonjs/Animations/animationGroup";
+import { TransformNode } from "babylonjs/Meshes/transformNode";
+/**
+ * a configuration interface for this block
+ */
+export interface IFlowGraphGLTFDataProviderBlockConfiguration extends IFlowGraphBlockConfiguration {
+    /**
+     * the glTF object to provide data from
+     */
+    glTF: IGLTF;
+}
+/**
+ * a glTF-based FlowGraph block that provides arrays with babylon object, based on the glTF tree
+ * Can be used, for example, to get animation index from a glTF animation
+ */
+export class FlowGraphGLTFDataProvider extends FlowGraphBlock {
+    /**
+     * Output: an array of animation groups
+     * Corresponds directly to the glTF animations array
+     */
+    readonly animationGroups: FlowGraphDataConnection<AnimationGroup[]>;
+    /**
+     * Output an array of (Transform) nodes
+     * Corresponds directly to the glTF nodes array
+     */
+    readonly nodes: FlowGraphDataConnection<TransformNode[]>;
+    constructor(config: IFlowGraphGLTFDataProviderBlockConfiguration);
+    getClassName(): string;
+}
+
+}
+declare module "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity/declarationMapper" {
+import { IKHRInteractivity_Declaration, IKHRInteractivity_Graph, IKHRInteractivity_Node } from "babylonjs-gltf2interface";
+import { FlowGraphBlockNames } from "babylonjs/FlowGraph/Blocks/flowGraphBlockNames";
+import { ISerializedFlowGraphBlock, ISerializedFlowGraphContext } from "babylonjs/FlowGraph/typeDefinitions";
+import { InteractivityGraphToFlowGraphParser } from "babylonjs-loaders/glTF/2.0/Extensions/KHR_interactivity/interactivityGraphParser";
+import { IGLTF } from "babylonjs-loaders/glTF/2.0/glTFLoaderInterfaces";
+interface IGLTFToFlowGraphMappingObject<I = any, O = any> {
+    /**
+     * The name of the property in the FlowGraph block.
+     */
+    name: string;
+    /**
+     * The type of the property in the glTF specs.
+     * If not provided will be inferred.
+     */
+    gltfType?: string;
+    /**
+     * The type of the property in the FlowGraph block.
+     * If not defined it equals the glTF type.
+     */
+    flowGraphType?: string;
+    /**
+     * A function that transforms the data from the glTF to the FlowGraph block.
+     */
+    dataTransformer?: (data: I[], parser: InteractivityGraphToFlowGraphParser) => O[];
+    /**
+     * If the property is in the options passed to the constructor of the block.
+     */
+    inOptions?: boolean;
+    /**
+     * If the property is a pointer to a value.
+     * This will add an extra JsonPointerParser block to the graph.
+     */
+    isPointer?: boolean;
+    /**
+     * If the property is an index to a value.
+     * if defined this will be the name of the array to find the object in.
+     */
+    isVariable?: boolean;
+    /**
+     * the name of the class type this value will be mapped to.
+     * This is used if we generate more than one block for a single glTF node.
+     * Defaults to the first block in the mapping.
+     */
+    toBlock?: FlowGraphBlockNames;
+    /**
+     * Used in configuration values. If defined, this will be the default value, if no value is provided.
+     */
+    defaultValue?: O;
+}
+export interface IGLTFToFlowGraphMapping {
+    /**
+     * The type of the FlowGraph block(s).
+     * Typically will be a single element in an array.
+     * When adding blocks defined in this module use the KHR_interactivity prefix.
+     */
+    blocks: (FlowGraphBlockNames | string)[];
+    /**
+     * The inputs of the glTF node mapped to the FlowGraph block.
+     */
+    inputs?: {
+        /**
+         * The value inputs of the glTF node mapped to the FlowGraph block.
+         */
+        values?: {
+            [originName: string]: IGLTFToFlowGraphMappingObject;
+        };
+        /**
+         * The flow inputs of the glTF node mapped to the FlowGraph block.
+         */
+        flows?: {
+            [originName: string]: IGLTFToFlowGraphMappingObject;
+        };
+    };
+    /**
+     * The outputs of the glTF node mapped to the FlowGraph block.
+     */
+    outputs?: {
+        /**
+         * The value outputs of the glTF node mapped to the FlowGraph block.
+         */
+        values?: {
+            [originName: string]: IGLTFToFlowGraphMappingObject;
+        };
+        /**
+         * The flow outputs of the glTF node mapped to the FlowGraph block.
+         */
+        flows?: {
+            [originName: string]: IGLTFToFlowGraphMappingObject;
+        };
+    };
+    /**
+     * The configuration of the glTF node mapped to the FlowGraph block.
+     * This information is usually passed to the constructor of the block.
+     */
+    configuration?: {
+        [originName: string]: IGLTFToFlowGraphMappingObject;
+    };
+    /**
+     * If we generate more than one block for a single glTF node, this mapping will be used to map
+     * between the flowGraph classes.
+     */
+    typeToTypeMapping?: {
+        [originName: string]: IGLTFToFlowGraphMappingObject;
+    };
+    /**
+     * The connections between two or more blocks.
+     * This is used to connect the blocks in the graph
+     */
+    interBlockConnectors?: {
+        /**
+         * The name of the input connection in the first block.
+         */
+        input: string;
+        /**
+         * The name of the output connection in the second block.
+         */
+        output: string;
+        /**
+         * The index of the block in the array of blocks that corresponds to the input.
+         */
+        inputBlockIndex: number;
+        /**
+         * The index of the block in the array of blocks that corresponds to the output.
+         */
+        outputBlockIndex: number;
+        /**
+         * If the connection is a variable connection or a flow connection.
+         */
+        isVariable?: boolean;
+    }[];
+    /**
+     * This optional function will allow to validate the node, according to the glTF specs.
+     * For example, if a node has a configuration object, it must be present and correct.
+     * This is a basic node-based validation.
+     * This function is expected to return false and log the error if the node is not valid.
+     * Note that this function can also modify the node, if needed.
+     *
+     * @param gltfBlock the glTF node to validate
+     * @param glTFObject the glTF object
+     * @returns true if validated, false if not.
+     */
+    validation?: (gltfBlock: IKHRInteractivity_Node, interactivityGraph: IKHRInteractivity_Graph, glTFObject?: IGLTF) => {
+        valid: boolean;
+        error?: string;
+    };
+    /**
+     * This is used if we need extra information for the constructor/options that is not provided directly by the glTF node.
+     * This function can return more than one node, if extra nodes are needed for this block to function correctly.
+     * Returning more than one block will usually happen when a json pointer was provided.
+     *
+     * @param gltfBlock the glTF node
+     * @param mapping the mapping object
+     * @param arrays the arrays of the interactivity object
+     * @param serializedObjects the serialized object
+     * @returns an array of serialized nodes that will be added to the graph.
+     */
+    extraProcessor?: (gltfBlock: IKHRInteractivity_Node, declaration: IKHRInteractivity_Declaration, mapping: IGLTFToFlowGraphMapping, parser: InteractivityGraphToFlowGraphParser, serializedObjects: ISerializedFlowGraphBlock[], context: ISerializedFlowGraphContext, globalGLTF?: IGLTF) => ISerializedFlowGraphBlock[];
+}
+export function getMappingForFullOperationName(fullOperationName: string): IGLTFToFlowGraphMapping | undefined;
+export function getMappingForDeclaration(declaration: IKHRInteractivity_Declaration, returnNoOpIfNotAvailable?: boolean): IGLTFToFlowGraphMapping | undefined;
+/**
+ * This function will add new mapping to glTF interactivity.
+ * Other extensions can define new types of blocks, this is the way to let interactivity know how to parse them.
+ * @param key the type of node, i.e. "variable/get"
+ * @param extension the extension of the interactivity operation, i.e. "KHR_selectability"
+ * @param mapping The mapping object. See documentation or examples below.
+ */
+export function addNewInteractivityFlowGraphMapping(key: string, extension: string, mapping: IGLTFToFlowGraphMapping): void;
+export function getAllSupportedNativeNodeTypes(): string[];
+export {};
+/**
+ *
+ * These are the nodes from the specs:
+
+### Math Nodes
+1. **Constants**
+   - E (`math/e`) FlowGraphBlockNames.E
+   - Pi (`math/pi`) FlowGraphBlockNames.PI
+   - Infinity (`math/inf`) FlowGraphBlockNames.Inf
+   - Not a Number (`math/nan`) FlowGraphBlockNames.NaN
+2. **Arithmetic Nodes**
+   - Absolute Value (`math/abs`) FlowGraphBlockNames.Abs
+   - Sign (`math/sign`) FlowGraphBlockNames.Sign
+   - Truncate (`math/trunc`) FlowGraphBlockNames.Trunc
+   - Floor (`math/floor`) FlowGraphBlockNames.Floor
+   - Ceil (`math/ceil`) FlowGraphBlockNames.Ceil
+   - Round (`math/round`)  FlowGraphBlockNames.Round
+   - Fraction (`math/fract`) FlowGraphBlockNames.Fract
+   - Negation (`math/neg`) FlowGraphBlockNames.Negation
+   - Addition (`math/add`) FlowGraphBlockNames.Add
+   - Subtraction (`math/sub`) FlowGraphBlockNames.Subtract
+   - Multiplication (`math/mul`) FlowGraphBlockNames.Multiply
+   - Division (`math/div`) FlowGraphBlockNames.Divide
+   - Remainder (`math/rem`) FlowGraphBlockNames.Modulo
+   - Minimum (`math/min`) FlowGraphBlockNames.Min
+   - Maximum (`math/max`) FlowGraphBlockNames.Max
+   - Clamp (`math/clamp`) FlowGraphBlockNames.Clamp
+   - Saturate (`math/saturate`) FlowGraphBlockNames.Saturate
+   - Interpolate (`math/mix`) FlowGraphBlockNames.MathInterpolation
+3. **Comparison Nodes**
+   - Equality (`math/eq`) FlowGraphBlockNames.Equality
+   - Less Than (`math/lt`) FlowGraphBlockNames.LessThan
+   - Less Than Or Equal To (`math/le`) FlowGraphBlockNames.LessThanOrEqual
+   - Greater Than (`math/gt`) FlowGraphBlockNames.GreaterThan
+   - Greater Than Or Equal To (`math/ge`) FlowGraphBlockNames.GreaterThanOrEqual
+4. **Special Nodes**
+   - Is Not a Number (`math/isnan`) FlowGraphBlockNames.IsNaN
+   - Is Infinity (`math/isinf`) FlowGraphBlockNames.IsInfinity
+   - Select (`math/select`) FlowGraphBlockNames.Conditional
+   - Switch (`math/switch`) FlowGraphBlockNames.DataSwitch
+   - Random (`math/random`) FlowGraphBlockNames.Random
+5. **Angle and Trigonometry Nodes**
+   - Degrees-To-Radians (`math/rad`) FlowGraphBlockNames.DegToRad
+   - Radians-To-Degrees (`math/deg`) FlowGraphBlockNames.RadToDeg
+   - Sine (`math/sin`)  FlowGraphBlockNames.Sin
+   - Cosine (`math/cos`) FlowGraphBlockNames.Cos
+   - Tangent (`math/tan`) FlowGraphBlockNames.Tan
+   - Arcsine (`math/asin`) FlowGraphBlockNames.Asin
+   - Arccosine (`math/acos`) FlowGraphBlockNames.Acos
+   - Arctangent (`math/atan`) FlowGraphBlockNames.Atan
+   - Arctangent 2 (`math/atan2`) FlowGraphBlockNames.Atan2
+6. **Hyperbolic Nodes**
+   - Hyperbolic Sine (`math/sinh`) FlowGraphBlockNames.Sinh
+   - Hyperbolic Cosine (`math/cosh`) FlowGraphBlockNames.Cosh
+   - Hyperbolic Tangent (`math/tanh`) FlowGraphBlockNames.Tanh
+   - Inverse Hyperbolic Sine (`math/asinh`) FlowGraphBlockNames.Asinh
+   - Inverse Hyperbolic Cosine (`math/acosh`) FlowGraphBlockNames.Acosh
+   - Inverse Hyperbolic Tangent (`math/atanh`) FlowGraphBlockNames.Atanh
+7. **Exponential Nodes**
+   - Exponent (`math/exp`) FlowGraphBlockNames.Exponential
+   - Natural Logarithm (`math/log`) FlowGraphBlockNames.Log
+   - Base-2 Logarithm (`math/log2`) FlowGraphBlockNames.Log2
+   - Base-10 Logarithm (`math/log10`) FlowGraphBlockNames.Log10
+   - Square Root (`math/sqrt`) FlowGraphBlockNames.SquareRoot
+   - Cube Root (`math/cbrt`) FlowGraphBlockNames.CubeRoot
+   - Power (`math/pow`) FlowGraphBlockNames.Power
+8. **Vector Nodes**
+   - Length (`math/length`) FlowGraphBlockNames.Length
+   - Normalize (`math/normalize`) FlowGraphBlockNames.Normalize
+   - Dot Product (`math/dot`) FlowGraphBlockNames.Dot
+   - Cross Product (`math/cross`) FlowGraphBlockNames.Cross
+   - Rotate 2D (`math/rotate2D`) FlowGraphBlockNames.Rotate2D
+   - Rotate 3D (`math/rotate3D`) FlowGraphBlockNames.Rotate3D
+   - Transform (`math/transform`) FlowGraphBlockNames.TransformVector
+9. **Matrix Nodes**
+   - Transpose (`math/transpose`) FlowGraphBlockNames.Transpose
+   - Determinant (`math/determinant`) FlowGraphBlockNames.Determinant
+   - Inverse (`math/inverse`) FlowGraphBlockNames.InvertMatrix
+   - Multiplication (`math/matmul`) FlowGraphBlockNames.MatrixMultiplication
+   - Compose (`math/matCompose`) FlowGraphBlockNames.MatrixCompose
+   - Decompose (`math/matDecompose`) FlowGraphBlockNames.MatrixDecompose
+10. **Quaternion Nodes**
+    - Conjugate (`math/quatConjugate`) FlowGraphBlockNames.Conjugate
+    - Multiplication (`math/quatMul`) FlowGraphBlockNames.Multiply
+    - Angle Between Quaternions (`math/quatAngleBetween`) FlowGraphBlockNames.AngleBetween
+    - Quaternion From Axis Angle (`math/quatFromAxisAngle`) FlowGraphBlockNames.QuaternionFromAxisAngle
+    - Quaternion To Axis Angle (`math/quatToAxisAngle`) FlowGraphBlockNames.QuaternionToAxisAngle
+    - Quaternion From Two Directional Vectors (`math/quatFromDirections`) FlowGraphBlockNames.QuaternionFromDirections
+11. **Swizzle Nodes**
+    - Combine (`math/combine2`, `math/combine3`, `math/combine4`, `math/combine2x2`, `math/combine3x3`, `math/combine4x4`)
+        FlowGraphBlockNames.CombineVector2, FlowGraphBlockNames.CombineVector3, FlowGraphBlockNames.CombineVector4
+        FlowGraphBlockNames.CombineMatrix2D, FlowGraphBlockNames.CombineMatrix3D, FlowGraphBlockNames.CombineMatrix
+    - Extract (`math/extract2`, `math/extract3`, `math/extract4`, `math/extract2x2`, `math/extract3x3`, `math/extract4x4`)
+        FlowGraphBlockNames.ExtractVector2, FlowGraphBlockNames.ExtractVector3, FlowGraphBlockNames.ExtractVector4
+        FlowGraphBlockNames.ExtractMatrix2D, FlowGraphBlockNames.ExtractMatrix3D, FlowGraphBlockNames.ExtractMatrix
+12. **Integer Arithmetic Nodes**
+    - Absolute Value (`math/abs`) FlowGraphBlockNames.Abs
+    - Sign (`math/sign`) FlowGraphBlockNames.Sign
+    - Negation (`math/neg`) FlowGraphBlockNames.Negation
+    - Addition (`math/add`) FlowGraphBlockNames.Add
+    - Subtraction (`math/sub`) FlowGraphBlockNames.Subtract
+    - Multiplication (`math/mul`) FlowGraphBlockNames.Multiply
+    - Division (`math/div`) FlowGraphBlockNames.Divide
+    - Remainder (`math/rem`) FlowGraphBlockNames.Modulo
+    - Minimum (`math/min`) FlowGraphBlockNames.Min
+    - Maximum (`math/max`) FlowGraphBlockNames.Max
+    - Clamp (`math/clamp`) FlowGraphBlockNames.Clamp
+13. **Integer Comparison Nodes**
+    - Equality (`math/eq`) FlowGraphBlockNames.Equality
+    - Less Than (`math/lt`) FlowGraphBlockNames.LessThan
+    - Less Than Or Equal To (`math/le`) FlowGraphBlockNames.LessThanOrEqual
+    - Greater Than (`math/gt`) FlowGraphBlockNames.GreaterThan
+    - Greater Than Or Equal To (`math/ge`) FlowGraphBlockNames.GreaterThanOrEqual
+14. **Integer Bitwise Nodes**
+    - Bitwise NOT (`math/not`) FlowGraphBlockNames.BitwiseNot
+    - Bitwise AND (`math/and`) FlowGraphBlockNames.BitwiseAnd
+    - Bitwise OR (`math/or`) FlowGraphBlockNames.BitwiseOr
+    - Bitwise XOR (`math/xor`) FlowGraphBlockNames.BitwiseXor
+    - Right Shift (`math/asr`) FlowGraphBlockNames.BitwiseRightShift
+    - Left Shift (`math/lsl`) FlowGraphBlockNames.BitwiseLeftShift
+    - Count Leading Zeros (`math/clz`) FlowGraphBlockNames.LeadingZeros
+    - Count Trailing Zeros (`math/ctz`) FlowGraphBlockNames.TrailingZeros
+    - Count One Bits (`math/popcnt`) FlowGraphBlockNames.OneBitsCounter
+15. **Boolean Arithmetic Nodes**
+    - Equality (`math/eq`) FlowGraphBlockNames.Equality
+    - Boolean NOT (`math/not`) FlowGraphBlockNames.BitwiseNot
+    - Boolean AND (`math/and`) FlowGraphBlockNames.BitwiseAnd
+    - Boolean OR (`math/or`) FlowGraphBlockNames.BitwiseOr
+    - Boolean XOR (`math/xor`) FlowGraphBlockNames.BitwiseXor
+
+### Type Conversion Nodes
+1. **Boolean Conversion Nodes**
+   - Boolean to Integer (`type/boolToInt`) FlowGraphBlockNames.BooleanToInt
+   - Boolean to Float (`type/boolToFloat`) FlowGraphBlockNames.BooleanToFloat
+2. **Integer Conversion Nodes**
+   - Integer to Boolean (`type/intToBool`) FlowGraphBlockNames.IntToBoolean
+   - Integer to Float (`type/intToFloat`) FlowGraphBlockNames.IntToFloat
+3. **Float Conversion Nodes**
+   - Float to Boolean (`type/floatToBool`) FlowGraphBlockNames.FloatToBoolean
+   - Float to Integer (`type/floatToInt`) FlowGraphBlockNames.FloatToInt
+
+### Control Flow Nodes
+1. **Sync Nodes**
+   - Sequence (`flow/sequence`) FlowGraphBlockNames.Sequence
+   - Branch (`flow/branch`) FlowGraphBlockNames.Branch
+   - Switch (`flow/switch`) FlowGraphBlockNames.Switch
+   - While Loop (`flow/while`) FlowGraphBlockNames.WhileLoop
+   - For Loop (`flow/for`) FlowGraphBlockNames.ForLoop
+   - Do N (`flow/doN`) FlowGraphBlockNames.DoN
+   - Multi Gate (`flow/multiGate`) FlowGraphBlockNames.MultiGate
+   - Wait All (`flow/waitAll`) FlowGraphBlockNames.WaitAll
+   - Throttle (`flow/throttle`) FlowGraphBlockNames.Throttle
+2. **Delay Nodes**
+   - Set Delay (`flow/setDelay`) FlowGraphBlockNames.SetDelay
+   - Cancel Delay (`flow/cancelDelay`) FlowGraphBlockNames.CancelDelay
+
+### State Manipulation Nodes
+1. **Custom Variable Access**
+   - Variable Get (`variable/get`) FlowGraphBlockNames.GetVariable
+   - Variable Set (`variable/set`) FlowGraphBlockNames.SetVariable
+   - Variable Interpolate (`variable/interpolate`)
+2. **Object Model Access** // TODO fully test this!!!
+   - JSON Pointer Template Parsing (`pointer/get`) [FlowGraphBlockNames.GetProperty, FlowGraphBlockNames.JsonPointerParser]
+   - Effective JSON Pointer Generation (`pointer/set`) [FlowGraphBlockNames.SetProperty, FlowGraphBlockNames.JsonPointerParser]
+   - Pointer Get (`pointer/get`) [FlowGraphBlockNames.GetProperty, FlowGraphBlockNames.JsonPointerParser]
+   - Pointer Set (`pointer/set`) [FlowGraphBlockNames.SetProperty, FlowGraphBlockNames.JsonPointerParser]
+   - Pointer Interpolate (`pointer/interpolate`) [FlowGraphBlockNames.ValueInterpolation, FlowGraphBlockNames.JsonPointerParser, FlowGraphBlockNames.PlayAnimation, FlowGraphBlockNames.Easing]
+
+### Animation Control Nodes
+1. **Animation Play** (`animation/start`) FlowGraphBlockNames.PlayAnimation
+2. **Animation Stop** (`animation/stop`) FlowGraphBlockNames.StopAnimation
+3. **Animation Stop At** (`animation/stopAt`) FlowGraphBlockNames.StopAnimation
+
+### Event Nodes
+1. **Lifecycle Event Nodes**
+   - On Start (`event/onStart`) FlowGraphBlockNames.SceneReadyEvent
+   - On Tick (`event/onTick`) FlowGraphBlockNames.SceneTickEvent
+2. **Custom Event Nodes**
+   - Receive (`event/receive`) FlowGraphBlockNames.ReceiveCustomEvent
+   - Send (`event/send`) FlowGraphBlockNames.SendCustomEvent
+
+ */
 
 }
 declare module "babylonjs-loaders/glTF/1.0/index" {
@@ -3769,7 +4313,7 @@ export interface IGLTFProperty {
     extensions?: {
         [key: string]: any;
     };
-    extras?: Object;
+    extras?: object;
 }
 /** @internal */
 export interface IGLTFChildRootProperty extends IGLTFProperty {
@@ -3825,7 +4369,7 @@ export interface IGLTFTechniqueParameter {
 /** @internal */
 export interface IGLTFTechniqueCommonProfile {
     lightingModel: string;
-    texcoordBindings: Object;
+    texcoordBindings: object;
     parameters?: Array<any>;
 }
 /** @internal */
@@ -4051,7 +4595,7 @@ export interface IGLTFRuntime {
     skins: {
         [key: string]: IGLTFSkins;
     };
-    currentScene?: Object;
+    currentScene?: object;
     scenes: {
         [key: string]: IGLTFScene;
     };
@@ -4355,6 +4899,10 @@ export type SPLATLoadingOptions = {
      * Defines if buffers should be kept in memory for editing purposes
      */
     keepInRam?: boolean;
+    /**
+     * Spatial Y Flip for splat position and orientation
+     */
+    flipY?: boolean;
 };
 
 }
@@ -4430,15 +4978,15 @@ export class SPLATFileLoader implements ISceneLoaderPluginAsync, ISceneLoaderPlu
      * @param scene the scene the meshes should be added to
      * @param data the gaussian splatting data to load
      * @param rootUrl root url to load from
-     * @param onProgress callback called while file is loading
-     * @param fileName Defines the name of the file to load
+     * @param _onProgress callback called while file is loading
+     * @param _fileName Defines the name of the file to load
      * @returns a promise containing the loaded meshes, particles, skeletons and animations
      */
-    importMeshAsync(meshesNames: any, scene: Scene, data: any, rootUrl: string, onProgress?: (event: ISceneLoaderProgressEvent) => void, fileName?: string): Promise<ISceneLoaderAsyncResult>;
+    importMeshAsync(meshesNames: any, scene: Scene, data: any, rootUrl: string, _onProgress?: (event: ISceneLoaderProgressEvent) => void, _fileName?: string): Promise<ISceneLoaderAsyncResult>;
     private static _BuildPointCloud;
     private static _BuildMesh;
-    private _parseSPZ;
-    private _parse;
+    private _parseSPZAsync;
+    private _parseAsync;
     /**
      * Load into an asset container.
      * @param scene The scene to load into
@@ -4707,7 +5255,7 @@ export const OBJFileLoaderMetadata: {
 }
 declare module "babylonjs-loaders/OBJ/objFileLoader" {
 import { Vector2 } from "babylonjs/Maths/math.vector";
-import { ISceneLoaderPluginAsync, ISceneLoaderPluginFactory, ISceneLoaderPlugin, ISceneLoaderAsyncResult } from "babylonjs/Loading/sceneLoader";
+import { ISceneLoaderPluginAsync, ISceneLoaderPluginFactory, ISceneLoaderPlugin, ISceneLoaderAsyncResult, SceneLoaderPluginOptions } from "babylonjs/Loading/sceneLoader";
 import { AssetContainer } from "babylonjs/assetContainer";
 import { Scene } from "babylonjs/scene";
 import { OBJFileLoaderMetadata } from "babylonjs-loaders/OBJ/objFileLoader.metadata";
@@ -4717,7 +5265,7 @@ module "babylonjs/Loading/sceneLoader" {
         /**
          * Defines options for the obj loader.
          */
-        [OBJFileLoaderMetadata.name]: {};
+        [OBJFileLoaderMetadata.name]: Partial<OBJLoadingOptions>;
     }
 }
 /**
@@ -4784,7 +5332,7 @@ export class OBJFileLoader implements ISceneLoaderPluginAsync, ISceneLoaderPlugi
      *
      * @param loadingOptions options for loading and parsing OBJ/MTL files.
      */
-    constructor(loadingOptions?: OBJLoadingOptions);
+    constructor(loadingOptions?: Partial<Readonly<OBJLoadingOptions>>);
     private static get _DefaultLoadingOptions();
     /**
      * Calls synchronously the MTL file attached to this obj.
@@ -4798,11 +5346,8 @@ export class OBJFileLoader implements ISceneLoaderPluginAsync, ISceneLoaderPlugi
      * @param onFailure
      */
     private _loadMTL;
-    /**
-     * Instantiates a OBJ file loader plugin.
-     * @returns the created plugin
-     */
-    createPlugin(): ISceneLoaderPluginAsync | ISceneLoaderPlugin;
+    /** @internal */
+    createPlugin(options: SceneLoaderPluginOptions): ISceneLoaderPluginAsync | ISceneLoaderPlugin;
     /**
      * If the data string can be loaded directly.
      * @returns if the data can be loaded directly
@@ -4843,7 +5388,7 @@ export class OBJFileLoader implements ISceneLoaderPluginAsync, ISceneLoaderPlugi
      * @param rootUrl defines the path to the folder
      * @returns the list of loaded meshes
      */
-    private _parseSolid;
+    private _parseSolidAsync;
 }
 
 }
@@ -4896,6 +5441,119 @@ export * from "babylonjs-loaders/OBJ/mtlFileLoader";
 export * from "babylonjs-loaders/OBJ/objLoadingOptions";
 export * from "babylonjs-loaders/OBJ/solidParser";
 export * from "babylonjs-loaders/OBJ/objFileLoader";
+
+}
+declare module "babylonjs-loaders/BVH/index" {
+export * from "babylonjs-loaders/BVH/bvhLoader";
+
+}
+declare module "babylonjs-loaders/BVH/bvhLoadingOptions" {
+/**
+ * Options for loading BVH files
+ */
+export type BVHLoadingOptions = {
+    /**
+     * Defines the loop mode of the animation to load.
+     */
+    loopMode: number;
+};
+
+}
+declare module "babylonjs-loaders/BVH/bvhLoader" {
+import { Skeleton } from "babylonjs/Bones/skeleton";
+import { Scene } from "babylonjs/scene";
+import { Nullable } from "babylonjs/types";
+import { BVHLoadingOptions } from "babylonjs-loaders/BVH/bvhLoadingOptions";
+import { AssetContainer } from "babylonjs/assetContainer";
+/**
+ * Reads a BVH file, returns a skeleton
+ * @param text - The BVH file content
+ * @param scene - The scene to add the skeleton to
+ * @param assetContainer - The asset container to add the skeleton to
+ * @param loadingOptions - The loading options
+ * @returns The skeleton
+ */
+export function ReadBvh(text: string, scene: Scene, assetContainer: Nullable<AssetContainer>, loadingOptions: BVHLoadingOptions): Skeleton;
+
+}
+declare module "babylonjs-loaders/BVH/bvhFileLoader.metadata" {
+export const BVHFileLoaderMetadata: {
+    readonly name: "bvh";
+    readonly extensions: {
+        readonly ".bvh": {
+            readonly isBinary: false;
+        };
+    };
+};
+
+}
+declare module "babylonjs-loaders/BVH/bvhFileLoader" {
+import { ISceneLoaderPluginAsync, ISceneLoaderPluginFactory, ISceneLoaderAsyncResult, SceneLoaderPluginOptions } from "babylonjs/Loading/sceneLoader";
+import { AssetContainer } from "babylonjs/assetContainer";
+import { Scene } from "babylonjs/scene";
+import { BVHLoadingOptions } from "babylonjs-loaders/BVH/bvhLoadingOptions";
+import { BVHFileLoaderMetadata } from "babylonjs-loaders/BVH/bvhFileLoader.metadata";
+module "babylonjs/Loading/sceneLoader" {
+    interface SceneLoaderPluginOptions {
+        /**
+         * Defines options for the bvh loader.
+         */
+        [BVHFileLoaderMetadata.name]: Partial<BVHLoadingOptions>;
+    }
+}
+/**
+ * @experimental
+ * BVH file type loader.
+ * This is a babylon scene loader plugin.
+ */
+export class BVHFileLoader implements ISceneLoaderPluginAsync, ISceneLoaderPluginFactory {
+    /**
+     * Name of the loader ("bvh")
+     */
+    readonly name: "bvh";
+    /** @internal */
+    readonly extensions: {
+        readonly ".bvh": {
+            readonly isBinary: false;
+        };
+    };
+    private readonly _loadingOptions;
+    /**
+     * Creates loader for bvh motion files
+     * @param loadingOptions - Options for the bvh loader
+     */
+    constructor(loadingOptions?: Partial<Readonly<BVHLoadingOptions>>);
+    private static get _DefaultLoadingOptions();
+    /** @internal */
+    createPlugin(options: SceneLoaderPluginOptions): ISceneLoaderPluginAsync;
+    /**
+     * If the data string can be loaded directly.
+     * @returns if the data can be loaded directly
+     */
+    canDirectLoad(): boolean;
+    /**
+     * Imports  from the loaded gaussian splatting data and adds them to the scene
+     * @param _meshesNames a string or array of strings of the mesh names that should be loaded from the file
+     * @param scene the scene the meshes should be added to
+     * @param data the bvh data to load
+     * @returns a promise containing the loaded skeletons and animations
+     */
+    importMeshAsync(_meshesNames: string | readonly string[] | null | undefined, scene: Scene, data: unknown): Promise<ISceneLoaderAsyncResult>;
+    /**
+     * Imports all objects from the loaded bvh data and adds them to the scene
+     * @param scene the scene the objects should be added to
+     * @param data the bvh data to load
+     * @returns a promise which completes when objects have been loaded to the scene
+     */
+    loadAsync(scene: Scene, data: unknown): Promise<void>;
+    /**
+     * Load into an asset container.
+     * @param scene The scene to load into
+     * @param data The data to import
+     * @returns The loaded asset container
+     */
+    loadAssetContainerAsync(scene: Scene, data: unknown): Promise<AssetContainer>;
+}
 
 }
 declare module "babylonjs-loaders/legacy/legacy" {
@@ -5059,7 +5717,7 @@ declare module BABYLON {
         /**
          * The object that represents the glTF JSON.
          */
-        json: Object;
+        json: object;
         /**
          * The BIN chunk of a binary glTF.
          */
@@ -5445,7 +6103,7 @@ declare module BABYLON {
         /**
          * @internal
          */
-        directLoad(scene: Scene, data: string): Promise<Object>;
+        directLoad(scene: Scene, data: string): Promise<object>;
         /**
          * The callback that allows custom handling of the root url based on the response url.
          * @param rootUrl the original root url
@@ -5986,24 +6644,26 @@ declare module BABYLON.GLTF2 {
         constructor(type: number, name: string, getValue: GetValueFn, getStride: (target: any) => number);
         protected _buildAnimation(name: string, fps: number, keys: any[]): Animation;
         /** @internal */
-        abstract buildAnimations(target: any, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
+        abstract buildAnimations(target: any, name: string, fps: number, keys: any[]): {
+            babylonAnimatable: IAnimatable;
+            babylonAnimation: Animation;
+        }[];
     }
     /** @internal */
     export class TransformNodeAnimationPropertyInfo extends AnimationPropertyInfo {
         /** @internal */
-        buildAnimations(target: BABYLON.GLTF2.Loader.INode, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
+        buildAnimations(target: BABYLON.GLTF2.Loader.INode, name: string, fps: number, keys: any[]): {
+            babylonAnimatable: IAnimatable;
+            babylonAnimation: Animation;
+        }[];
     }
     /** @internal */
     export class WeightAnimationPropertyInfo extends AnimationPropertyInfo {
-        buildAnimations(target: BABYLON.GLTF2.Loader.INode, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
+        buildAnimations(target: BABYLON.GLTF2.Loader.INode, name: string, fps: number, keys: any[]): {
+            babylonAnimatable: IAnimatable;
+            babylonAnimation: Animation;
+        }[];
     }
-    /** @internal */
-    export var nodeAnimationData: {
-        translation: TransformNodeAnimationPropertyInfo[];
-        rotation: TransformNodeAnimationPropertyInfo[];
-        scale: TransformNodeAnimationPropertyInfo[];
-        weights: WeightAnimationPropertyInfo[];
-    };
 
 
 
@@ -6065,6 +6725,8 @@ declare module BABYLON.GLTF2 {
         _disableInstancedMesh: number;
         /** @internal */
         _allMaterialsDirtyRequired: boolean;
+        /** @internal */
+        _skipStartAnimationStep: boolean;
         private readonly _parent;
         private readonly _extensions;
         private _disposed;
@@ -6222,7 +6884,7 @@ declare module BABYLON.GLTF2 {
          * @param onLoad Called for each animation loaded
          * @returns A void promise that resolves when the load is complete
          */
-        _loadAnimationChannelFromTargetInfoAsync(context: string, animationContext: string, animation: BABYLON.GLTF2.Loader.IAnimation, channel: BABYLON.GLTF2.Loader.IAnimationChannel, targetInfo: IObjectInfo<BABYLON.GLTF2.AnimationPropertyInfo[]>, onLoad: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): Promise<void>;
+        _loadAnimationChannelFromTargetInfoAsync(context: string, animationContext: string, animation: BABYLON.GLTF2.Loader.IAnimation, channel: BABYLON.GLTF2.Loader.IAnimationChannel, targetInfo: IObjectInfo<IInterpolationPropertyInfo[]>, onLoad: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): Promise<void>;
         private _loadAnimationSamplerAsync;
         /**
          * Loads a glTF buffer.
@@ -6423,41 +7085,279 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GLTF2.Loader.Extensions {
-        export var gltfToFlowGraphTypeMap: {
-        [key: string]: string;
-    };
-    export var gltfTypeToBabylonType: any;
-
-
-
-}
-declare module BABYLON {
-
-
-}
-declare module BABYLON.GLTF2.Loader.Extensions {
-        /**
-     * Class to convert an interactivity pointer path to a smart object
-     */
-    export class InteractivityPathToObjectConverter extends BABYLON.GLTF2.Loader.Extensions.GLTFPathToObjectConverter<IObjectAccessor> {
-        constructor(gltf: BABYLON.GLTF2.Loader.IGLTF);
+        export interface IGLTFObjectModelTree {
+        cameras: IGLTFObjectModelTreeCamerasObject;
+        nodes: IGLTFObjectModelTreeNodesObject;
+        materials: IGLTFObjectModelTreeMaterialsObject;
+        extensions: IGLTFObjectModelTreeExtensionsObject;
+        animations: {
+            length: IObjectAccessor<BABYLON.GLTF2.Loader.IAnimation[], AnimationGroup[], number>;
+            __array__: {};
+        };
+        meshes: {
+            length: IObjectAccessor<BABYLON.GLTF2.Loader.IMesh[], (Mesh | undefined)[], number>;
+            __array__: {};
+        };
     }
-
-
-
-}
-declare module BABYLON {
-
-
-}
-declare module BABYLON.GLTF2.Loader.Extensions {
-        /**
-     * @internal
-     * Converts a glTF Interactivity Extension to a serialized flow graph.
-     * @param gltf the interactivity data
-     * @returns a serialized flow graph
+    export interface IGLTFObjectModelTreeNodesObject<GLTFTargetType = BABYLON.GLTF2.Loader.INode, BabylonTargetType = TransformNode> {
+        length: IObjectAccessor<GLTFTargetType[], BabylonTargetType[], number>;
+        __array__: {
+            __target__: boolean;
+            translation: IObjectAccessor<GLTFTargetType, BabylonTargetType, Vector3>;
+            rotation: IObjectAccessor<GLTFTargetType, BabylonTargetType, Quaternion>;
+            scale: IObjectAccessor<GLTFTargetType, BabylonTargetType, Vector3>;
+            matrix: IObjectAccessor<GLTFTargetType, BabylonTargetType, Matrix>;
+            globalMatrix: IObjectAccessor<GLTFTargetType, BabylonTargetType, Matrix>;
+            weights: {
+                length: IObjectAccessor<GLTFTargetType, BabylonTargetType, number>;
+                __array__: {
+                    __target__: boolean;
+                } & IObjectAccessor<GLTFTargetType, BabylonTargetType, number>;
+            } & IObjectAccessor<GLTFTargetType, BabylonTargetType, number[]>;
+            extensions: {
+                EXT_lights_ies?: {
+                    multiplier: IObjectAccessor<BABYLON.GLTF2.Loader.INode, Light, number>;
+                    color: IObjectAccessor<BABYLON.GLTF2.Loader.INode, Light, Color3>;
+                };
+            };
+        };
+    }
+    export interface IGLTFObjectModelTreeCamerasObject {
+        __array__: {
+            __target__: boolean;
+            orthographic: {
+                xmag: IObjectAccessor<BABYLON.GLTF2.Loader.ICamera, BABYLON.GLTF2.Loader.ICamera, Vector2>;
+                ymag: IObjectAccessor<BABYLON.GLTF2.Loader.ICamera, BABYLON.GLTF2.Loader.ICamera, Vector2>;
+                zfar: IObjectAccessor<BABYLON.GLTF2.Loader.ICamera, BABYLON.GLTF2.Loader.ICamera, number>;
+                znear: IObjectAccessor<BABYLON.GLTF2.Loader.ICamera, BABYLON.GLTF2.Loader.ICamera, number>;
+            };
+            perspective: {
+                yfov: IObjectAccessor<BABYLON.GLTF2.Loader.ICamera, BABYLON.GLTF2.Loader.ICamera, number>;
+                zfar: IObjectAccessor<BABYLON.GLTF2.Loader.ICamera, BABYLON.GLTF2.Loader.ICamera, number>;
+                znear: IObjectAccessor<BABYLON.GLTF2.Loader.ICamera, BABYLON.GLTF2.Loader.ICamera, number>;
+                aspectRatio: IObjectAccessor<BABYLON.GLTF2.Loader.ICamera, BABYLON.GLTF2.Loader.ICamera, Nullable<number>>;
+            };
+        };
+    }
+    export interface IGLTFObjectModelTreeMaterialsObject {
+        __array__: {
+            __target__: boolean;
+            pbrMetallicRoughness: {
+                baseColorFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, Color4>;
+                metallicFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, Nullable<number>>;
+                roughnessFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, Nullable<number>>;
+                baseColorTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+                metallicRoughnessTexture: {
+                    extensions: {
+                        KHR_texture_transform: ITextureDefinition;
+                    };
+                };
+            };
+            emissiveFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, Color3>;
+            normalTexture: {
+                scale: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                extensions: {
+                    KHR_texture_transform: ITextureDefinition;
+                };
+            };
+            occlusionTexture: {
+                strength: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                extensions: {
+                    KHR_texture_transform: ITextureDefinition;
+                };
+            };
+            emissiveTexture: {
+                extensions: {
+                    KHR_texture_transform: ITextureDefinition;
+                };
+            };
+            extensions: {
+                KHR_materials_anisotropy: {
+                    anisotropyStrength: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    anisotropyRotation: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    anisotropyTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                };
+                KHR_materials_clearcoat: {
+                    clearcoatFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    clearcoatRoughnessFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    clearcoatTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                    clearcoatNormalTexture: {
+                        scale: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                    clearcoatRoughnessTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                };
+                KHR_materials_dispersion: {
+                    dispersion: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                };
+                KHR_materials_emissive_strength: {
+                    emissiveStrength: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                };
+                KHR_materials_ior: {
+                    ior: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                };
+                KHR_materials_iridescence: {
+                    iridescenceFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    iridescenceIor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    iridescenceThicknessMinimum: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    iridescenceThicknessMaximum: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    iridescenceTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                    iridescenceThicknessTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                };
+                KHR_materials_sheen: {
+                    sheenColorFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, Color3>;
+                    sheenRoughnessFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    sheenColorTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                    sheenRoughnessTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                };
+                KHR_materials_specular: {
+                    specularFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    specularColorFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, Color3>;
+                    specularTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                    specularColorTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                };
+                KHR_materials_transmission: {
+                    transmissionFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    transmissionTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                };
+                KHR_materials_diffuse_transmission: {
+                    diffuseTransmissionFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    diffuseTransmissionTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                    diffuseTransmissionColorFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, Nullable<Color3>>;
+                    diffuseTransmissionColorTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                };
+                KHR_materials_volume: {
+                    thicknessFactor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    attenuationColor: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, Color3>;
+                    attenuationDistance: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+                    thicknessTexture: {
+                        extensions: {
+                            KHR_texture_transform: ITextureDefinition;
+                        };
+                    };
+                };
+            };
+        };
+    }
+    interface ITextureDefinition {
+        offset: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, Vector2>;
+        rotation: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, number>;
+        scale: IObjectAccessor<BABYLON.GLTF2.Loader.IMaterial, PBRMaterial, Vector2>;
+    }
+    export interface IGLTFObjectModelTreeMeshesObject {
+    }
+    export interface IGLTFObjectModelTreeExtensionsObject {
+        KHR_lights_punctual: {
+            lights: {
+                length: IObjectAccessor<BABYLON.GLTF2.Loader.IKHRLightsPunctual_Light[], Light[], number>;
+                __array__: {
+                    __target__: boolean;
+                    color: IObjectAccessor<BABYLON.GLTF2.Loader.IKHRLightsPunctual_Light, Light, Color3>;
+                    intensity: IObjectAccessor<BABYLON.GLTF2.Loader.IKHRLightsPunctual_Light, Light, number>;
+                    range: IObjectAccessor<BABYLON.GLTF2.Loader.IKHRLightsPunctual_Light, Light, number>;
+                    spot: {
+                        innerConeAngle: IObjectAccessor<BABYLON.GLTF2.Loader.IKHRLightsPunctual_Light, Light, number>;
+                        outerConeAngle: IObjectAccessor<BABYLON.GLTF2.Loader.IKHRLightsPunctual_Light, Light, number>;
+                    };
+                };
+            };
+        };
+        EXT_lights_ies: {
+            lights: {
+                length: IObjectAccessor<BABYLON.GLTF2.Loader.IKHRLightsPunctual_Light[], Light[], number>;
+            };
+        };
+        EXT_lights_image_based: {
+            lights: {
+                __array__: {
+                    __target__: boolean;
+                    intensity: IObjectAccessor<BABYLON.GLTF2.IEXTLightsImageBased_LightImageBased, BaseTexture, number>;
+                    rotation: IObjectAccessor<BABYLON.GLTF2.IEXTLightsImageBased_LightImageBased, BaseTexture, Quaternion>;
+                };
+                length: IObjectAccessor<BABYLON.GLTF2.IEXTLightsImageBased_LightImageBased[], BaseTexture[], number>;
+            };
+        };
+    }
+    /**
+     * get a path-to-object converter for the given glTF tree
+     * @param gltf the glTF tree to use
+     * @returns a path-to-object converter for the given glTF tree
      */
-    export function convertGLTFToSerializedFlowGraph(gltf: BABYLON.GLTF2.IKHRInteractivity): ISerializedFlowGraph;
+    export function GetPathToObjectConverter(gltf: BABYLON.GLTF2.Loader.IGLTF): BABYLON.GLTF2.Loader.Extensions.GLTFPathToObjectConverter<unknown, unknown, unknown>;
+    /**
+     * This function will return the object accessor for the given key in the object model
+     * If the key is not found, it will return undefined
+     * @param key the key to get the mapping for, for example /materials/\{\}/emissiveFactor
+     * @returns an object accessor for the given key, or undefined if the key is not found
+     */
+    export function GetMappingForKey(key: string): IObjectAccessor | undefined;
+    /**
+     * Set interpolation for a specific key in the object model
+     * @param key the key to set, for example /materials/\{\}/emissiveFactor
+     * @param interpolation the interpolation elements array
+     */
+    export function SetInterpolationForKey(key: string, interpolation?: IInterpolationPropertyInfo[]): void;
+    /**
+     * This will ad a new object accessor in the object model at the given key.
+     * Note that this will NOT change the typescript types. To do that you will need to change the interface itself (extending it in the module that uses it)
+     * @param key the key to add the object accessor at. For example /cameras/\{\}/perspective/aspectRatio
+     * @param accessor the object accessor to add
+     */
+    export function AddObjectAccessorToKey<GLTFTargetType = any, BabylonTargetType = any, BabylonValueType = any>(key: string, accessor: IObjectAccessor<GLTFTargetType, BabylonTargetType, BabylonValueType>): void;
 
 
 
@@ -6477,17 +7377,26 @@ declare module BABYLON {
 }
 declare module BABYLON.GLTF2.Loader.Extensions {
         /**
+     * Adding an exception here will break traversing through the glTF object tree.
+     * This is used for properties that might not be in the glTF object model, but are optional and have a default value.
+     * For example, the path /nodes/\{\}/extensions/KHR_node_visibility/visible is optional - the object can be deferred without the object fully existing.
+     */
+    export var OptionalPathExceptionsList: {
+        regex: RegExp;
+    }[];
+    /**
      * A converter that takes a glTF Object Model JSON Pointer
      * and transforms it into an ObjectAccessorContainer, allowing
      * objects referenced in the glTF to be associated with their
      * respective Babylon.js objects.
      */
-    export class GLTFPathToObjectConverter<T> implements IPathToObjectConverter<T> {
+    export class GLTFPathToObjectConverter<T, BabylonType, BabylonValue> implements IPathToObjectConverter<IObjectAccessor<T, BabylonType, BabylonValue>> {
         private _gltf;
         private _infoTree;
         constructor(_gltf: BABYLON.GLTF2.Loader.IGLTF, _infoTree: any);
         /**
          * The pointer string is represented by a [JSON pointer](https://datatracker.ietf.org/doc/html/rfc6901).
+         * See also https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/ObjectModel.adoc#core-pointers
          * <animationPointer> := /<rootNode>/<assetIndex>/<propertyPath>
          * <rootNode> := "nodes" | "materials" | "meshes" | "cameras" | "extensions"
          * <assetIndex> := <digit> | <name>
@@ -6499,6 +7408,7 @@ declare module BABYLON.GLTF2.Loader.Extensions {
          *
          * Examples:
          *  - "/nodes/0/rotation"
+         * - "/nodes.length"
          *  - "/materials/2/emissiveFactor"
          *  - "/materials/2/pbrMetallicRoughness/baseColorFactor"
          *  - "/materials/2/extensions/KHR_materials_emissive_strength/emissiveStrength"
@@ -6506,7 +7416,7 @@ declare module BABYLON.GLTF2.Loader.Extensions {
          * @param path The path to convert
          * @returns The object and info associated with the path
          */
-        convert(path: string): IObjectInfo<T>;
+        convert(path: string): IObjectInfo<IObjectAccessor<T, BabylonType, BabylonValue>>;
     }
 
 
@@ -6541,7 +7451,7 @@ declare module BABYLON.GLTF2.Loader.Extensions {
         constructor(loader: BABYLON.GLTF2.GLTFLoader);
         /** @internal */
         dispose(): void;
-        /** @internal */
+        /** @internal*/
         loadMaterialPropertiesAsync(context: string, material: BABYLON.GLTF2.Loader.IMaterial, babylonMaterial: Material): Nullable<Promise<void>>;
     }
 
@@ -6892,6 +7802,40 @@ declare module BABYLON {
 }
 declare module BABYLON.GLTF2.Loader.Extensions {
         /**
+     * Loader extension for KHR_selectability
+     */
+    export class KHR_node_selectability implements BABYLON.GLTF2.IGLTFLoaderExtension {
+        /**
+         * The name of this extension.
+         */
+        readonly name = "KHR_node_selectability";
+        /**
+         * Defines whether this extension is enabled.
+         */
+        enabled: boolean;
+        private _loader;
+        /**
+         * @internal
+         */
+        constructor(loader: BABYLON.GLTF2.GLTFLoader);
+        onReady(): Promise<void>;
+        dispose(): void;
+    }
+
+
+
+}
+declare module BABYLON {
+    interface GLTFLoaderExtensionOptions {
+        /**
+         * Defines options for the KHR_selectability extension.
+         */
+        ["KHR_node_selectability"]: {};
+    }
+
+}
+declare module BABYLON.GLTF2.Loader.Extensions {
+        /**
      * Loader extension for KHR_node_hoverability
      * @see https://github.com/KhronosGroup/glTF/pull/2426
      */
@@ -7099,6 +8043,10 @@ declare module BABYLON {
          * Defines options for the KHR_materials_variants extension.
          */
         ["KHR_materials_variants"]: Partial<{
+            /**
+             * Specifies the name of the variant that should be selected by default.
+             */
+            defaultVariant: string;
             /**
              * Defines a callback that will be called if material variants are loaded.
              * @experimental
@@ -7695,8 +8643,13 @@ declare module BABYLON.GLTF2.Loader.Extensions {
          */
         constructor(_loader: BABYLON.GLTF2.GLTFLoader);
         dispose(): void;
-        onReady(): void;
+        onReady(): Promise<void>;
     }
+    /**
+     * @internal
+     * populates the object model with the interactivity extension
+     */
+    export function _AddInteractivityObjectModel(scene: Scene): void;
 
 
 
@@ -7757,302 +8710,7 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GLTF2.Loader.Extensions {
-        class CameraAnimationPropertyInfo extends BABYLON.GLTF2.AnimationPropertyInfo {
-        /** @internal */
-        buildAnimations(target: BABYLON.GLTF2.Loader.ICamera, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
-    }
-    class MaterialAnimationPropertyInfo extends BABYLON.GLTF2.AnimationPropertyInfo {
-        /** @internal */
-        buildAnimations(target: BABYLON.GLTF2.Loader.IMaterial, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
-    }
-    class LightAnimationPropertyInfo extends BABYLON.GLTF2.AnimationPropertyInfo {
-        /** @internal */
-        buildAnimations(target: BABYLON.GLTF2.Loader.IKHRLightsPunctual_Light, name: string, fps: number, keys: any[], callback: (babylonAnimatable: IAnimatable, babylonAnimation: Animation) => void): void;
-    }
-    /** @internal */
-    export var animationPointerTree: {
-        nodes: {
-            __array__: {
-                translation: TransformNodeAnimationPropertyInfo[];
-                rotation: TransformNodeAnimationPropertyInfo[];
-                scale: TransformNodeAnimationPropertyInfo[];
-                weights: WeightAnimationPropertyInfo[];
-                __target__: boolean;
-            };
-        };
-        materials: {
-            __array__: {
-                __target__: boolean;
-                pbrMetallicRoughness: {
-                    baseColorFactor: MaterialAnimationPropertyInfo[];
-                    metallicFactor: MaterialAnimationPropertyInfo[];
-                    roughnessFactor: MaterialAnimationPropertyInfo[];
-                    baseColorTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                    metallicRoughnessTexture: {
-                        extensions: {
-                            KHR_texture_transform: {
-                                scale: MaterialAnimationPropertyInfo[];
-                                offset: MaterialAnimationPropertyInfo[];
-                                rotation: MaterialAnimationPropertyInfo[];
-                            };
-                        };
-                    };
-                };
-                emissiveFactor: MaterialAnimationPropertyInfo[];
-                normalTexture: {
-                    scale: MaterialAnimationPropertyInfo[];
-                    extensions: {
-                        KHR_texture_transform: {
-                            scale: MaterialAnimationPropertyInfo[];
-                            offset: MaterialAnimationPropertyInfo[];
-                            rotation: MaterialAnimationPropertyInfo[];
-                        };
-                    };
-                };
-                occlusionTexture: {
-                    strength: MaterialAnimationPropertyInfo[];
-                    extensions: {
-                        KHR_texture_transform: {
-                            scale: MaterialAnimationPropertyInfo[];
-                            offset: MaterialAnimationPropertyInfo[];
-                            rotation: MaterialAnimationPropertyInfo[];
-                        };
-                    };
-                };
-                emissiveTexture: {
-                    extensions: {
-                        KHR_texture_transform: {
-                            scale: MaterialAnimationPropertyInfo[];
-                            offset: MaterialAnimationPropertyInfo[];
-                            rotation: MaterialAnimationPropertyInfo[];
-                        };
-                    };
-                };
-                extensions: {
-                    KHR_materials_anisotropy: {
-                        anisotropyStrength: MaterialAnimationPropertyInfo[];
-                        anisotropyRotation: MaterialAnimationPropertyInfo[];
-                        anisotropyTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                    };
-                    KHR_materials_clearcoat: {
-                        clearcoatFactor: MaterialAnimationPropertyInfo[];
-                        clearcoatRoughnessFactor: MaterialAnimationPropertyInfo[];
-                        clearcoatTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                        clearcoatNormalTexture: {
-                            scale: MaterialAnimationPropertyInfo[];
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                        clearcoatRoughnessTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                    };
-                    KHR_materials_dispersion: {
-                        dispersion: MaterialAnimationPropertyInfo[];
-                    };
-                    KHR_materials_emissive_strength: {
-                        emissiveStrength: MaterialAnimationPropertyInfo[];
-                    };
-                    KHR_materials_ior: {
-                        ior: MaterialAnimationPropertyInfo[];
-                    };
-                    KHR_materials_iridescence: {
-                        iridescenceFactor: MaterialAnimationPropertyInfo[];
-                        iridescenceIor: MaterialAnimationPropertyInfo[];
-                        iridescenceThicknessMinimum: MaterialAnimationPropertyInfo[];
-                        iridescenceThicknessMaximum: MaterialAnimationPropertyInfo[];
-                        iridescenceTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                        iridescenceThicknessTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                    };
-                    KHR_materials_sheen: {
-                        sheenColorFactor: MaterialAnimationPropertyInfo[];
-                        sheenRoughnessFactor: MaterialAnimationPropertyInfo[];
-                        sheenColorTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                        sheenRoughnessTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                    };
-                    KHR_materials_specular: {
-                        specularFactor: MaterialAnimationPropertyInfo[];
-                        specularColorFactor: MaterialAnimationPropertyInfo[];
-                        specularTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                        specularColorTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                    };
-                    KHR_materials_transmission: {
-                        transmissionFactor: MaterialAnimationPropertyInfo[];
-                        transmissionTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                    };
-                    KHR_materials_volume: {
-                        attenuationColor: MaterialAnimationPropertyInfo[];
-                        attenuationDistance: MaterialAnimationPropertyInfo[];
-                        thicknessFactor: MaterialAnimationPropertyInfo[];
-                        thicknessTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                    };
-                    KHR_materials_diffuse_transmission: {
-                        diffuseTransmissionFactor: MaterialAnimationPropertyInfo[];
-                        diffuseTransmissionTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                        diffuseTransmissionColorFactor: MaterialAnimationPropertyInfo[];
-                        diffuseTransmissionColorTexture: {
-                            extensions: {
-                                KHR_texture_transform: {
-                                    scale: MaterialAnimationPropertyInfo[];
-                                    offset: MaterialAnimationPropertyInfo[];
-                                    rotation: MaterialAnimationPropertyInfo[];
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-        };
-        cameras: {
-            __array__: {
-                __target__: boolean;
-                orthographic: {
-                    xmag: CameraAnimationPropertyInfo[];
-                    ymag: CameraAnimationPropertyInfo[];
-                    zfar: CameraAnimationPropertyInfo[];
-                    znear: CameraAnimationPropertyInfo[];
-                };
-                perspective: {
-                    yfov: CameraAnimationPropertyInfo[];
-                    zfar: CameraAnimationPropertyInfo[];
-                    znear: CameraAnimationPropertyInfo[];
-                };
-            };
-        };
-        extensions: {
-            KHR_lights_punctual: {
-                lights: {
-                    __array__: {
-                        __target__: boolean;
-                        color: LightAnimationPropertyInfo[];
-                        intensity: LightAnimationPropertyInfo[];
-                        range: LightAnimationPropertyInfo[];
-                        spot: {
-                            innerConeAngle: LightAnimationPropertyInfo[];
-                            outerConeAngle: LightAnimationPropertyInfo[];
-                        };
-                    };
-                };
-            };
-            EXT_lights_ies: {
-                lights: {
-                    __array__: {
-                        __target__: boolean;
-                        color: LightAnimationPropertyInfo[];
-                        multiplier: LightAnimationPropertyInfo[];
-                    };
-                };
-            };
-        };
-    };
-
+    
 
 
 }
@@ -8303,6 +8961,50 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GLTF2.Loader.Extensions {
+        /**
+     * [Specification](https://github.com/KhronosGroup/glTF/blob/fdee35425ae560ea378092e38977216d63a094ec/extensions/2.0/Khronos/EXT_materials_diffuse_roughness/README.md)
+     * @experimental
+     */
+    export class EXT_materials_diffuse_roughness implements BABYLON.GLTF2.IGLTFLoaderExtension {
+        /**
+         * The name of this extension.
+         */
+        readonly name = "EXT_materials_diffuse_roughness";
+        /**
+         * Defines whether this extension is enabled.
+         */
+        enabled: boolean;
+        /**
+         * Defines a number that determines the order the extensions are applied.
+         */
+        order: number;
+        private _loader;
+        /**
+         * @internal
+         */
+        constructor(loader: BABYLON.GLTF2.GLTFLoader);
+        /** @internal */
+        dispose(): void;
+        /**
+         * @internal
+         */
+        loadMaterialPropertiesAsync(context: string, material: BABYLON.GLTF2.Loader.IMaterial, babylonMaterial: Material): Nullable<Promise<void>>;
+        private _loadDiffuseRoughnessPropertiesAsync;
+    }
+
+
+
+}
+declare module BABYLON {
+    interface GLTFLoaderExtensionOptions {
+        /**
+         * Defines options for the EXT_materials_diffuse_roughness extension.
+         */
+        ["EXT_materials_diffuse_roughness"]: {};
+    }
+
+}
+declare module BABYLON.GLTF2.Loader.Extensions {
             /** @internal */
         interface IEXTLightsImageBased_LightImageBased {
             _babylonTexture?: BaseTexture;
@@ -8389,6 +9091,473 @@ declare module BABYLON {
          */
         ["EXT_lights_ies"]: {};
     }
+
+}
+declare module BABYLON.GLTF2.Loader.Extensions {
+        export interface InteractivityEvent {
+        eventId: string;
+        eventData?: {
+            eventData: boolean;
+            id: string;
+            type: string;
+            value?: any;
+        }[];
+    }
+    export var gltfTypeToBabylonType: {
+        [key: string]: {
+            length: number;
+            flowGraphType: FlowGraphTypes;
+            elementType: "number" | "boolean";
+        };
+    };
+    export class InteractivityGraphToFlowGraphParser {
+        private _interactivityGraph;
+        private _gltf;
+        _animationTargetFps: number;
+        /**
+         * Note - the graph should be rejected if the same type is defined twice.
+         * We currently don't validate that.
+         */
+        private _types;
+        private _mappings;
+        private _staticVariables;
+        private _events;
+        private _internalEventsCounter;
+        private _nodes;
+        constructor(_interactivityGraph: BABYLON.GLTF2.IKHRInteractivity_Graph, _gltf: BABYLON.GLTF2.Loader.IGLTF, _animationTargetFps?: number);
+        get arrays(): {
+            types: {
+                length: number;
+                flowGraphType: FlowGraphTypes;
+                elementType: "number" | "boolean";
+            }[];
+            mappings: {
+                flowGraphMapping: BABYLON.GLTF2.Loader.Extensions.IGLTFToFlowGraphMapping;
+                fullOperationName: string;
+            }[];
+            staticVariables: {
+                type: FlowGraphTypes;
+                value: any[];
+            }[];
+            events: InteractivityEvent[];
+            nodes: {
+                blocks: ISerializedFlowGraphBlock[];
+                fullOperationName: string;
+            }[];
+        };
+        private _parseTypes;
+        private _parseDeclarations;
+        private _parseVariables;
+        private _parseVariable;
+        private _parseEvents;
+        private _parseNodes;
+        private _getEmptyBlock;
+        private _parseNodeConfiguration;
+        private _parseNodeConnections;
+        private _createNewSocketConnection;
+        private _connectFlowGraphNodes;
+        getVariableName(index: number): string;
+        serializeToFlowGraph(): ISerializedFlowGraph;
+    }
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GLTF2.Loader.Extensions {
+    
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GLTF2.Loader.Extensions {
+        /**
+     * a configuration interface for this block
+     */
+    export interface IFlowGraphGLTFDataProviderBlockConfiguration extends IFlowGraphBlockConfiguration {
+        /**
+         * the glTF object to provide data from
+         */
+        glTF: BABYLON.GLTF2.Loader.IGLTF;
+    }
+    /**
+     * a glTF-based FlowGraph block that provides arrays with babylon object, based on the glTF tree
+     * Can be used, for example, to get animation index from a glTF animation
+     */
+    export class FlowGraphGLTFDataProvider extends FlowGraphBlock {
+        /**
+         * Output: an array of animation groups
+         * Corresponds directly to the glTF animations array
+         */
+        readonly animationGroups: FlowGraphDataConnection<AnimationGroup[]>;
+        /**
+         * Output an array of (Transform) nodes
+         * Corresponds directly to the glTF nodes array
+         */
+        readonly nodes: FlowGraphDataConnection<TransformNode[]>;
+        constructor(config: IFlowGraphGLTFDataProviderBlockConfiguration);
+        getClassName(): string;
+    }
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GLTF2.Loader.Extensions {
+        interface IGLTFToFlowGraphMappingObject<I = any, O = any> {
+        /**
+         * The name of the property in the FlowGraph block.
+         */
+        name: string;
+        /**
+         * The type of the property in the glTF specs.
+         * If not provided will be inferred.
+         */
+        gltfType?: string;
+        /**
+         * The type of the property in the FlowGraph block.
+         * If not defined it equals the glTF type.
+         */
+        flowGraphType?: string;
+        /**
+         * A function that transforms the data from the glTF to the FlowGraph block.
+         */
+        dataTransformer?: (data: I[], parser: BABYLON.GLTF2.Loader.Extensions.InteractivityGraphToFlowGraphParser) => O[];
+        /**
+         * If the property is in the options passed to the constructor of the block.
+         */
+        inOptions?: boolean;
+        /**
+         * If the property is a pointer to a value.
+         * This will add an extra JsonPointerParser block to the graph.
+         */
+        isPointer?: boolean;
+        /**
+         * If the property is an index to a value.
+         * if defined this will be the name of the array to find the object in.
+         */
+        isVariable?: boolean;
+        /**
+         * the name of the class type this value will be mapped to.
+         * This is used if we generate more than one block for a single glTF node.
+         * Defaults to the first block in the mapping.
+         */
+        toBlock?: FlowGraphBlockNames;
+        /**
+         * Used in configuration values. If defined, this will be the default value, if no value is provided.
+         */
+        defaultValue?: O;
+    }
+    export interface IGLTFToFlowGraphMapping {
+        /**
+         * The type of the FlowGraph block(s).
+         * Typically will be a single element in an array.
+         * When adding blocks defined in this module use the KHR_interactivity prefix.
+         */
+        blocks: (FlowGraphBlockNames | string)[];
+        /**
+         * The inputs of the glTF node mapped to the FlowGraph block.
+         */
+        inputs?: {
+            /**
+             * The value inputs of the glTF node mapped to the FlowGraph block.
+             */
+            values?: {
+                [originName: string]: IGLTFToFlowGraphMappingObject;
+            };
+            /**
+             * The flow inputs of the glTF node mapped to the FlowGraph block.
+             */
+            flows?: {
+                [originName: string]: IGLTFToFlowGraphMappingObject;
+            };
+        };
+        /**
+         * The outputs of the glTF node mapped to the FlowGraph block.
+         */
+        outputs?: {
+            /**
+             * The value outputs of the glTF node mapped to the FlowGraph block.
+             */
+            values?: {
+                [originName: string]: IGLTFToFlowGraphMappingObject;
+            };
+            /**
+             * The flow outputs of the glTF node mapped to the FlowGraph block.
+             */
+            flows?: {
+                [originName: string]: IGLTFToFlowGraphMappingObject;
+            };
+        };
+        /**
+         * The configuration of the glTF node mapped to the FlowGraph block.
+         * This information is usually passed to the constructor of the block.
+         */
+        configuration?: {
+            [originName: string]: IGLTFToFlowGraphMappingObject;
+        };
+        /**
+         * If we generate more than one block for a single glTF node, this mapping will be used to map
+         * between the flowGraph classes.
+         */
+        typeToTypeMapping?: {
+            [originName: string]: IGLTFToFlowGraphMappingObject;
+        };
+        /**
+         * The connections between two or more blocks.
+         * This is used to connect the blocks in the graph
+         */
+        interBlockConnectors?: {
+            /**
+             * The name of the input connection in the first block.
+             */
+            input: string;
+            /**
+             * The name of the output connection in the second block.
+             */
+            output: string;
+            /**
+             * The index of the block in the array of blocks that corresponds to the input.
+             */
+            inputBlockIndex: number;
+            /**
+             * The index of the block in the array of blocks that corresponds to the output.
+             */
+            outputBlockIndex: number;
+            /**
+             * If the connection is a variable connection or a flow connection.
+             */
+            isVariable?: boolean;
+        }[];
+        /**
+         * This optional function will allow to validate the node, according to the glTF specs.
+         * For example, if a node has a configuration object, it must be present and correct.
+         * This is a basic node-based validation.
+         * This function is expected to return false and log the error if the node is not valid.
+         * Note that this function can also modify the node, if needed.
+         *
+         * @param gltfBlock the glTF node to validate
+         * @param glTFObject the glTF object
+         * @returns true if validated, false if not.
+         */
+        validation?: (gltfBlock: BABYLON.GLTF2.IKHRInteractivity_Node, interactivityGraph: BABYLON.GLTF2.IKHRInteractivity_Graph, glTFObject?: BABYLON.GLTF2.Loader.IGLTF) => {
+            valid: boolean;
+            error?: string;
+        };
+        /**
+         * This is used if we need extra information for the constructor/options that is not provided directly by the glTF node.
+         * This function can return more than one node, if extra nodes are needed for this block to function correctly.
+         * Returning more than one block will usually happen when a json pointer was provided.
+         *
+         * @param gltfBlock the glTF node
+         * @param mapping the mapping object
+         * @param arrays the arrays of the interactivity object
+         * @param serializedObjects the serialized object
+         * @returns an array of serialized nodes that will be added to the graph.
+         */
+        extraProcessor?: (gltfBlock: BABYLON.GLTF2.IKHRInteractivity_Node, declaration: BABYLON.GLTF2.IKHRInteractivity_Declaration, mapping: IGLTFToFlowGraphMapping, parser: BABYLON.GLTF2.Loader.Extensions.InteractivityGraphToFlowGraphParser, serializedObjects: ISerializedFlowGraphBlock[], context: ISerializedFlowGraphContext, globalGLTF?: BABYLON.GLTF2.Loader.IGLTF) => ISerializedFlowGraphBlock[];
+    }
+    export function getMappingForFullOperationName(fullOperationName: string): IGLTFToFlowGraphMapping | undefined;
+    export function getMappingForDeclaration(declaration: BABYLON.GLTF2.IKHRInteractivity_Declaration, returnNoOpIfNotAvailable?: boolean): IGLTFToFlowGraphMapping | undefined;
+    /**
+     * This function will add new mapping to glTF interactivity.
+     * Other extensions can define new types of blocks, this is the way to let interactivity know how to parse them.
+     * @param key the type of node, i.e. "variable/get"
+     * @param extension the extension of the interactivity operation, i.e. "KHR_selectability"
+     * @param mapping The mapping object. See documentation or examples below.
+     */
+    export function addNewInteractivityFlowGraphMapping(key: string, extension: string, mapping: IGLTFToFlowGraphMapping): void;
+    export function getAllSupportedNativeNodeTypes(): string[];
+    /**
+     *
+     * These are the nodes from the specs:
+    ### Math Nodes
+    1. **Constants**
+       - E (`math/e`) FlowGraphBlockNames.E
+       - Pi (`math/pi`) FlowGraphBlockNames.PI
+       - Infinity (`math/inf`) FlowGraphBlockNames.Inf
+       - Not a Number (`math/nan`) FlowGraphBlockNames.NaN
+    2. **Arithmetic Nodes**
+       - Absolute Value (`math/abs`) FlowGraphBlockNames.Abs
+       - Sign (`math/sign`) FlowGraphBlockNames.Sign
+       - Truncate (`math/trunc`) FlowGraphBlockNames.Trunc
+       - Floor (`math/floor`) FlowGraphBlockNames.Floor
+       - Ceil (`math/ceil`) FlowGraphBlockNames.Ceil
+       - Round (`math/round`)  FlowGraphBlockNames.Round
+       - Fraction (`math/fract`) FlowGraphBlockNames.Fract
+       - Negation (`math/neg`) FlowGraphBlockNames.Negation
+       - Addition (`math/add`) FlowGraphBlockNames.Add
+       - Subtraction (`math/sub`) FlowGraphBlockNames.Subtract
+       - Multiplication (`math/mul`) FlowGraphBlockNames.Multiply
+       - Division (`math/div`) FlowGraphBlockNames.Divide
+       - Remainder (`math/rem`) FlowGraphBlockNames.Modulo
+       - Minimum (`math/min`) FlowGraphBlockNames.Min
+       - Maximum (`math/max`) FlowGraphBlockNames.Max
+       - Clamp (`math/clamp`) FlowGraphBlockNames.Clamp
+       - Saturate (`math/saturate`) FlowGraphBlockNames.Saturate
+       - Interpolate (`math/mix`) FlowGraphBlockNames.MathInterpolation
+    3. **Comparison Nodes**
+       - Equality (`math/eq`) FlowGraphBlockNames.Equality
+       - Less Than (`math/lt`) FlowGraphBlockNames.LessThan
+       - Less Than Or Equal To (`math/le`) FlowGraphBlockNames.LessThanOrEqual
+       - Greater Than (`math/gt`) FlowGraphBlockNames.GreaterThan
+       - Greater Than Or Equal To (`math/ge`) FlowGraphBlockNames.GreaterThanOrEqual
+    4. **Special Nodes**
+       - Is Not a Number (`math/isnan`) FlowGraphBlockNames.IsNaN
+       - Is Infinity (`math/isinf`) FlowGraphBlockNames.IsInfinity
+       - Select (`math/select`) FlowGraphBlockNames.Conditional
+       - Switch (`math/switch`) FlowGraphBlockNames.DataSwitch
+       - Random (`math/random`) FlowGraphBlockNames.Random
+    5. **Angle and Trigonometry Nodes**
+       - Degrees-To-Radians (`math/rad`) FlowGraphBlockNames.DegToRad
+       - Radians-To-Degrees (`math/deg`) FlowGraphBlockNames.RadToDeg
+       - Sine (`math/sin`)  FlowGraphBlockNames.Sin
+       - Cosine (`math/cos`) FlowGraphBlockNames.Cos
+       - Tangent (`math/tan`) FlowGraphBlockNames.Tan
+       - Arcsine (`math/asin`) FlowGraphBlockNames.Asin
+       - Arccosine (`math/acos`) FlowGraphBlockNames.Acos
+       - Arctangent (`math/atan`) FlowGraphBlockNames.Atan
+       - Arctangent 2 (`math/atan2`) FlowGraphBlockNames.Atan2
+    6. **Hyperbolic Nodes**
+       - Hyperbolic Sine (`math/sinh`) FlowGraphBlockNames.Sinh
+       - Hyperbolic Cosine (`math/cosh`) FlowGraphBlockNames.Cosh
+       - Hyperbolic Tangent (`math/tanh`) FlowGraphBlockNames.Tanh
+       - Inverse Hyperbolic Sine (`math/asinh`) FlowGraphBlockNames.Asinh
+       - Inverse Hyperbolic Cosine (`math/acosh`) FlowGraphBlockNames.Acosh
+       - Inverse Hyperbolic Tangent (`math/atanh`) FlowGraphBlockNames.Atanh
+    7. **Exponential Nodes**
+       - Exponent (`math/exp`) FlowGraphBlockNames.Exponential
+       - Natural Logarithm (`math/log`) FlowGraphBlockNames.Log
+       - Base-2 Logarithm (`math/log2`) FlowGraphBlockNames.Log2
+       - Base-10 Logarithm (`math/log10`) FlowGraphBlockNames.Log10
+       - Square Root (`math/sqrt`) FlowGraphBlockNames.SquareRoot
+       - Cube Root (`math/cbrt`) FlowGraphBlockNames.CubeRoot
+       - Power (`math/pow`) FlowGraphBlockNames.Power
+    8. **Vector Nodes**
+       - Length (`math/length`) FlowGraphBlockNames.Length
+       - Normalize (`math/normalize`) FlowGraphBlockNames.Normalize
+       - Dot Product (`math/dot`) FlowGraphBlockNames.Dot
+       - Cross Product (`math/cross`) FlowGraphBlockNames.Cross
+       - Rotate 2D (`math/rotate2D`) FlowGraphBlockNames.Rotate2D
+       - Rotate 3D (`math/rotate3D`) FlowGraphBlockNames.Rotate3D
+       - Transform (`math/transform`) FlowGraphBlockNames.TransformVector
+    9. **Matrix Nodes**
+       - Transpose (`math/transpose`) FlowGraphBlockNames.Transpose
+       - Determinant (`math/determinant`) FlowGraphBlockNames.Determinant
+       - Inverse (`math/inverse`) FlowGraphBlockNames.InvertMatrix
+       - Multiplication (`math/matmul`) FlowGraphBlockNames.MatrixMultiplication
+       - Compose (`math/matCompose`) FlowGraphBlockNames.MatrixCompose
+       - Decompose (`math/matDecompose`) FlowGraphBlockNames.MatrixDecompose
+    10. **Quaternion Nodes**
+        - Conjugate (`math/quatConjugate`) FlowGraphBlockNames.Conjugate
+        - Multiplication (`math/quatMul`) FlowGraphBlockNames.Multiply
+        - Angle Between Quaternions (`math/quatAngleBetween`) FlowGraphBlockNames.AngleBetween
+        - Quaternion From Axis Angle (`math/quatFromAxisAngle`) FlowGraphBlockNames.QuaternionFromAxisAngle
+        - Quaternion To Axis Angle (`math/quatToAxisAngle`) FlowGraphBlockNames.QuaternionToAxisAngle
+        - Quaternion From Two Directional Vectors (`math/quatFromDirections`) FlowGraphBlockNames.QuaternionFromDirections
+    11. **Swizzle Nodes**
+        - Combine (`math/combine2`, `math/combine3`, `math/combine4`, `math/combine2x2`, `math/combine3x3`, `math/combine4x4`)
+            FlowGraphBlockNames.CombineVector2, FlowGraphBlockNames.CombineVector3, FlowGraphBlockNames.CombineVector4
+            FlowGraphBlockNames.CombineMatrix2D, FlowGraphBlockNames.CombineMatrix3D, FlowGraphBlockNames.CombineMatrix
+        - Extract (`math/extract2`, `math/extract3`, `math/extract4`, `math/extract2x2`, `math/extract3x3`, `math/extract4x4`)
+            FlowGraphBlockNames.ExtractVector2, FlowGraphBlockNames.ExtractVector3, FlowGraphBlockNames.ExtractVector4
+            FlowGraphBlockNames.ExtractMatrix2D, FlowGraphBlockNames.ExtractMatrix3D, FlowGraphBlockNames.ExtractMatrix
+    12. **Integer Arithmetic Nodes**
+        - Absolute Value (`math/abs`) FlowGraphBlockNames.Abs
+        - Sign (`math/sign`) FlowGraphBlockNames.Sign
+        - Negation (`math/neg`) FlowGraphBlockNames.Negation
+        - Addition (`math/add`) FlowGraphBlockNames.Add
+        - Subtraction (`math/sub`) FlowGraphBlockNames.Subtract
+        - Multiplication (`math/mul`) FlowGraphBlockNames.Multiply
+        - Division (`math/div`) FlowGraphBlockNames.Divide
+        - Remainder (`math/rem`) FlowGraphBlockNames.Modulo
+        - Minimum (`math/min`) FlowGraphBlockNames.Min
+        - Maximum (`math/max`) FlowGraphBlockNames.Max
+        - Clamp (`math/clamp`) FlowGraphBlockNames.Clamp
+    13. **Integer Comparison Nodes**
+        - Equality (`math/eq`) FlowGraphBlockNames.Equality
+        - Less Than (`math/lt`) FlowGraphBlockNames.LessThan
+        - Less Than Or Equal To (`math/le`) FlowGraphBlockNames.LessThanOrEqual
+        - Greater Than (`math/gt`) FlowGraphBlockNames.GreaterThan
+        - Greater Than Or Equal To (`math/ge`) FlowGraphBlockNames.GreaterThanOrEqual
+    14. **Integer Bitwise Nodes**
+        - Bitwise NOT (`math/not`) FlowGraphBlockNames.BitwiseNot
+        - Bitwise AND (`math/and`) FlowGraphBlockNames.BitwiseAnd
+        - Bitwise OR (`math/or`) FlowGraphBlockNames.BitwiseOr
+        - Bitwise XOR (`math/xor`) FlowGraphBlockNames.BitwiseXor
+        - Right Shift (`math/asr`) FlowGraphBlockNames.BitwiseRightShift
+        - Left Shift (`math/lsl`) FlowGraphBlockNames.BitwiseLeftShift
+        - Count Leading Zeros (`math/clz`) FlowGraphBlockNames.LeadingZeros
+        - Count Trailing Zeros (`math/ctz`) FlowGraphBlockNames.TrailingZeros
+        - Count One Bits (`math/popcnt`) FlowGraphBlockNames.OneBitsCounter
+    15. **Boolean Arithmetic Nodes**
+        - Equality (`math/eq`) FlowGraphBlockNames.Equality
+        - Boolean NOT (`math/not`) FlowGraphBlockNames.BitwiseNot
+        - Boolean AND (`math/and`) FlowGraphBlockNames.BitwiseAnd
+        - Boolean OR (`math/or`) FlowGraphBlockNames.BitwiseOr
+        - Boolean XOR (`math/xor`) FlowGraphBlockNames.BitwiseXor
+    ### Type Conversion Nodes
+    1. **Boolean Conversion Nodes**
+       - Boolean to Integer (`type/boolToInt`) FlowGraphBlockNames.BooleanToInt
+       - Boolean to Float (`type/boolToFloat`) FlowGraphBlockNames.BooleanToFloat
+    2. **Integer Conversion Nodes**
+       - Integer to Boolean (`type/intToBool`) FlowGraphBlockNames.IntToBoolean
+       - Integer to Float (`type/intToFloat`) FlowGraphBlockNames.IntToFloat
+    3. **Float Conversion Nodes**
+       - Float to Boolean (`type/floatToBool`) FlowGraphBlockNames.FloatToBoolean
+       - Float to Integer (`type/floatToInt`) FlowGraphBlockNames.FloatToInt
+    ### Control Flow Nodes
+    1. **Sync Nodes**
+       - Sequence (`flow/sequence`) FlowGraphBlockNames.Sequence
+       - Branch (`flow/branch`) FlowGraphBlockNames.Branch
+       - Switch (`flow/switch`) FlowGraphBlockNames.Switch
+       - While Loop (`flow/while`) FlowGraphBlockNames.WhileLoop
+       - For Loop (`flow/for`) FlowGraphBlockNames.ForLoop
+       - Do N (`flow/doN`) FlowGraphBlockNames.DoN
+       - Multi Gate (`flow/multiGate`) FlowGraphBlockNames.MultiGate
+       - Wait All (`flow/waitAll`) FlowGraphBlockNames.WaitAll
+       - Throttle (`flow/throttle`) FlowGraphBlockNames.Throttle
+    2. **Delay Nodes**
+       - Set Delay (`flow/setDelay`) FlowGraphBlockNames.SetDelay
+       - Cancel Delay (`flow/cancelDelay`) FlowGraphBlockNames.CancelDelay
+    ### State Manipulation Nodes
+    1. **Custom Variable Access**
+       - Variable Get (`variable/get`) FlowGraphBlockNames.GetVariable
+       - Variable Set (`variable/set`) FlowGraphBlockNames.SetVariable
+       - Variable Interpolate (`variable/interpolate`)
+    2. **Object Model Access** // TODO fully test this!!!
+       - JSON Pointer Template Parsing (`pointer/get`) [FlowGraphBlockNames.GetProperty, FlowGraphBlockNames.JsonPointerParser]
+       - Effective JSON Pointer Generation (`pointer/set`) [FlowGraphBlockNames.SetProperty, FlowGraphBlockNames.JsonPointerParser]
+       - Pointer Get (`pointer/get`) [FlowGraphBlockNames.GetProperty, FlowGraphBlockNames.JsonPointerParser]
+       - Pointer Set (`pointer/set`) [FlowGraphBlockNames.SetProperty, FlowGraphBlockNames.JsonPointerParser]
+       - Pointer Interpolate (`pointer/interpolate`) [FlowGraphBlockNames.ValueInterpolation, FlowGraphBlockNames.JsonPointerParser, FlowGraphBlockNames.PlayAnimation, FlowGraphBlockNames.Easing]
+    ### Animation Control Nodes
+    1. **Animation Play** (`animation/start`) FlowGraphBlockNames.PlayAnimation
+    2. **Animation Stop** (`animation/stop`) FlowGraphBlockNames.StopAnimation
+    3. **Animation Stop At** (`animation/stopAt`) FlowGraphBlockNames.StopAnimation
+    ### Event Nodes
+    1. **Lifecycle Event Nodes**
+       - On Start (`event/onStart`) FlowGraphBlockNames.SceneReadyEvent
+       - On Tick (`event/onTick`) FlowGraphBlockNames.SceneTickEvent
+    2. **Custom Event Nodes**
+       - Receive (`event/receive`) FlowGraphBlockNames.ReceiveCustomEvent
+       - Send (`event/send`) FlowGraphBlockNames.SendCustomEvent
+     */
+
+
+
+}
+declare module BABYLON {
+
 
 }
 declare module BABYLON.GLTF1 {
@@ -8586,7 +9755,7 @@ declare module BABYLON.GLTF1 {
         extensions?: {
             [key: string]: any;
         };
-        extras?: Object;
+        extras?: object;
     }
     /** @internal */
     export interface IGLTFChildRootProperty extends IGLTFProperty {
@@ -8642,7 +9811,7 @@ declare module BABYLON.GLTF1 {
     /** @internal */
     export interface IGLTFTechniqueCommonProfile {
         lightingModel: string;
-        texcoordBindings: Object;
+        texcoordBindings: object;
         parameters?: Array<any>;
     }
     /** @internal */
@@ -8868,7 +10037,7 @@ declare module BABYLON.GLTF1 {
         skins: {
             [key: string]: IGLTFSkins;
         };
-        currentScene?: Object;
+        currentScene?: object;
         scenes: {
             [key: string]: IGLTFScene;
         };
@@ -9162,6 +10331,10 @@ declare module BABYLON {
          * Defines if buffers should be kept in memory for editing purposes
          */
         keepInRam?: boolean;
+        /**
+         * Spatial Y Flip for splat position and orientation
+         */
+        flipY?: boolean;
     };
 
 
@@ -9228,15 +10401,15 @@ declare module BABYLON {
          * @param scene the scene the meshes should be added to
          * @param data the gaussian splatting data to load
          * @param rootUrl root url to load from
-         * @param onProgress callback called while file is loading
-         * @param fileName Defines the name of the file to load
+         * @param _onProgress callback called while file is loading
+         * @param _fileName Defines the name of the file to load
          * @returns a promise containing the loaded meshes, particles, skeletons and animations
          */
-        importMeshAsync(meshesNames: any, scene: Scene, data: any, rootUrl: string, onProgress?: (event: ISceneLoaderProgressEvent) => void, fileName?: string): Promise<ISceneLoaderAsyncResult>;
+        importMeshAsync(meshesNames: any, scene: Scene, data: any, rootUrl: string, _onProgress?: (event: ISceneLoaderProgressEvent) => void, _fileName?: string): Promise<ISceneLoaderAsyncResult>;
         private static _BuildPointCloud;
         private static _BuildMesh;
-        private _parseSPZ;
-        private _parse;
+        private _parseSPZAsync;
+        private _parseAsync;
         /**
          * Load into an asset container.
          * @param scene The scene to load into
@@ -9495,7 +10668,7 @@ declare module BABYLON {
             /**
              * Defines options for the obj loader.
              */
-            [OBJFileLoaderMetadata.name]: {};
+            [OBJFileLoaderMetadata.name]: Partial<OBJLoadingOptions>;
         }
     /**
      * OBJ file type loader.
@@ -9561,7 +10734,7 @@ declare module BABYLON {
          *
          * @param loadingOptions options for loading and parsing OBJ/MTL files.
          */
-        constructor(loadingOptions?: OBJLoadingOptions);
+        constructor(loadingOptions?: Partial<Readonly<OBJLoadingOptions>>);
         private static get _DefaultLoadingOptions();
         /**
          * Calls synchronously the MTL file attached to this obj.
@@ -9575,11 +10748,8 @@ declare module BABYLON {
          * @param onFailure
          */
         private _loadMTL;
-        /**
-         * Instantiates a OBJ file loader plugin.
-         * @returns the created plugin
-         */
-        createPlugin(): ISceneLoaderPluginAsync | ISceneLoaderPlugin;
+        /** @internal */
+        createPlugin(options: SceneLoaderPluginOptions): ISceneLoaderPluginAsync | ISceneLoaderPlugin;
         /**
          * If the data string can be loaded directly.
          * @returns if the data can be loaded directly
@@ -9620,7 +10790,7 @@ declare module BABYLON {
          * @param rootUrl defines the path to the folder
          * @returns the list of loaded meshes
          */
-        private _parseSolid;
+        private _parseSolidAsync;
     }
 
 
@@ -9663,6 +10833,101 @@ declare module BABYLON {
     }
 
 
+
+
+
+
+    /**
+     * Options for loading BVH files
+     */
+    export type BVHLoadingOptions = {
+        /**
+         * Defines the loop mode of the animation to load.
+         */
+        loopMode: number;
+    };
+
+
+    /**
+     * Reads a BVH file, returns a skeleton
+     * @param text - The BVH file content
+     * @param scene - The scene to add the skeleton to
+     * @param assetContainer - The asset container to add the skeleton to
+     * @param loadingOptions - The loading options
+     * @returns The skeleton
+     */
+    export function ReadBvh(text: string, scene: Scene, assetContainer: Nullable<AssetContainer>, loadingOptions: BVHLoadingOptions): Skeleton;
+
+
+    export var BVHFileLoaderMetadata: {
+        readonly name: "bvh";
+        readonly extensions: {
+            readonly ".bvh": {
+                readonly isBinary: false;
+            };
+        };
+    };
+
+
+        interface SceneLoaderPluginOptions {
+            /**
+             * Defines options for the bvh loader.
+             */
+            [BVHFileLoaderMetadata.name]: Partial<BVHLoadingOptions>;
+        }
+    /**
+     * @experimental
+     * BVH file type loader.
+     * This is a babylon scene loader plugin.
+     */
+    export class BVHFileLoader implements ISceneLoaderPluginAsync, ISceneLoaderPluginFactory {
+        /**
+         * Name of the loader ("bvh")
+         */
+        readonly name: "bvh";
+        /** @internal */
+        readonly extensions: {
+            readonly ".bvh": {
+                readonly isBinary: false;
+            };
+        };
+        private readonly _loadingOptions;
+        /**
+         * Creates loader for bvh motion files
+         * @param loadingOptions - Options for the bvh loader
+         */
+        constructor(loadingOptions?: Partial<Readonly<BVHLoadingOptions>>);
+        private static get _DefaultLoadingOptions();
+        /** @internal */
+        createPlugin(options: SceneLoaderPluginOptions): ISceneLoaderPluginAsync;
+        /**
+         * If the data string can be loaded directly.
+         * @returns if the data can be loaded directly
+         */
+        canDirectLoad(): boolean;
+        /**
+         * Imports  from the loaded gaussian splatting data and adds them to the scene
+         * @param _meshesNames a string or array of strings of the mesh names that should be loaded from the file
+         * @param scene the scene the meshes should be added to
+         * @param data the bvh data to load
+         * @returns a promise containing the loaded skeletons and animations
+         */
+        importMeshAsync(_meshesNames: string | readonly string[] | null | undefined, scene: Scene, data: unknown): Promise<ISceneLoaderAsyncResult>;
+        /**
+         * Imports all objects from the loaded bvh data and adds them to the scene
+         * @param scene the scene the objects should be added to
+         * @param data the bvh data to load
+         * @returns a promise which completes when objects have been loaded to the scene
+         */
+        loadAsync(scene: Scene, data: unknown): Promise<void>;
+        /**
+         * Load into an asset container.
+         * @param scene The scene to load into
+         * @param data The data to import
+         * @returns The loaded asset container
+         */
+        loadAssetContainerAsync(scene: Scene, data: unknown): Promise<AssetContainer>;
+    }
 
 
 

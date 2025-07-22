@@ -59,8 +59,12 @@ declare module INSPECTOR {
         private static _SceneExplorerHost;
         private static _ActionTabsHost;
         private static _EmbedHost;
-        private static _NewCanvasContainer;
         private static _PersistentPopupHost;
+        private static _SceneExplorerRoot;
+        private static _ActionTabsRoot;
+        private static _EmbedHostRoot;
+        private static _PersistentPopupRoot;
+        private static _NewCanvasContainer;
         private static _SceneExplorerWindow;
         private static _ActionTabsWindow;
         private static _EmbedHostWindow;
@@ -132,7 +136,7 @@ declare module INSPECTOR {
         onKeyUp?: (evt: KeyboardEvent) => void;
         onKeyDown?: (evt: KeyboardEvent) => void;
     }
-    export class PopupComponent extends React.Component<IPopupComponentProps, {
+    export class PopupComponent extends React.Component<React.PropsWithChildren<IPopupComponentProps>, {
         isComponentMounted: boolean;
         blockedByBrowser: boolean;
     }> {
@@ -252,11 +256,13 @@ declare module INSPECTOR {
     }
     export class TreeItemSelectableComponent extends React.Component<ITreeItemSelectableComponentProps, {
         isExpanded: boolean;
+        mustExpand: boolean;
         isSelected: boolean;
     }> {
         private _wasSelected;
+        private _thisRef;
         constructor(props: ITreeItemSelectableComponentProps);
-        switchExpandedState(): void;
+        switchExpandedState(mustExpand: boolean): void;
         shouldComponentUpdate(nextProps: ITreeItemSelectableComponentProps, nextState: {
             isExpanded: boolean;
             isSelected: boolean;
@@ -273,7 +279,8 @@ declare module INSPECTOR {
     interface ITreeItemLabelComponentProps {
         label: string;
         onClick?: () => void;
-        icon: any;
+        icon?: any;
+        iconBase64?: string;
         color: string;
     }
     export class TreeItemLabelComponent extends React.Component<ITreeItemLabelComponentProps> {
@@ -364,6 +371,7 @@ declare module INSPECTOR {
         private _getMaterialsContextMenus;
         private _getSpriteManagersContextMenus;
         private _getParticleSystemsContextMenus;
+        private _getFrameGraphsContextMenus;
         renderContent(allNodes: any[]): import("react/jsx-runtime").JSX.Element | null;
         onClose(): void;
         onPopup(): void;
@@ -581,6 +589,17 @@ declare module INSPECTOR {
         constructor(props: ILightTreeItemComponentProps);
         switchIsEnabled(): void;
         toggleGizmo(): void;
+        render(): import("react/jsx-runtime").JSX.Element;
+    }
+
+
+    interface IFrameGraphItemComponenttProps {
+        frameGraph: BABYLON.FrameGraph;
+        extensibilityGroups?: BABYLON.IExplorerExtensibilityGroup[];
+        onClick: () => void;
+    }
+    export class FrameGraphTreeItemComponent extends React.Component<IFrameGraphItemComponenttProps> {
+        constructor(props: IFrameGraphItemComponenttProps);
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -1163,9 +1182,6 @@ declare module INSPECTOR {
     }
 
 
-    /**
-     *
-     */
     export class PropertyGridTabComponent extends PaneComponent {
         private _timerIntervalId;
         private _lockObject;
@@ -1220,8 +1236,10 @@ declare module INSPECTOR {
 
     export class DebugTabComponent extends PaneComponent {
         private _physicsViewersEnabled;
+        private _namesViewerEnabled;
         constructor(props: IPaneComponentProps);
         switchPhysicsViewers(): void;
+        switchNameViewerAsync(): Promise<void>;
         render(): import("react/jsx-runtime").JSX.Element | null;
     }
 
@@ -1559,6 +1577,7 @@ declare module INSPECTOR {
         host: BABYLON.IParticleSystem;
         codeRecorderPropertyName: string;
         onCreateRequired: () => void;
+        onRemoveRequired: (step: BABYLON.IValueGradient) => void;
     }
     export class ValueGradientGridComponent extends React.Component<IValueGradientGridComponent> {
         constructor(props: IValueGradientGridComponent);
@@ -1612,6 +1631,8 @@ declare module INSPECTOR {
         loadFromSnippet(): void;
         saveToSnippet(): void;
         updateTexture(file: File): void;
+        view(): void;
+        edit(): void;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -1737,6 +1758,63 @@ declare module INSPECTOR {
     }
 
 
+    interface IAttractorsGridComponent {
+        globalState: GlobalState;
+        lockObject: INSPECTOR.SharedUIComponents.LockObject;
+        docLink?: string;
+        host: BABYLON.ParticleSystem;
+    }
+    export class AttractorsGridComponent extends React.Component<IAttractorsGridComponent, {
+        impostorScale: number;
+        color: BABYLON.Color3;
+    }> {
+        private _impostorMaterial;
+        private _gizmoManager;
+        private _sceneOnAfterRenderObserver;
+        private _fontAsset;
+        constructor(props: IAttractorsGridComponent);
+        addNewAttractor(): void;
+        updateImpostorScale(value: number): void;
+        removeImpostor(attractor: BABYLON.Attractor): void;
+        addImpostor(attractor: BABYLON.Attractor, index: number): void;
+        addLabelAsync(attractor: BABYLON.Attractor, index: number): Promise<void>;
+        controlImpostor(attractor: BABYLON.Attractor, index: number): void;
+        shouldComponentUpdate(nextProps: Readonly<IAttractorsGridComponent>, nextState: Readonly<{
+            impostorScale: number;
+            color: BABYLON.Color3;
+        }>, nextContext: any): boolean;
+        componentWillUnmount(): void;
+        cleanup(): void;
+        render(): import("react/jsx-runtime").JSX.Element;
+    }
+
+
+    interface IAttractorGridComponent {
+        globalState: GlobalState;
+        attractor: BABYLON.Attractor;
+        lockObject: INSPECTOR.SharedUIComponents.LockObject;
+        lineIndex: number;
+        host: BABYLON.IParticleSystem;
+        codeRecorderPropertyName: string;
+        onDelete: (attractor: BABYLON.Attractor) => void;
+        removeImpostor: (attractor: BABYLON.Attractor) => void;
+        addImpostor: (attractor: BABYLON.Attractor, index: number) => void;
+        onControl: (attractor: BABYLON.Attractor, index: number) => void;
+        isControlled: (attractor: BABYLON.Attractor) => boolean;
+    }
+    export class AttractorGridComponent extends React.Component<IAttractorGridComponent, {
+        strength: number;
+    }> {
+        constructor(props: IAttractorGridComponent);
+        lock(): void;
+        unlock(): void;
+        updateStrength(strength: number): void;
+        onView(): void;
+        onControl(): void;
+        render(): import("react/jsx-runtime").JSX.Element;
+    }
+
+
     interface IMetadataComponentProps {
         globalState: GlobalState;
         entity: any;
@@ -1794,7 +1872,7 @@ declare module INSPECTOR {
          * @param object - any object
          * @returns is parsable
          */
-        parsableJson(object: Object): boolean;
+        parsableJson(object: object): boolean;
         /**
          * @param string - any string
          * @returns parsable string
@@ -1811,7 +1889,7 @@ declare module INSPECTOR {
          * @param o Any Object, String or number
          * @returns Boolean
          */
-        objectCanSafelyStringify(o: Object | string | number): boolean;
+        objectCanSafelyStringify(o: object | string | number | boolean): boolean;
         copyToClipboard(): void;
         /** Safely checks if valid JSON then appends necessary props without overwriting existing */
         populateGltfExtras(): void;
@@ -2635,6 +2713,19 @@ declare module INSPECTOR {
     }
     export class LayerPropertyGridComponent extends React.Component<ILayerPropertyGridComponentProps> {
         constructor(props: ILayerPropertyGridComponentProps);
+        render(): import("react/jsx-runtime").JSX.Element;
+    }
+
+
+    interface IFrameGraphPropertyGridComponentProps {
+        globalState: GlobalState;
+        frameGraph: BABYLON.FrameGraph;
+        extensibilityGroups?: BABYLON.IExplorerExtensibilityGroup[];
+        lockObject: INSPECTOR.SharedUIComponents.LockObject;
+        onPropertyChangedObservable?: BABYLON.Observable<PropertyChangedEvent>;
+    }
+    export class FrameGraphPropertyGridComponent extends React.Component<IFrameGraphPropertyGridComponentProps> {
+        constructor(props: IFrameGraphPropertyGridComponentProps);
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -3573,6 +3664,7 @@ declare module INSPECTOR {
         componentWillUnmount(): void;
         debugTexture(): void;
         onLink(): void;
+        onLinkTexture(texture: BABYLON.BaseTexture): void;
         updateTexture(file: File): void;
         removeTexture(): void;
         render(): import("react/jsx-runtime").JSX.Element | null;
@@ -3664,6 +3756,16 @@ declare module INSPECTOR.SharedUIComponents {
      * @param target document or shadow root to copy styles to
      */
     export function CopyStyles(source: Document, target: DocumentOrShadowRoot): void;
+    /**
+     * Merges classNames by array of strings or conditions
+     * @param classNames Array of className strings or truthy conditions
+     * @returns A concatenated string, suitable for the className attribute
+     */
+    export function MergeClassNames(classNames: ClassNameCondition[]): string;
+    /**
+     * className (replicating React type) or a tuple with the second member being any truthy value ["className", true]
+     */
+    type ClassNameCondition = string | undefined | [string, any];
 
 
 
@@ -3799,6 +3901,38 @@ declare module INSPECTOR.SharedUIComponents {
         className: string;
         babylonNamespace: string;
     };
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        /**
+     * Used by both particleSystem and alphaBlendModes
+     */
+    export var CommonBlendModes: {
+        label: string;
+        value: number;
+    }[];
+    /**
+     * Used to populated the blendMode dropdown in our various tools (Node Editor, Inspector, etc.)
+     * The below ParticleSystem consts were defined before new Engine alpha blend modes were added, so we have to reference
+     * the ParticleSystem.FOO consts explicitly (as the underlying var values are different - they get mapped to engine consts within baseParticleSystem.ts)
+     */
+    export var BlendModeOptions: {
+        label: string;
+        value: number;
+    }[];
+    /**
+     * Used to populated the alphaMode dropdown in our various tools (Node Editor, Inspector, etc.)
+     */
+    export var AlphaModeOptions: {
+        label: string;
+        value: number;
+    }[];
 
 
 
@@ -4273,7 +4407,7 @@ declare module INSPECTOR.SharedUIComponents {
      * @param props defines the split container properties
      * @returns the split container component
      */
-    export var SplitContainer: React.FC<ISplitContainerProps>;
+    export var SplitContainer: React.FC<React.PropsWithChildren<ISplitContainerProps>>;
 
 
 
@@ -4298,7 +4432,17 @@ declare module INSPECTOR {
 declare module INSPECTOR.SharedUIComponents {
         export const IsFramePortData: (variableToCheck: any) => variableToCheck is INSPECTOR.SharedUIComponents.FramePortData;
     export const RefreshNode: (node: INSPECTOR.SharedUIComponents.GraphNode, visitedNodes?: Set<INSPECTOR.SharedUIComponents.GraphNode>, visitedLinks?: Set<INSPECTOR.SharedUIComponents.NodeLink>, canvas?: INSPECTOR.SharedUIComponents.GraphCanvasComponent) => void;
-    export const BuildFloatUI: (container: HTMLDivElement, document: Document, displayName: string, isInteger: boolean, source: any, propertyName: string, onChange: () => void, min?: number, max?: number, visualPropertiesRefresh?: Array<() => void>) => void;
+    export const BuildFloatUI: (container: HTMLDivElement, document: Document, displayName: string, isInteger: boolean, source: any, propertyName: string, onChange: () => void, min?: number, max?: number, visualPropertiesRefresh?: Array<() => void>, additionalClassName?: string) => void;
+    export function GetListOfAcceptedTypes<T extends Record<string, string | number>>(types: T, allValue: number, autoDetectValue: number, port: {
+        acceptedConnectionPointTypes: number[];
+        excludedConnectionPointTypes: number[];
+        type: number;
+    }, skips?: number[]): string[];
+    export function GetConnectionErrorMessage<T extends Record<string, string | number>>(sourceType: number, types: T, allValue: number, autoDetectValue: number, port: {
+        acceptedConnectionPointTypes: number[];
+        excludedConnectionPointTypes: number[];
+        type: number;
+    }, skips?: number[]): string;
 
 
 
@@ -4346,7 +4490,7 @@ declare module INSPECTOR.SharedUIComponents {
         exportData: (data: any, frame?: BABYLON.Nullable<INSPECTOR.SharedUIComponents.GraphFrame>) => string;
         isElbowConnectionAllowed: (nodeA: INSPECTOR.SharedUIComponents.FrameNodePort | INSPECTOR.SharedUIComponents.NodePort, nodeB: INSPECTOR.SharedUIComponents.FrameNodePort | INSPECTOR.SharedUIComponents.NodePort) => boolean;
         isDebugConnectionAllowed: (nodeA: INSPECTOR.SharedUIComponents.FrameNodePort | INSPECTOR.SharedUIComponents.NodePort, nodeB: INSPECTOR.SharedUIComponents.FrameNodePort | INSPECTOR.SharedUIComponents.NodePort) => boolean;
-        applyNodePortDesign: (data: INSPECTOR.SharedUIComponents.IPortData, element: HTMLElement, img: HTMLImageElement, pip: HTMLDivElement) => void;
+        applyNodePortDesign: (data: INSPECTOR.SharedUIComponents.IPortData, element: HTMLElement, imgHost: HTMLImageElement, pip: HTMLDivElement) => boolean;
         getPortColor: (portData: INSPECTOR.SharedUIComponents.IPortData) => string;
         storeEditorData: (serializationObject: any, frame?: BABYLON.Nullable<INSPECTOR.SharedUIComponents.GraphFrame>) => void;
         getEditorDataMap: () => {
@@ -4420,7 +4564,7 @@ declare module INSPECTOR.SharedUIComponents {
         node: INSPECTOR.SharedUIComponents.GraphNode;
         protected _element: HTMLDivElement;
         protected _portContainer: HTMLElement;
-        protected _img: HTMLImageElement;
+        protected _imgHost: HTMLImageElement;
         protected _pip: HTMLDivElement;
         protected _stateManager: INSPECTOR.SharedUIComponents.StateManager;
         protected _portLabelElement: Element;
@@ -4507,6 +4651,7 @@ declare module INSPECTOR {
 declare module INSPECTOR.SharedUIComponents {
         export class GraphNode {
         content: INSPECTOR.SharedUIComponents.INodeData;
+        private static _IdGenerator;
         private _visual;
         private _headerContainer;
         private _headerIcon;
@@ -4538,11 +4683,11 @@ declare module INSPECTOR.SharedUIComponents {
         private _onUpdateRequiredObserver;
         private _onHighlightNodeObserver;
         private _ownerCanvas;
-        private _isSelected;
         private _displayManager;
         private _isVisible;
         private _enclosingFrameId;
         private _visualPropertiesRefresh;
+        private _lastClick;
         addClassToVisual(className: string): void;
         removeClassFromVisual(className: string): void;
         get isCollapsed(): boolean;
@@ -4562,10 +4707,8 @@ declare module INSPECTOR.SharedUIComponents {
         get height(): number;
         get id(): number;
         get name(): string;
-        get isSelected(): boolean;
         get enclosingFrameId(): number;
         set enclosingFrameId(value: number);
-        set isSelected(value: boolean);
         setIsSelected(value: boolean, marqueeSelection: boolean): void;
         get rootElement(): HTMLDivElement;
         constructor(content: INSPECTOR.SharedUIComponents.INodeData, stateManager: INSPECTOR.SharedUIComponents.StateManager);
@@ -4577,6 +4720,8 @@ declare module INSPECTOR.SharedUIComponents {
         private _refreshFrames;
         _refreshLinks(): void;
         refresh(): void;
+        private _expand;
+        private _searchMiddle;
         private _onDown;
         cleanAccumulation(useCeil?: boolean): void;
         private _onUp;
@@ -4592,6 +4737,8 @@ declare module INSPECTOR.SharedUIComponents {
          * Expand the node
          */
         expand(): void;
+        private _portUICount;
+        private _buildInputPorts;
         appendVisual(root: HTMLDivElement, owner: INSPECTOR.SharedUIComponents.GraphCanvasComponent): void;
         dispose(): void;
     }
@@ -4797,6 +4944,8 @@ declare module INSPECTOR.SharedUIComponents {
         private _candidateLinkedHasMoved;
         private _x;
         private _y;
+        private _lastx;
+        private _lasty;
         private _zoom;
         private _selectedNodes;
         private _selectedLink;
@@ -4810,6 +4959,7 @@ declare module INSPECTOR.SharedUIComponents {
         private _frames;
         private _nodeDataContentList;
         private _altKeyIsPressed;
+        private _shiftKeyIsPressed;
         private _multiKeyIsPressed;
         private _oldY;
         _frameIsMoving: boolean;
@@ -5098,6 +5248,7 @@ declare module INSPECTOR.SharedUIComponents {
         isActive?: boolean;
         setIsActive?: (value: boolean) => void;
         canBeActivated?: boolean;
+        onInputCountChanged?: () => void;
     }
 
 
@@ -5190,8 +5341,8 @@ declare module INSPECTOR {
 declare module INSPECTOR.SharedUIComponents {
         interface IVector3LineComponentProps {
         label: string;
-        target: any;
-        propertyName: string;
+        target?: any;
+        propertyName?: string;
         step?: number;
         onChange?: (newvalue: BABYLON.Vector3) => void;
         useEuler?: boolean;
@@ -5200,6 +5351,8 @@ declare module INSPECTOR.SharedUIComponents {
         icon?: string;
         iconLabel?: string;
         lockObject: INSPECTOR.SharedUIComponents.LockObject;
+        directValue?: BABYLON.Vector3;
+        additionalCommands?: JSX.Element[];
     }
     export class Vector3LineComponent extends React.Component<IVector3LineComponentProps, {
         isExpanded: boolean;
@@ -5221,7 +5374,9 @@ declare module INSPECTOR.SharedUIComponents {
         updateStateX(value: number): void;
         updateStateY(value: number): void;
         updateStateZ(value: number): void;
-        onCopyClick(): void;
+        onCopyClick(): string;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5309,6 +5464,33 @@ declare module INSPECTOR {
 
 }
 declare module INSPECTOR.SharedUIComponents {
+        interface ITextureButtonLineProps {
+        label: string;
+        scene: BABYLON.Scene;
+        onClick: (file: File) => void;
+        onLink: (texture: BABYLON.BaseTexture) => void;
+        accept: string;
+    }
+    interface ITextureButtonLineState {
+        isOpen: boolean;
+    }
+    export class TextureButtonLine extends React.Component<ITextureButtonLineProps, ITextureButtonLineState> {
+        private static _IdGenerator;
+        private _id;
+        private _uploadInputRef;
+        constructor(props: ITextureButtonLineProps);
+        onChange(evt: any): void;
+        render(): import("react/jsx-runtime").JSX.Element;
+    }
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
         interface ITextLineComponentProps {
         label?: string;
         value?: string;
@@ -5321,11 +5503,15 @@ declare module INSPECTOR.SharedUIComponents {
         icon?: string;
         iconLabel?: string;
         tooltip?: string;
+        onCopy?: true | (() => string);
     }
     export class TextLineComponent extends React.Component<ITextLineComponentProps> {
         constructor(props: ITextLineComponentProps);
         onLink(): void;
-        renderContent(): import("react/jsx-runtime").JSX.Element | null;
+        copyFn(): (() => string) | undefined;
+        renderContent(isLink: boolean, tooltip: string): import("react/jsx-runtime").JSX.Element | null;
+        renderOriginal(isLink: boolean, tooltip: string): import("react/jsx-runtime").JSX.Element;
+        renderFluent(isLink: boolean, tooltip: string): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5381,6 +5567,8 @@ declare module INSPECTOR.SharedUIComponents {
         updateValue(value: string, valueToValidate?: string): void;
         incrementValue(amount: number): void;
         onKeyDown(event: React.KeyboardEvent): void;
+        renderFluent(value: string, placeholder: string, step: number): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(value: string, placeholder: string, step: number): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5442,6 +5630,8 @@ declare module INSPECTOR.SharedUIComponents {
         onInput(newValueString: any): void;
         prepareDataToRead(value: number): number;
         onCopyClick(): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5485,7 +5675,7 @@ declare module INSPECTOR.SharedUIComponents {
         label: string;
         target: any;
         propertyName: string;
-        options: BABYLON.IInspectableOptions[];
+        options: readonly BABYLON.IInspectableOptions[];
         noDirectUpdate?: boolean;
         onSelect?: (value: number | string) => void;
         extractValue?: (target: any) => number | string;
@@ -5511,7 +5701,9 @@ declare module INSPECTOR.SharedUIComponents {
         raiseOnPropertyChanged(newValue: number, previousValue: number): void;
         setValue(value: string | number): void;
         updateValue(valueString: string): void;
-        onCopyClick(): void;
+        onCopyClickStr(): string;
+        private _renderFluent;
+        private _renderOriginal;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5568,6 +5760,8 @@ declare module INSPECTOR.SharedUIComponents {
     }
     export class MessageLineComponent extends React.Component<IMessageLineComponentProps> {
         constructor(props: IMessageLineComponentProps);
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5656,6 +5850,8 @@ declare module INSPECTOR.SharedUIComponents {
         constructor(props: ILineWithFileButtonComponentProps);
         onChange(evt: any): void;
         switchExpandedState(): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5681,6 +5877,8 @@ declare module INSPECTOR.SharedUIComponents {
         switchExpandedState(): void;
         renderHeader(): import("react/jsx-runtime").JSX.Element;
         componentDidMount(): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5751,25 +5949,6 @@ declare module INSPECTOR {
 
 }
 declare module INSPECTOR.SharedUIComponents {
-        export interface IIconButtonLineComponentProps {
-        icon: string;
-        onClick: () => void;
-        tooltip: string;
-        active?: boolean;
-    }
-    export class IconButtonLineComponent extends React.Component<IIconButtonLineComponentProps> {
-        constructor(props: IIconButtonLineComponentProps);
-        render(): import("react/jsx-runtime").JSX.Element;
-    }
-
-
-
-}
-declare module INSPECTOR {
-
-
-}
-declare module INSPECTOR.SharedUIComponents {
         export interface ISelectedLineContainer {
         selectedLineContainerTitles: Array<string>;
         selectedLineContainerTitlesNoFocus: Array<string>;
@@ -5816,6 +5995,7 @@ declare module INSPECTOR.SharedUIComponents {
         updateValue(valueString: string, raisePropertyChanged: boolean): void;
         lock(): void;
         unlock(): void;
+        onCopyClick(): void;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5872,6 +6052,8 @@ declare module INSPECTOR.SharedUIComponents {
         incrementValue(amount: number, processStep?: boolean): void;
         onKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void;
         onCopyClick(): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5891,7 +6073,7 @@ declare module INSPECTOR.SharedUIComponents {
         iconLabel?: string;
     }
     export class FileMultipleButtonLineComponent extends React.Component<IFileMultipleButtonLineComponentProps> {
-        private static _IDGenerator;
+        private static _IdGenerator;
         private _id;
         private _uploadInputRef;
         constructor(props: IFileMultipleButtonLineComponentProps);
@@ -5915,11 +6097,13 @@ declare module INSPECTOR.SharedUIComponents {
         iconLabel?: string;
     }
     export class FileButtonLine extends React.Component<IFileButtonLineProps> {
-        private static _IDGenerator;
+        private static _IdGenerator;
         private _id;
         private _uploadInputRef;
         constructor(props: IFileButtonLineProps);
         onChange(evt: any): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -5931,7 +6115,7 @@ declare module INSPECTOR {
 
 }
 declare module INSPECTOR.SharedUIComponents {
-        export interface IDraggableLineWithButtonComponent {
+        export type DraggableLineWithButtonProps = {
         format: string;
         data: string;
         tooltip: string;
@@ -5939,11 +6123,8 @@ declare module INSPECTOR.SharedUIComponents {
         onIconClick: (value: string) => void;
         iconTitle: string;
         lenSuffixToRemove?: number;
-    }
-    export class DraggableLineWithButtonComponent extends React.Component<IDraggableLineWithButtonComponent> {
-        constructor(props: IDraggableLineWithButtonComponent);
-        render(): import("react/jsx-runtime").JSX.Element;
-    }
+    };
+    export var DraggableLineWithButtonComponent: React.FunctionComponent<DraggableLineWithButtonProps>;
 
 
 
@@ -5953,15 +6134,8 @@ declare module INSPECTOR {
 
 }
 declare module INSPECTOR.SharedUIComponents {
-        export interface IButtonLineComponentProps {
-        format: string;
-        data: string;
-        tooltip: string;
-    }
-    export class DraggableLineComponent extends React.Component<IButtonLineComponentProps> {
-        constructor(props: IButtonLineComponentProps);
-        render(): import("react/jsx-runtime").JSX.Element;
-    }
+        type DraggableLineComponentProps = Omit<INSPECTOR.SharedUIComponents.DraggableLineProps, "label">;
+    export var DraggableLineComponent: React.FunctionComponent<DraggableLineComponentProps>;
 
 
 
@@ -5991,9 +6165,7 @@ declare module INSPECTOR.SharedUIComponents {
         constructor(props: IColorPickerLineProps);
         syncPositions(): void;
         shouldComponentUpdate(nextProps: IColorPickerLineProps, nextState: IColorPickerComponentState): boolean;
-        getHexString(props?: Readonly<IColorPickerLineProps> & Readonly<{
-            children?: React.ReactNode | undefined;
-        }>): string;
+        getHexString(props?: Readonly<IColorPickerLineProps>): string;
         componentDidUpdate(): void;
         componentDidMount(): void;
         render(): import("react/jsx-runtime").JSX.Element;
@@ -6026,9 +6198,7 @@ declare module INSPECTOR.SharedUIComponents {
     export class ColorLine extends React.Component<IColorLineProps, IColorLineComponentState> {
         constructor(props: IColorLineProps);
         shouldComponentUpdate(nextProps: IColorLineProps, nextState: IColorLineComponentState): boolean;
-        getValue(props?: Readonly<IColorLineProps> & Readonly<{
-            children?: React.ReactNode | undefined;
-        }>): BABYLON.Color4;
+        getValue(props?: Readonly<IColorLineProps>): BABYLON.Color4;
         setColorFromString(colorString: string): void;
         setColor(newColor: BABYLON.Color4): void;
         switchExpandState(): void;
@@ -6039,6 +6209,8 @@ declare module INSPECTOR.SharedUIComponents {
         private _convertToColor;
         private _toColor3;
         onCopyClick(): void;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -6100,7 +6272,7 @@ declare module INSPECTOR.SharedUIComponents {
         label?: string;
         target?: any;
         propertyName?: string;
-        isSelected?: () => boolean;
+        isSelected?: boolean | (() => boolean);
         onSelect?: (value: boolean) => void;
         onValueChanged?: () => void;
         onPropertyChangedObservable?: BABYLON.Observable<INSPECTOR.SharedUIComponents.PropertyChangedEvent>;
@@ -6127,6 +6299,8 @@ declare module INSPECTOR.SharedUIComponents {
         }): boolean;
         onChange(): void;
         onCopyClick(): void;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -6147,6 +6321,8 @@ declare module INSPECTOR.SharedUIComponents {
     }
     export class ButtonLineComponent extends React.Component<IButtonLineComponentProps> {
         constructor(props: IButtonLineComponentProps);
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -6166,8 +6342,765 @@ declare module INSPECTOR.SharedUIComponents {
     }
     export class BooleanLineComponent extends React.Component<IBooleanLineComponentProps> {
         constructor(props: IBooleanLineComponentProps);
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element;
         render(): import("react/jsx-runtime").JSX.Element;
     }
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type TextareaProps = INSPECTOR.SharedUIComponents.BaseComponentProps<string> & {
+        placeholder?: string;
+    };
+    /**
+     * This is a texarea box that stops propagation of change/keydown events
+     * @param props
+     * @returns
+     */
+    export var Textarea: React.FunctionComponent<any>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type SyncedSliderProps = INSPECTOR.SharedUIComponents.BaseComponentProps<number> & {
+        /** Minimum value for the slider */
+        min?: number;
+        /** Maximum value for the slider */
+        max?: number;
+        /** Step size for the slider */
+        step?: number;
+        /** When true, onChange is only called when the user releases the slider, not during drag */
+        notifyOnlyOnRelease?: boolean;
+    };
+    /**
+     * Component which synchronizes a slider and an input field, allowing the user to change the value using either control
+     * @param props
+     * @returns SyncedSlider component
+     */
+    export var SyncedSliderInput: React.FunctionComponent<SyncedSliderProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type SwitchProps = INSPECTOR.SharedUIComponents.BaseComponentProps<boolean>;
+    /**
+     * This is a primitive fluent boolean switch component whose only knowledge is the shared styling across all tools
+     * @param props
+     * @returns Switch component
+     */
+    export var Switch: React.FunctionComponent<SwitchProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type SpinButtonProps = INSPECTOR.SharedUIComponents.BaseComponentProps<number> & {
+        precision?: number;
+        step?: number;
+        min?: number;
+        max?: number;
+    };
+    export var SpinButton: React.FunctionComponent<SpinButtonProps>;
+    export var SpinButtonPropertyLine: React.FunctionComponent<SpinButtonProps & INSPECTOR.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        type SearchProps = {
+        onChange: (val: string) => void;
+        placeholder?: string;
+    };
+    export const SearchBox: (props: SearchProps) => import("react/jsx-runtime").JSX.Element;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        type MessageBarProps = {
+        message: string;
+        title: string;
+        docLink?: string;
+        intent: "info" | "success" | "warning" | "error";
+    };
+    export var MessageBar: React.FunctionComponent<MessageBarProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        /**
+     * Represents an item in a list
+     */
+    export type ListItem<T = any> = {
+        /** Unique identifier for the item */
+        id: number;
+        /** The data associated with the item */
+        data: T;
+        /** Value to use for sorting the list */
+        sortBy: number;
+    };
+    type ListProps<T = any> = {
+        items: ListItem<T>[];
+        renderItem: (item: ListItem<T>, index: number) => React.ReactNode;
+        onDelete: (item: ListItem<T>, index: number) => void;
+        onAdd: (item?: ListItem<T>) => void;
+        addButtonLabel?: string;
+    };
+    /**
+     * For cases where you may want to add / remove items from a list via a trash can button / copy button, this HOC can be used
+     * @returns A React component that renders a list of items with add/delete functionality
+     * @param props - The properties for the List component
+     */
+    export var List: React.FunctionComponent<ListProps<any>>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+    
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type InputProps<T extends string | number> = INSPECTOR.SharedUIComponents.BaseComponentProps<T> & {
+        step?: number;
+        placeholder?: string;
+        min?: number;
+        max?: number;
+    };
+    export var NumberInput: React.FunctionComponent<InputProps<number>>;
+    export var TextInput: React.FunctionComponent<InputProps<string>>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        /**
+     * Component wrapper for BABYLON.FactorGradient that provides slider inputs for factor1, factor2, and gradient step
+     * @param props - Component props containing BABYLON.FactorGradient value and change handler
+     * @returns A React component
+     */
+    export var FactorGradientComponent: React.FunctionComponent<INSPECTOR.SharedUIComponents.BaseComponentProps<BABYLON.FactorGradient>>;
+    /**
+     * Component wrapper for BABYLON.Color3Gradient that provides color picker and gradient step slider
+     * @param props - Component props containing BABYLON.Color3Gradient value and change handler
+     * @returns A React component
+     */
+    export var Color3GradientComponent: React.FunctionComponent<INSPECTOR.SharedUIComponents.BaseComponentProps<BABYLON.Color3Gradient>>;
+    /**
+     * Component wrapper for BABYLON.ColorGradient that provides color pickers for color1, color2, and gradient step slider
+     * @param props - Component props containing BABYLON.ColorGradient value and change handler
+     * @returns A React component
+     */
+    export var Color4GradientComponent: React.FunctionComponent<INSPECTOR.SharedUIComponents.BaseComponentProps<BABYLON.ColorGradient>>;
+    /**
+     * Component wrapper for BABYLON.GradientBlockColorStep that provides color picker and step slider
+     * @param props - Component props containing BABYLON.GradientBlockColorStep value and change handler
+     * @returns A React component
+     */
+    export var ColorStepGradientComponent: React.FunctionComponent<INSPECTOR.SharedUIComponents.BaseComponentProps<BABYLON.GradientBlockColorStep>>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        type DropdownOptionValue = string | number;
+    export type AcceptedDropdownValue = BABYLON.Nullable<DropdownOptionValue> | undefined;
+    export type DropdownOption = {
+        /**
+         * Defines the visible part of the option
+         */
+        label: string;
+        /**
+         * Defines the value part of the option
+         */
+        value: DropdownOptionValue;
+    };
+    export type DropdownProps<V extends AcceptedDropdownValue> = INSPECTOR.SharedUIComponents.BaseComponentProps<V> & {
+        options: readonly DropdownOption[];
+        includeNullAs?: "null" | "undefined";
+    };
+    /**
+     * Renders a fluent UI dropdown component for the options passed in, and an additional 'Not Defined' option if null is set to true
+     * This component can handle both null and undefined values
+     * @param props
+     * @returns dropdown component
+     */
+    export var Dropdown: React.FunctionComponent<DropdownProps<AcceptedDropdownValue>>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type DraggableLineProps = {
+        format: string;
+        data: string;
+        tooltip: string;
+        label: string;
+        onDelete?: () => void;
+    };
+    export var DraggableLine: React.FunctionComponent<DraggableLineProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type ColorPickerProps<C extends BABYLON.Color3 | BABYLON.Color4> = {
+        isLinearMode?: boolean;
+    } & INSPECTOR.SharedUIComponents.BaseComponentProps<C>;
+    export var ColorPickerPopup: React.FunctionComponent<ColorPickerProps<BABYLON.Color3 | BABYLON.Color4>>;
+    type HsvKey = "h" | "s" | "v";
+    export type InputHexProps = INSPECTOR.SharedUIComponents.BaseComponentProps<BABYLON.Color3 | BABYLON.Color4> & {
+        label?: string;
+        linearHex?: boolean;
+        isLinearMode?: boolean;
+    };
+    /**
+     * Component which displays the passed in color's HEX value, either in linearSpace (if linearHex is true) or in gamma space
+     * When the hex color is changed by user, component calculates the new BABYLON.Color3/4 value and calls onChange
+     *
+     * Component uses the isLinearMode boolean to display an informative label regarding linear / gamma space
+     * @param props - The properties for the InputHexField component.
+     * @returns
+     */
+    export var InputHexField: React.FunctionComponent<InputHexProps>;
+    type InputHsvFieldProps = {
+        color: BABYLON.Color3 | BABYLON.Color4;
+        label: string;
+        hsvKey: HsvKey;
+        onChange: (color: BABYLON.Color3 | BABYLON.Color4) => void;
+        max: number;
+        scale?: number;
+    };
+    /**
+     * In the HSV (Hue, Saturation, Value) color model, Hue (H) ranges from 0 to 360 degrees, representing the color's position on the color wheel.
+     * Saturation (S) ranges from 0 to 100%, indicating the intensity or purity of the color, with 0 being shades of gray and 100 being a fully saturated color.
+     * Value (V) ranges from 0 to 100%, representing the brightness of the color, with 0 being black and 100 being the brightest.
+     * @param props - The properties for the InputHsvField component.
+     */
+    export var InputHsvField: React.FunctionComponent<InputHsvFieldProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type CheckboxProps = INSPECTOR.SharedUIComponents.BaseComponentProps<boolean>;
+    /**
+     * This is a primitive fluent checkbox that can both read and write checked state
+     * @param props
+     * @returns Checkbox component
+     */
+    export var Checkbox: React.FunctionComponent<CheckboxProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type ButtonProps = {
+        onClick: () => void;
+        icon?: any;
+        label: string;
+        disabled?: boolean;
+    };
+    export var Button: React.FunctionComponent<ButtonProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type AccordionSectionProps = {
+        title: string;
+        collapseByDefault?: boolean;
+    };
+    export var AccordionSection: React.FunctionComponent<React.PropsWithChildren<AccordionSectionProps>>;
+    export var Accordion: React.FunctionComponent<React.PropsWithChildren>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type PaneProps = {
+        title: string;
+        icon?: any;
+    };
+    export var Pane: React.FunctionComponent<React.PropsWithChildren<PaneProps>>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        type GradientListProps<T extends BABYLON.FactorGradient | BABYLON.Color3Gradient | BABYLON.ColorGradient> = {
+        label: string;
+        gradients: BABYLON.Nullable<Array<T>>;
+        addGradient: (step?: T) => void;
+        removeGradient: (step: T) => void;
+        onChange: (newGradient: T) => void;
+    };
+    export var FactorGradientList: React.FunctionComponent<GradientListProps<BABYLON.FactorGradient>>;
+    export var Color3GradientList: React.FunctionComponent<GradientListProps<BABYLON.Color3Gradient>>;
+    export var Color4GradientList: React.FunctionComponent<GradientListProps<BABYLON.ColorGradient>>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type ToolHostProps = {
+        /**
+         * Allows host to pass in a theme
+         */
+        customTheme?: any;
+        /**
+         * Can be set to true to disable the copy button in the tool's property lines. Default is false (copy enabled)
+         */
+        disableCopy?: boolean;
+        /**
+         * Name of the tool displayed in the UX
+         */
+        toolName: string;
+    };
+    export var ToolContext: import("react").Context<{
+        readonly useFluent: boolean;
+        readonly disableCopy: boolean;
+        readonly toolName: string;
+    }>;
+    /**
+     * For tools which are ready to move over the fluent, wrap the root of the tool (or the panel which you want fluentized) with this component
+     * Today we will only enable fluent if the URL has the `newUX` query parameter is truthy
+     * @param props
+     * @returns
+     */
+    export var FluentToolWrapper: React.FunctionComponent<React.PropsWithChildren<ToolHostProps>>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        type FileUploadLineProps = Omit<INSPECTOR.SharedUIComponents.ButtonProps, "onClick"> & {
+        onClick: (files: FileList) => void;
+        accept: string;
+    };
+    export var FileUploadLine: React.FunctionComponent<FileUploadLineProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        /**
+     * Wraps a button with a label in a line container
+     * @param props Button props plus a label
+     * @returns A button inside a line
+     */
+    export var ButtonLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.ButtonProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type TensorPropertyLineProps<V extends BABYLON.Vector3 | BABYLON.Vector4 | BABYLON.Quaternion> = INSPECTOR.SharedUIComponents.BaseComponentProps<V> & INSPECTOR.SharedUIComponents.PropertyLineProps & {
+        /**
+         * If passed, all sliders will use this for the min value
+         */
+        min?: number;
+        /**
+         * If passed, all sliders will use this for the max value
+         */
+        max?: number;
+        /**
+         * If passed, the UX will use the conversion functions to display/update values
+         */
+        valueConverter?: {
+            /**
+             * Will call from(val) before displaying in the UX
+             */
+            from: (val: number) => number;
+            /**
+             * Will call to(val) before calling onChange
+             */
+            to: (val: number) => number;
+        };
+    };
+    type RotationVectorPropertyLineProps = TensorPropertyLineProps<BABYLON.Vector3> & {
+        /**
+         * Display angles as degrees instead of radians
+         */
+        useDegrees?: boolean;
+    };
+    export var RotationVectorPropertyLine: React.FunctionComponent<RotationVectorPropertyLineProps>;
+    type QuaternionPropertyLineProps = TensorPropertyLineProps<BABYLON.Quaternion> & {
+        /**
+         * Display angles as degrees instead of radians
+         */
+        useDegrees?: boolean;
+    };
+    export var QuaternionPropertyLine: React.FunctionComponent<QuaternionPropertyLineProps>;
+    export var Vector3PropertyLine: React.FunctionComponent<TensorPropertyLineProps<BABYLON.Vector3>>;
+    export var Vector4PropertyLine: React.FunctionComponent<TensorPropertyLineProps<BABYLON.Vector4>>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        type TextProps = {
+        value: string;
+        tooltip?: string;
+    };
+    /**
+     * Wraps text in a property line
+     * @param props - INSPECTOR.SharedUIComponents.PropertyLineProps and TextProps
+     * @returns property-line wrapped text
+     */
+    export var TextPropertyLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.PropertyLineProps & TextProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        type SyncedSliderPropertyProps = INSPECTOR.SharedUIComponents.SyncedSliderProps & INSPECTOR.SharedUIComponents.PropertyLineProps;
+    /**
+     * Renders a simple wrapper around the SyncedSliderInput
+     * @param props
+     * @returns
+     */
+    export var SyncedSliderPropertyLine: import("react").ForwardRefExoticComponent<SyncedSliderPropertyProps & import("react").RefAttributes<HTMLDivElement>>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        /**
+     * Wraps a switch in a property line
+     * @param props - The properties for the switch and property line
+     * @returns A React element representing the property line with a switch
+     */
+    export var SwitchPropertyLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.PropertyLineProps & INSPECTOR.SharedUIComponents.SwitchProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type PropertyLineProps = {
+        /**
+         * The name of the property to display in the property line.
+         */
+        label: string;
+        /**
+         * Optional description for the property, shown on hover of the info icon
+         */
+        description?: string;
+        /**
+         * Optional function returning a string to copy to clipboard.
+         */
+        onCopy?: () => string;
+        /**
+         * Link to the documentation for this property, available from the info icon either linked from the description (if provided) or default 'docs' text
+         */
+        docLink?: string;
+    } & ({
+        expandedContent?: undefined;
+        expandByDefault?: never;
+    } | {
+        /**
+         * If supplied, an 'expand' icon will be shown which, when clicked, renders this component within the property line.
+         */
+        expandedContent: JSX.Element;
+        /**
+         * If true, the expanded content will be shown by default.
+         */
+        expandByDefault?: boolean;
+    });
+    export var LineContainer: import("react").ForwardRefExoticComponent<Omit<React.PropsWithChildren<React.HTMLProps<HTMLDivElement>>, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
+    export type BaseComponentProps<T> = {
+        /**
+         * The value of the property to be displayed and modified.
+         */
+        value: T;
+        /**
+         * Callback function to handle changes to the value
+         */
+        onChange: (value: T) => void;
+        /**
+         * Optional flag to disable the component, preventing any interaction.
+         */
+        disabled?: boolean;
+        /**
+         * Optional class name to apply custom styles to the component.
+         */
+        className?: string;
+    };
+    /**
+     * A reusable component that renders a property line with a label and child content, and an optional description, copy button, and expandable section.
+     *
+     * @param props - The properties for the PropertyLine component.
+     * @returns A React element representing the property line.
+     *
+     */
+    export var PropertyLine: import("react").ForwardRefExoticComponent<React.PropsWithChildren<PropertyLineProps> & import("react").RefAttributes<HTMLDivElement>>;
+    export var PlaceholderPropertyLine: React.FunctionComponent<BaseComponentProps<any> & PropertyLineProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        type LinkProps = {
+        value: string;
+        tooltip?: string;
+        onLink?: () => void;
+        url?: string;
+    };
+    /**
+     * Wraps a link in a property line
+     * @param props - INSPECTOR.SharedUIComponents.PropertyLineProps and LinkProps
+     * @returns property-line wrapped link
+     */
+    export var LinkPropertyLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.PropertyLineProps & LinkProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        /**
+     * Wraps a text input in a property line
+     * @param props - INSPECTOR.SharedUIComponents.PropertyLineProps and INSPECTOR.SharedUIComponents.InputProps
+     * @returns property-line wrapped input component
+     */
+    export var TextInputPropertyLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.InputProps<string> & INSPECTOR.SharedUIComponents.PropertyLineProps>;
+    /**
+     * Wraps a number input in a property line
+     * @param props - INSPECTOR.SharedUIComponents.PropertyLineProps and INSPECTOR.SharedUIComponents.InputProps
+     * @returns property-line wrapped input component
+     */
+    export var NumberInputPropertyLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.InputProps<number> & INSPECTOR.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        /**
+     * Wraps a hex input in a property line
+     * @param props - INSPECTOR.SharedUIComponents.PropertyLineProps and INSPECTOR.SharedUIComponents.InputHexProps
+     * @returns property-line wrapped input hex component
+     */
+    export var HexPropertyLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.InputHexProps & INSPECTOR.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        type DropdownPropertyLineProps<V extends INSPECTOR.SharedUIComponents.AcceptedDropdownValue> = Omit<INSPECTOR.SharedUIComponents.DropdownProps<V>, "includeNullAs"> & INSPECTOR.SharedUIComponents.PropertyLineProps;
+    /**
+     * Dropdown component for explicitly defined number values.
+     * If value can be undefined, use OptionalNumberDropdownPropertyLine instead.
+     * If value can be null, use NullableNumberDropdownPropertyLine instead.
+     */
+    export var NumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<number>>;
+    /**
+     * Dropdown component for explicitly defined string values.
+     * If value can be undefined, use OptionalStringDropdownPropertyLine instead.
+     * If value can be null, use NullableStringDropdownPropertyLine instead.
+     */
+    export var StringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<string>>;
+    /**
+     * Dropdown component for BABYLON.Nullable<number> values.
+     */
+    export var NullableNumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<BABYLON.Nullable<number>>>;
+    /**
+     * Dropdown component for BABYLON.Nullable<string> values.
+     */
+    export var NullableStringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<BABYLON.Nullable<string>>>;
+    /**
+     * Dropdown component for number | undefined values
+     */
+    export var OptionalNumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<number | undefined>>;
+    /**
+     * Dropdown component for string | undefined values
+     */
+    export var OptionalStringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<string | undefined>>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        export type ColorPropertyLineProps = INSPECTOR.SharedUIComponents.ColorPickerProps<BABYLON.Color3 | BABYLON.Color4> & INSPECTOR.SharedUIComponents.PropertyLineProps;
+    export var Color3PropertyLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.ColorPickerProps<BABYLON.Color3> & INSPECTOR.SharedUIComponents.PropertyLineProps>;
+    export var Color4PropertyLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.ColorPickerProps<BABYLON.Color4> & INSPECTOR.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        /**
+     * Wraps a checkbox in a property line
+     * @param props - INSPECTOR.SharedUIComponents.PropertyLineProps and INSPECTOR.SharedUIComponents.CheckboxProps
+     * @returns property-line wrapped checkbox
+     */
+    export var CheckboxPropertyLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.PropertyLineProps & INSPECTOR.SharedUIComponents.CheckboxProps>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        /**
+     * Displays an icon indicating enabled (green check) or disabled (red cross) state
+     * @param props - The properties for the PropertyLine, including the boolean value to display.
+     * @returns A PropertyLine component with a PresenceBadge indicating the boolean state.
+     */
+    export var BooleanBadgePropertyLine: React.FunctionComponent<INSPECTOR.SharedUIComponents.PropertyLineProps & {
+        value: boolean;
+    }>;
+
+
+
+}
+declare module INSPECTOR {
+
+
+}
+declare module INSPECTOR.SharedUIComponents {
+        /**
+     * A wrapper component for the property tab that provides a consistent layout and styling.
+     * It uses a Pane and an Accordion to organize the content, so its direct children
+     * must have 'title' props to be compatible with the Accordion structure.
+     * @param props The props to pass to the component.
+     * @returns The rendered component.
+     */
+    export var PropertyTabComponentBase: React.FunctionComponent<React.PropsWithChildren>;
 
 
 
@@ -6270,7 +7203,7 @@ declare module INSPECTOR {
 
 }
 declare module INSPECTOR.SharedUIComponents {
-        export type ButtonProps = {
+        export type ButtonComponentProps = {
         disabled?: boolean;
         active?: boolean;
         onClick?: () => void;
@@ -6279,7 +7212,7 @@ declare module INSPECTOR.SharedUIComponents {
         title?: string;
         backgroundColor?: string;
     };
-    export var Button: React.FC<ButtonProps>;
+    export var ButtonComponent: React.FC<React.PropsWithChildren<ButtonComponentProps>>;
 
 
 
@@ -6369,7 +7302,7 @@ declare module INSPECTOR.SharedUIComponents {
      * @param props
      * @returns
      */
-    export const NodeRenderer: (props: INodeRendererProps) => import("react/jsx-runtime").JSX.Element;
+    export const NodeRenderer: (props: React.PropsWithChildren<INodeRendererProps>) => import("react/jsx-runtime").JSX.Element;
 
 
 
@@ -6388,7 +7321,7 @@ declare module INSPECTOR.SharedUIComponents {
      * @param props properties
      * @returns graph node container element
      */
-    export var GraphNodesContainer: React.FC<IGraphContainerProps>;
+    export var GraphNodesContainer: React.FC<React.PropsWithChildren<IGraphContainerProps>>;
 
 
 
@@ -6409,7 +7342,7 @@ declare module INSPECTOR.SharedUIComponents {
         highlighted?: boolean;
         parentContainerId: string;
     }
-    export var SingleGraphNode: React.FC<IGraphNodeProps>;
+    export var SingleGraphNode: React.FC<React.PropsWithChildren<IGraphNodeProps>>;
 
 
 
@@ -6433,7 +7366,7 @@ declare module INSPECTOR.SharedUIComponents {
      * @param props
      * @returns
      */
-    export var GraphLinesContainer: React.FC<IGraphLinesContainerProps>;
+    export var GraphLinesContainer: React.FC<React.PropsWithChildren<IGraphLinesContainerProps>>;
 
 
 
@@ -6519,7 +7452,7 @@ declare module INSPECTOR.SharedUIComponents {
      * @param props
      * @returns
      */
-    export var GraphContainer: React.FC<IGraphContainerProps>;
+    export var GraphContainer: React.FC<React.PropsWithChildren<IGraphContainerProps>>;
 
 
 
@@ -6571,7 +7504,7 @@ declare module INSPECTOR.SharedUIComponents {
      * drag the handle in a node and drop it in another node to create a connection.
      * @returns connector element
      */
-    export var GraphConnectorHandler: React.FC<IGraphConnectorHandlerProps>;
+    export var GraphConnectorHandler: React.FC<React.PropsWithChildren<IGraphConnectorHandlerProps>>;
 
 
 
@@ -6655,7 +7588,7 @@ declare module INSPECTOR.SharedUIComponents {
         iconLabel?: string;
     }
     export class FileButtonLineComponent extends React.Component<IFileButtonLineComponentProps> {
-        private static _IDGenerator;
+        private static _IdGenerator;
         private _id;
         private _uploadInputRef;
         constructor(props: IFileButtonLineComponentProps);
@@ -6693,54 +7626,9 @@ declare module INSPECTOR.SharedUIComponents {
         constructor(props: IColorPickerLineComponentProps);
         syncPositions(): void;
         shouldComponentUpdate(nextProps: IColorPickerLineComponentProps, nextState: IColorPickerComponentState): boolean;
-        getHexString(props?: Readonly<IColorPickerLineComponentProps> & Readonly<{
-            children?: React.ReactNode | undefined;
-        }>): string;
+        getHexString(props?: Readonly<IColorPickerLineComponentProps>): string;
         componentDidUpdate(): void;
         componentDidMount(): void;
-        render(): import("react/jsx-runtime").JSX.Element;
-    }
-
-
-
-}
-declare module INSPECTOR {
-
-
-}
-declare module INSPECTOR.SharedUIComponents {
-        export interface IColorLineComponentProps {
-        label: string;
-        target: any;
-        propertyName: string;
-        onPropertyChangedObservable: BABYLON.Observable<INSPECTOR.SharedUIComponents.PropertyChangedEvent>;
-        onChange?: () => void;
-        isLinear?: boolean;
-        icon?: string;
-        iconLabel?: string;
-        disableAlpha?: boolean;
-        lockObject: INSPECTOR.SharedUIComponents.LockObject;
-    }
-    interface IColorLineComponentState {
-        isExpanded: boolean;
-        color: BABYLON.Color4;
-    }
-    export class ColorLineComponent extends React.Component<IColorLineComponentProps, IColorLineComponentState> {
-        constructor(props: IColorLineComponentProps);
-        shouldComponentUpdate(nextProps: IColorLineComponentProps, nextState: IColorLineComponentState): boolean;
-        getValue(props?: Readonly<IColorLineComponentProps> & Readonly<{
-            children?: React.ReactNode | undefined;
-        }>): BABYLON.Color4;
-        setColorFromString(colorString: string): void;
-        setColor(newColor: BABYLON.Color4): void;
-        switchExpandState(): void;
-        updateStateR(value: number): void;
-        updateStateG(value: number): void;
-        updateStateB(value: number): void;
-        updateStateA(value: number): void;
-        copyToClipboard(): void;
-        private _convertToColor;
-        private _toColor3;
         render(): import("react/jsx-runtime").JSX.Element;
     }
 
@@ -7090,7 +7978,7 @@ declare module INSPECTOR.SharedUIComponents {
      * @param props properties
      * @returns drop zone element
      */
-    export var FlexibleDropZone: React.FC<IFlexibleDropZoneProps>;
+    export var FlexibleDropZone: React.FC<React.PropsWithChildren<IFlexibleDropZoneProps>>;
 
 
 
@@ -7118,7 +8006,7 @@ declare module INSPECTOR.SharedUIComponents {
      * @param props properties
      * @returns DragHandler element
      */
-    export var FlexibleDragHandler: React.FC<IFlexibleDragHandlerProps>;
+    export var FlexibleDragHandler: React.FC<React.PropsWithChildren<IFlexibleDragHandlerProps>>;
 
 
 
@@ -7143,7 +8031,7 @@ declare module INSPECTOR.SharedUIComponents {
      * @param props
      * @returns
      */
-    export var FlexibleColumn: React.FC<IFlexibleColumnProps>;
+    export var FlexibleColumn: React.FC<React.PropsWithChildren<IFlexibleColumnProps>>;
 
 
 
@@ -7352,7 +8240,7 @@ declare module INSPECTOR.SharedUIComponents {
         artboardColor?: string;
         artboardColorPickerColor?: string;
     }
-    export var CommandBarComponent: React.FC<ICommandBarComponentProps>;
+    export var CommandBarComponent: React.FC<React.PropsWithChildren<ICommandBarComponentProps>>;
 
 
 

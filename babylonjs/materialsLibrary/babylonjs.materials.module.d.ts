@@ -730,6 +730,8 @@ declare module "babylonjs-materials/shadowOnly/shadowOnly.vertex" {
 import "babylonjs/Shaders/ShadersInclude/bonesDeclaration";
 import "babylonjs/Shaders/ShadersInclude/bakedVertexAnimationDeclaration";
 import "babylonjs/Shaders/ShadersInclude/instancesDeclaration";
+import "babylonjs/Shaders/ShadersInclude/sceneVertexDeclaration";
+import "babylonjs/Shaders/ShadersInclude/sceneUboDeclaration";
 import "babylonjs/Shaders/ShadersInclude/clipPlaneVertexDeclaration";
 import "babylonjs/Shaders/ShadersInclude/logDepthDeclaration";
 import "babylonjs/Shaders/ShadersInclude/fogVertexDeclaration";
@@ -750,6 +752,8 @@ export const shadowOnlyVertexShader: {
 
 }
 declare module "babylonjs-materials/shadowOnly/shadowOnly.fragment" {
+import "babylonjs/Shaders/ShadersInclude/sceneFragmentDeclaration";
+import "babylonjs/Shaders/ShadersInclude/sceneUboDeclaration";
 import "babylonjs/Shaders/ShadersInclude/helperFunctions";
 import "babylonjs/Shaders/ShadersInclude/lightFragmentDeclaration";
 import "babylonjs/Shaders/ShadersInclude/lightUboDeclaration";
@@ -1172,6 +1176,8 @@ export class GridMaterial extends PushMaterial {
 }
 declare module "babylonjs-materials/grid/grid.vertex" {
 import "babylonjs/Shaders/ShadersInclude/instancesDeclaration";
+import "babylonjs/Shaders/ShadersInclude/sceneVertexDeclaration";
+import "babylonjs/Shaders/ShadersInclude/sceneUboDeclaration";
 import "babylonjs/Shaders/ShadersInclude/logDepthDeclaration";
 import "babylonjs/Shaders/ShadersInclude/fogVertexDeclaration";
 import "babylonjs/Shaders/ShadersInclude/clipPlaneVertexDeclaration";
