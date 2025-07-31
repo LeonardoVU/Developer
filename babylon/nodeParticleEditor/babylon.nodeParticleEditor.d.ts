@@ -1484,7 +1484,9 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
         onFilterChange(evt: React.ChangeEvent<HTMLInputElement>): void;
         onNewNodeRequested(name: string): void;
         onKeyDown(evt: React.KeyboardEvent): void;
-        render(): import("react/jsx-runtime").JSX.Element | null;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element | null;
+        render(): import("react/jsx-runtime").JSX.Element;
     }
 
 
@@ -3306,7 +3308,7 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        export type TextareaProps = BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<string> & {
+        export type TextareaProps = BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<string> & {
         placeholder?: string;
     };
     /**
@@ -3314,7 +3316,7 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
      * @param props
      * @returns
      */
-    export var Textarea: React.FunctionComponent<any>;
+    export var Textarea: React.FunctionComponent<TextareaProps>;
 
 
 
@@ -3324,7 +3326,7 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        export type SyncedSliderProps = BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<number> & {
+        export type SyncedSliderProps = BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<number> & {
         /** Minimum value for the slider */
         min?: number;
         /** Maximum value for the slider */
@@ -3349,7 +3351,7 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        export type SwitchProps = BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<boolean>;
+        export type SwitchProps = BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<boolean>;
     /**
      * This is a primitive fluent boolean switch component whose only knowledge is the shared styling across all tools
      * @param props
@@ -3365,14 +3367,33 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        export type SpinButtonProps = BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<number> & {
+        export type SpinButtonProps = BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<number> & {
         precision?: number;
         step?: number;
         min?: number;
         max?: number;
     };
     export var SpinButton: React.FunctionComponent<SpinButtonProps>;
-    export var SpinButtonPropertyLine: React.FunctionComponent<SpinButtonProps & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module BABYLON.NodeParticleEditor {
+
+
+}
+declare module BABYLON.NodeParticleEditor.SharedUIComponents {
+        type SearchBoxProps = {
+        items: string[];
+        onItemSelected: (item: string) => void;
+        title?: string;
+    };
+    /**
+     * SearchBox component that displays a popup with search functionality
+     * @param props - The component props
+     * @returns The search box component
+     */
+    export var SearchBox: React.FunctionComponent<SearchBoxProps>;
 
 
 
@@ -3386,7 +3407,61 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
         onChange: (val: string) => void;
         placeholder?: string;
     };
-    export const SearchBox: (props: SearchProps) => import("react/jsx-runtime").JSX.Element;
+    export var SearchBar: import("react").ForwardRefExoticComponent<SearchProps & import("react").RefAttributes<HTMLInputElement>>;
+
+
+
+}
+declare module BABYLON.NodeParticleEditor {
+
+
+}
+declare module BABYLON.NodeParticleEditor.SharedUIComponents {
+        export type ImmutablePrimitiveProps<ValueT> = {
+        /**
+         * The value of the property to be displayed and modified.
+         */
+        value: ValueT;
+        /**
+         * Optional flag to disable the component, preventing any interaction.
+         */
+        disabled?: boolean;
+        /**
+         * Optional class name to apply custom styles to the component.
+         */
+        className?: string;
+        /**
+         * Optional title for the component, used for tooltips or accessibility.
+         */
+        title?: string;
+    };
+    export type PrimitiveProps<T> = ImmutablePrimitiveProps<T> & {
+        /**
+         * Called when the primitive value changes
+         */
+        onChange: (value: T) => void;
+    };
+
+
+
+}
+declare module BABYLON.NodeParticleEditor {
+
+
+}
+declare module BABYLON.NodeParticleEditor.SharedUIComponents {
+        type PositionedPopoverProps = {
+        x: number;
+        y: number;
+        visible: boolean;
+        hide: () => void;
+    };
+    /**
+     * PositionedPopover component that shows a popover at specific coordinates
+     * @param props - The component props
+     * @returns The positioned popover component
+     */
+    export var PositionedPopover: React.FunctionComponent<React.PropsWithChildren<PositionedPopoverProps>>;
 
 
 
@@ -3454,7 +3529,28 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        export type InputProps<T extends string | number> = BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<T> & {
+        type LazyComponentProps = {
+        spinnerSize?: any;
+        spinnerLabel?: string;
+    };
+    /**
+     * Creates a lazy component wrapper that only calls the async function to get the underlying component when the lazy component is actually mounted.
+     * This allows deferring imports until they are needed. While the underlying component is being loaded, a spinner is displayed.
+     * @param getComponentAsync A function that returns a promise resolving to the component.
+     * @param defaultProps Options for the loading spinner.
+     * @returns A React component that displays a spinner while loading the async component.
+     */
+    export function MakeLazyComponent<ComponentT extends React.ComponentType<any>>(getComponentAsync: () => Promise<ComponentT>, defaultProps?: LazyComponentProps): import("react").ForwardRefExoticComponent<import("react").PropsWithoutRef<React.ComponentProps<ComponentT> & LazyComponentProps> & import("react").RefAttributes<React.ElementRef<ComponentT | import("@fluentui/react-utilities").ForwardRefComponent<any>>>>;
+
+
+
+}
+declare module BABYLON.NodeParticleEditor {
+
+
+}
+declare module BABYLON.NodeParticleEditor.SharedUIComponents {
+        export type InputProps<T extends string | number> = BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<T> & {
         step?: number;
         placeholder?: string;
         min?: number;
@@ -3476,25 +3572,25 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
      * @param props - Component props containing BABYLON.FactorGradient value and change handler
      * @returns A React component
      */
-    export var FactorGradientComponent: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<BABYLON.FactorGradient>>;
+    export var FactorGradientComponent: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<BABYLON.FactorGradient>>;
     /**
      * Component wrapper for BABYLON.Color3Gradient that provides color picker and gradient step slider
      * @param props - Component props containing BABYLON.Color3Gradient value and change handler
      * @returns A React component
      */
-    export var Color3GradientComponent: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<BABYLON.Color3Gradient>>;
+    export var Color3GradientComponent: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<BABYLON.Color3Gradient>>;
     /**
      * Component wrapper for BABYLON.ColorGradient that provides color pickers for color1, color2, and gradient step slider
      * @param props - Component props containing BABYLON.ColorGradient value and change handler
      * @returns A React component
      */
-    export var Color4GradientComponent: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<BABYLON.ColorGradient>>;
+    export var Color4GradientComponent: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<BABYLON.ColorGradient>>;
     /**
      * Component wrapper for BABYLON.GradientBlockColorStep that provides color picker and step slider
      * @param props - Component props containing BABYLON.GradientBlockColorStep value and change handler
      * @returns A React component
      */
-    export var ColorStepGradientComponent: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<BABYLON.GradientBlockColorStep>>;
+    export var ColorStepGradientComponent: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<BABYLON.GradientBlockColorStep>>;
 
 
 
@@ -3516,7 +3612,7 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
          */
         value: DropdownOptionValue;
     };
-    export type DropdownProps<V extends AcceptedDropdownValue> = BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<V> & {
+    export type DropdownProps<V extends AcceptedDropdownValue> = BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<V> & {
         options: readonly DropdownOption[];
         includeNullAs?: "null" | "undefined";
     };
@@ -3553,12 +3649,32 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
+        export type ComboBoxProps = {
+        label: string;
+        value: string[];
+        onChange: (value: string) => void;
+    };
+    /**
+     * Wrapper around a Fluent ComboBox that allows for filtering options
+     * @param props
+     * @returns
+     */
+    export var ComboBox: React.FunctionComponent<ComboBoxProps>;
+
+
+
+}
+declare module BABYLON.NodeParticleEditor {
+
+
+}
+declare module BABYLON.NodeParticleEditor.SharedUIComponents {
         export type ColorPickerProps<C extends BABYLON.Color3 | BABYLON.Color4> = {
         isLinearMode?: boolean;
-    } & BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<C>;
+    } & BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<C>;
     export var ColorPickerPopup: React.FunctionComponent<ColorPickerProps<BABYLON.Color3 | BABYLON.Color4>>;
     type HsvKey = "h" | "s" | "v";
-    export type InputHexProps = BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<BABYLON.Color3 | BABYLON.Color4> & {
+    export type InputHexProps = BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<BABYLON.Color3 | BABYLON.Color4> & {
         label?: string;
         linearHex?: boolean;
         isLinearMode?: boolean;
@@ -3596,13 +3712,12 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        export type CheckboxProps = BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<boolean>;
-    /**
+        /**
      * This is a primitive fluent checkbox that can both read and write checked state
      * @param props
      * @returns Checkbox component
      */
-    export var Checkbox: React.FunctionComponent<CheckboxProps>;
+    export var Checkbox: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<boolean>>;
 
 
 
@@ -3740,7 +3855,7 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        export type TensorPropertyLineProps<V extends BABYLON.Vector3 | BABYLON.Vector4 | BABYLON.Quaternion> = BABYLON.NodeParticleEditor.SharedUIComponents.BaseComponentProps<V> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps & {
+        export type TensorPropertyLineProps<V extends BABYLON.Vector2 | BABYLON.Vector3 | BABYLON.Vector4 | BABYLON.Quaternion> = BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<V> & BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<V> & {
         /**
          * If passed, all sliders will use this for the min value
          */
@@ -3777,6 +3892,7 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
         useDegrees?: boolean;
     };
     export var QuaternionPropertyLine: React.FunctionComponent<QuaternionPropertyLineProps>;
+    export var Vector2PropertyLine: React.FunctionComponent<TensorPropertyLineProps<BABYLON.Vector2>>;
     export var Vector3PropertyLine: React.FunctionComponent<TensorPropertyLineProps<BABYLON.Vector3>>;
     export var Vector4PropertyLine: React.FunctionComponent<TensorPropertyLineProps<BABYLON.Vector4>>;
 
@@ -3788,16 +3904,12 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        type TextProps = {
-        value: string;
-        tooltip?: string;
-    };
-    /**
+        /**
      * Wraps text in a property line
      * @param props - BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps and TextProps
      * @returns property-line wrapped text
      */
-    export var TextPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps & TextProps>;
+    export var TextPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<string> & BABYLON.NodeParticleEditor.SharedUIComponents.ImmutablePrimitiveProps<string>>;
 
 
 
@@ -3807,7 +3919,22 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        type SyncedSliderPropertyProps = BABYLON.NodeParticleEditor.SharedUIComponents.SyncedSliderProps & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps;
+        /**
+     * Wraps textarea in a property line
+     * @param props - BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps and TextProps
+     * @returns property-line wrapped text
+     */
+    export var TextAreaPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<string> & BABYLON.NodeParticleEditor.SharedUIComponents.TextareaProps>;
+
+
+
+}
+declare module BABYLON.NodeParticleEditor {
+
+
+}
+declare module BABYLON.NodeParticleEditor.SharedUIComponents {
+        type SyncedSliderPropertyProps = BABYLON.NodeParticleEditor.SharedUIComponents.SyncedSliderProps & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<number>;
     /**
      * Renders a simple wrapper around the SyncedSliderInput
      * @param props
@@ -3828,7 +3955,7 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
      * @param props - The properties for the switch and property line
      * @returns A React element representing the property line with a switch
      */
-    export var SwitchPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps & BABYLON.NodeParticleEditor.SharedUIComponents.SwitchProps>;
+    export var SwitchPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<boolean> & BABYLON.NodeParticleEditor.SharedUIComponents.SwitchProps>;
 
 
 
@@ -3838,7 +3965,37 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        export type PropertyLineProps = {
+        type StringifiedPropertyLineProps = BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<number> & BABYLON.NodeParticleEditor.SharedUIComponents.ImmutablePrimitiveProps<number> & {
+        precision?: number;
+        units?: string;
+    };
+    /**
+     * Expects a numerical value and converts it toFixed(if precision is supplied) or toLocaleString
+     * Can pass optional units to be appending to the end of the string
+     * @param props
+     * @returns
+     */
+    export var StringifiedPropertyLine: React.FunctionComponent<StringifiedPropertyLineProps>;
+
+
+
+}
+declare module BABYLON.NodeParticleEditor {
+
+
+}
+declare module BABYLON.NodeParticleEditor.SharedUIComponents {
+        export var SpinButtonPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<number> & BABYLON.NodeParticleEditor.SharedUIComponents.SpinButtonProps>;
+
+
+
+}
+declare module BABYLON.NodeParticleEditor {
+
+
+}
+declare module BABYLON.NodeParticleEditor.SharedUIComponents {
+        type BasePropertyLineProps = {
         /**
          * The name of the property to display in the property line.
          */
@@ -3855,10 +4012,17 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
          * Link to the documentation for this property, available from the info icon either linked from the description (if provided) or default 'docs' text
          */
         docLink?: string;
-    } & ({
-        expandedContent?: undefined;
-        expandByDefault?: never;
-    } | {
+    };
+    type NullableProperty<ValueT> = {
+        nullable: true;
+        value: ValueT;
+        onChange: (value: ValueT) => void;
+        defaultValue?: ValueT;
+    };
+    type NonNullableProperty = {
+        nullable?: false;
+    };
+    type ExpandableProperty = {
         /**
          * If supplied, an 'expand' icon will be shown which, when clicked, renders this component within the property line.
          */
@@ -3867,26 +4031,11 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
          * If true, the expanded content will be shown by default.
          */
         expandByDefault?: boolean;
-    });
-    export var LineContainer: import("react").ForwardRefExoticComponent<Omit<React.PropsWithChildren<React.HTMLProps<HTMLDivElement>>, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
-    export type BaseComponentProps<T> = {
-        /**
-         * The value of the property to be displayed and modified.
-         */
-        value: T;
-        /**
-         * Callback function to handle changes to the value
-         */
-        onChange: (value: T) => void;
-        /**
-         * Optional flag to disable the component, preventing any interaction.
-         */
-        disabled?: boolean;
-        /**
-         * Optional class name to apply custom styles to the component.
-         */
-        className?: string;
     };
+    type NonExpandableProperty = {
+        expandedContent?: undefined;
+    };
+    export type PropertyLineProps<ValueT> = BasePropertyLineProps & (NullableProperty<ValueT> | NonNullableProperty) & (ExpandableProperty | NonExpandableProperty);
     /**
      * A reusable component that renders a property line with a label and child content, and an optional description, copy button, and expandable section.
      *
@@ -3894,8 +4043,9 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
      * @returns A React element representing the property line.
      *
      */
-    export var PropertyLine: import("react").ForwardRefExoticComponent<React.PropsWithChildren<PropertyLineProps> & import("react").RefAttributes<HTMLDivElement>>;
-    export var PlaceholderPropertyLine: React.FunctionComponent<BaseComponentProps<any> & PropertyLineProps>;
+    export var PropertyLine: import("react").ForwardRefExoticComponent<React.PropsWithChildren<PropertyLineProps<any>> & import("react").RefAttributes<HTMLDivElement>>;
+    export var LineContainer: import("react").ForwardRefExoticComponent<Omit<React.PropsWithChildren<React.HTMLProps<HTMLDivElement>>, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
+    export var PlaceholderPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<any> & PropertyLineProps<any>>;
 
 
 
@@ -3905,9 +4055,7 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        type LinkProps = {
-        value: string;
-        tooltip?: string;
+        type LinkProps = BABYLON.NodeParticleEditor.SharedUIComponents.ImmutablePrimitiveProps<string> & {
         onLink?: () => void;
         url?: string;
     };
@@ -3916,7 +4064,7 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
      * @param props - BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps and LinkProps
      * @returns property-line wrapped link
      */
-    export var LinkPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps & LinkProps>;
+    export var LinkPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<string> & LinkProps>;
 
 
 
@@ -3931,13 +4079,13 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
      * @param props - BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps and BABYLON.NodeParticleEditor.SharedUIComponents.InputProps
      * @returns property-line wrapped input component
      */
-    export var TextInputPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.InputProps<string> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps>;
+    export var TextInputPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.InputProps<string> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<string>>;
     /**
      * Wraps a number input in a property line
      * @param props - BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps and BABYLON.NodeParticleEditor.SharedUIComponents.InputProps
      * @returns property-line wrapped input component
      */
-    export var NumberInputPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.InputProps<number> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps>;
+    export var NumberInputPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.InputProps<number> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<number>>;
 
 
 
@@ -3952,7 +4100,7 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
      * @param props - BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps and BABYLON.NodeParticleEditor.SharedUIComponents.InputHexProps
      * @returns property-line wrapped input hex component
      */
-    export var HexPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.InputHexProps & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps>;
+    export var HexPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.InputHexProps & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<BABYLON.Color3 | BABYLON.Color4>>;
 
 
 
@@ -3962,35 +4110,15 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        type DropdownPropertyLineProps<V extends BABYLON.NodeParticleEditor.SharedUIComponents.AcceptedDropdownValue> = Omit<BABYLON.NodeParticleEditor.SharedUIComponents.DropdownProps<V>, "includeNullAs"> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps;
+        type DropdownPropertyLineProps<V extends BABYLON.NodeParticleEditor.SharedUIComponents.AcceptedDropdownValue> = Omit<BABYLON.NodeParticleEditor.SharedUIComponents.DropdownProps<V>, "includeNullAs"> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<BABYLON.NodeParticleEditor.SharedUIComponents.AcceptedDropdownValue>;
     /**
-     * Dropdown component for explicitly defined number values.
-     * If value can be undefined, use OptionalNumberDropdownPropertyLine instead.
-     * If value can be null, use NullableNumberDropdownPropertyLine instead.
+     * Dropdown component for number values.
      */
     export var NumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<number>>;
     /**
-     * Dropdown component for explicitly defined string values.
-     * If value can be undefined, use OptionalStringDropdownPropertyLine instead.
-     * If value can be null, use NullableStringDropdownPropertyLine instead.
+     * Dropdown component for string values
      */
     export var StringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<string>>;
-    /**
-     * Dropdown component for BABYLON.Nullable<number> values.
-     */
-    export var NullableNumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<BABYLON.Nullable<number>>>;
-    /**
-     * Dropdown component for BABYLON.Nullable<string> values.
-     */
-    export var NullableStringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<BABYLON.Nullable<string>>>;
-    /**
-     * Dropdown component for number | undefined values
-     */
-    export var OptionalNumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<number | undefined>>;
-    /**
-     * Dropdown component for string | undefined values
-     */
-    export var OptionalStringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<string | undefined>>;
 
 
 
@@ -4000,9 +4128,9 @@ declare module BABYLON.NodeParticleEditor {
 
 }
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
-        export type ColorPropertyLineProps = BABYLON.NodeParticleEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color3 | BABYLON.Color4> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps;
-    export var Color3PropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color3> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps>;
-    export var Color4PropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color4> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps>;
+        export type ColorPropertyLineProps = BABYLON.NodeParticleEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color3 | BABYLON.Color4> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<BABYLON.Color3 | BABYLON.Color4>;
+    export var Color3PropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color3> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<BABYLON.Color3>>;
+    export var Color4PropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color4> & BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<BABYLON.Color4>>;
 
 
 
@@ -4014,10 +4142,10 @@ declare module BABYLON.NodeParticleEditor {
 declare module BABYLON.NodeParticleEditor.SharedUIComponents {
         /**
      * Wraps a checkbox in a property line
-     * @param props - BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps and BABYLON.NodeParticleEditor.SharedUIComponents.CheckboxProps
+     * @param props - BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps and CheckboxProps
      * @returns property-line wrapped checkbox
      */
-    export var CheckboxPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps & BABYLON.NodeParticleEditor.SharedUIComponents.CheckboxProps>;
+    export var CheckboxPropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<boolean> & BABYLON.NodeParticleEditor.SharedUIComponents.PrimitiveProps<boolean>>;
 
 
 
@@ -4032,9 +4160,7 @@ declare module BABYLON.NodeParticleEditor.SharedUIComponents {
      * @param props - The properties for the PropertyLine, including the boolean value to display.
      * @returns A PropertyLine component with a PresenceBadge indicating the boolean state.
      */
-    export var BooleanBadgePropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps & {
-        value: boolean;
-    }>;
+    export var BooleanBadgePropertyLine: React.FunctionComponent<BABYLON.NodeParticleEditor.SharedUIComponents.PropertyLineProps<boolean> & BABYLON.NodeParticleEditor.SharedUIComponents.ImmutablePrimitiveProps<boolean>>;
 
 
 

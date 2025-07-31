@@ -6457,6 +6457,7 @@ export class Image extends Control {
      * Gets or sets image source url
      */
     set source(value: Nullable<string>);
+    private _sanitizeSVG;
     /**
      * Checks for svg document with icon id present
      * @param value the source svg
@@ -14916,6 +14917,7 @@ declare module BABYLON.GUI {
          * Gets or sets image source url
          */
         set source(value: BABYLON.Nullable<string>);
+        private _sanitizeSVG;
         /**
          * Checks for svg document with icon id present
          * @param value the source svg

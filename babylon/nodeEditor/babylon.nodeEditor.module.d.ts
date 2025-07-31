@@ -188,6 +188,7 @@ export class GlobalState {
     onPreviewSceneAfterRenderObservable: Observable<void>;
     onPreviewUpdatedObservable: Observable<NodeMaterial>;
     debugBlocksToRefresh: NodeMaterialDebugBlock[];
+    forcedDebugBlock: Nullable<NodeMaterialDebugBlock>;
     /** Gets the mode */
     get mode(): NodeMaterialModes;
     /** Sets the mode */
@@ -944,6 +945,18 @@ export class DiscardDisplayManager implements IDisplayManager {
     getHeaderText(nodeData: INodeData): string;
     getBackgroundColor(): string;
     updatePreviewContent(nodeData: INodeData, contentArea: HTMLDivElement): void;
+}
+
+}
+declare module "babylonjs-node-editor/graphSystem/display/depthSourceDisplayManager" {
+import { IDisplayManager } from "babylonjs-node-editor/nodeGraphSystem/interfaces/displayManager";
+import { INodeData } from "babylonjs-node-editor/nodeGraphSystem/interfaces/nodeData";
+export class DepthSourceDisplayManager implements IDisplayManager {
+    getHeaderClass(): string;
+    shouldDisplayPortLabels(): boolean;
+    getHeaderText(nodeData: INodeData): string;
+    getBackgroundColor(): string;
+    updatePreviewContent(): void;
 }
 
 }
@@ -2092,6 +2105,8 @@ export class SearchBoxComponent extends React.Component<ISearchBoxComponentProps
     onFilterChange(evt: React.ChangeEvent<HTMLInputElement>): void;
     onNewNodeRequested(name: string): void;
     onKeyDown(evt: React.KeyboardEvent): void;
+
+
 
 }
 
@@ -3776,10 +3791,9 @@ export class BooleanLineComponent extends React.Component<IBooleanLineComponentP
 
 }
 declare module "babylonjs-node-editor/fluent/primitives/textarea" {
-
 import { FunctionComponent } from "react";
-import { BaseComponentProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
-export type TextareaProps = BaseComponentProps<string> & {
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
+export type TextareaProps = PrimitiveProps<string> & {
     placeholder?: string;
 };
 /**
@@ -3787,13 +3801,13 @@ export type TextareaProps = BaseComponentProps<string> & {
  * @param props
  * @returns
  */
-export const Textarea: FunctionComponent<any>;
+export const Textarea: FunctionComponent<TextareaProps>;
 
 }
 declare module "babylonjs-node-editor/fluent/primitives/syncedSlider" {
 import { FunctionComponent } from "react";
-import { BaseComponentProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
-export type SyncedSliderProps = BaseComponentProps<number> & {
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
+export type SyncedSliderProps = PrimitiveProps<number> & {
     /** Minimum value for the slider */
     min?: number;
     /** Maximum value for the slider */
@@ -3813,8 +3827,8 @@ export const SyncedSliderInput: FunctionComponent<SyncedSliderProps>;
 }
 declare module "babylonjs-node-editor/fluent/primitives/switch" {
 import { FunctionComponent } from "react";
-import { BaseComponentProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
-export type SwitchProps = BaseComponentProps<boolean>;
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
+export type SwitchProps = PrimitiveProps<boolean>;
 /**
  * This is a primitive fluent boolean switch component whose only knowledge is the shared styling across all tools
  * @param props
@@ -3825,23 +3839,82 @@ export const Switch: FunctionComponent<SwitchProps>;
 }
 declare module "babylonjs-node-editor/fluent/primitives/spinButton" {
 import { FunctionComponent } from "react";
-import { BaseComponentProps, PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
-export type SpinButtonProps = BaseComponentProps<number> & {
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
+export type SpinButtonProps = PrimitiveProps<number> & {
     precision?: number;
     step?: number;
     min?: number;
     max?: number;
 };
 export const SpinButton: FunctionComponent<SpinButtonProps>;
-export const SpinButtonPropertyLine: FunctionComponent<SpinButtonProps & PropertyLineProps>;
 
 }
 declare module "babylonjs-node-editor/fluent/primitives/searchBox" {
+import { FunctionComponent } from "react";
+type SearchBoxProps = {
+    items: string[];
+    onItemSelected: (item: string) => void;
+    title?: string;
+};
+/**
+ * SearchBox component that displays a popup with search functionality
+ * @param props - The component props
+ * @returns The search box component
+ */
+export const SearchBox: FunctionComponent<SearchBoxProps>;
+export {};
+
+}
+declare module "babylonjs-node-editor/fluent/primitives/searchBar" {
 type SearchProps = {
     onChange: (val: string) => void;
     placeholder?: string;
 };
 
+export {};
+
+}
+declare module "babylonjs-node-editor/fluent/primitives/primitive" {
+export type ImmutablePrimitiveProps<ValueT> = {
+    /**
+     * The value of the property to be displayed and modified.
+     */
+    value: ValueT;
+    /**
+     * Optional flag to disable the component, preventing any interaction.
+     */
+    disabled?: boolean;
+    /**
+     * Optional class name to apply custom styles to the component.
+     */
+    className?: string;
+    /**
+     * Optional title for the component, used for tooltips or accessibility.
+     */
+    title?: string;
+};
+export type PrimitiveProps<T> = ImmutablePrimitiveProps<T> & {
+    /**
+     * Called when the primitive value changes
+     */
+    onChange: (value: T) => void;
+};
+
+}
+declare module "babylonjs-node-editor/fluent/primitives/positionedPopover" {
+import { FunctionComponent, PropsWithChildren } from "react";
+type PositionedPopoverProps = {
+    x: number;
+    y: number;
+    visible: boolean;
+    hide: () => void;
+};
+/**
+ * PositionedPopover component that shows a popover at specific coordinates
+ * @param props - The component props
+ * @returns The positioned popover component
+ */
+export const PositionedPopover: FunctionComponent<PropsWithChildren<PositionedPopoverProps>>;
 export {};
 
 }
@@ -3890,10 +3963,28 @@ declare module "babylonjs-node-editor/fluent/primitives/link" {
 
 
 }
+declare module "babylonjs-node-editor/fluent/primitives/lazyComponent" {
+
+import { ComponentProps, ComponentType, ElementRef } from "react";
+type LazyComponentProps = {
+    spinnerSize?: any;
+    spinnerLabel?: string;
+};
+/**
+ * Creates a lazy component wrapper that only calls the async function to get the underlying component when the lazy component is actually mounted.
+ * This allows deferring imports until they are needed. While the underlying component is being loaded, a spinner is displayed.
+ * @param getComponentAsync A function that returns a promise resolving to the component.
+ * @param defaultProps Options for the loading spinner.
+ * @returns A React component that displays a spinner while loading the async component.
+ */
+
+export {};
+
+}
 declare module "babylonjs-node-editor/fluent/primitives/input" {
 import { FunctionComponent } from "react";
-import { BaseComponentProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
-export type InputProps<T extends string | number> = BaseComponentProps<T> & {
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
+export type InputProps<T extends string | number> = PrimitiveProps<T> & {
     step?: number;
     placeholder?: string;
     min?: number;
@@ -3905,7 +3996,7 @@ export const TextInput: FunctionComponent<InputProps<string>>;
 }
 declare module "babylonjs-node-editor/fluent/primitives/gradient" {
 import { FunctionComponent } from "react";
-import { BaseComponentProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
 import { Color3Gradient, ColorGradient as Color4Gradient, FactorGradient } from "babylonjs/Misc/gradients";
 import { GradientBlockColorStep } from "babylonjs/Materials/Node/Blocks/gradientBlock";
 /**
@@ -3913,30 +4004,30 @@ import { GradientBlockColorStep } from "babylonjs/Materials/Node/Blocks/gradient
  * @param props - Component props containing FactorGradient value and change handler
  * @returns A React component
  */
-export const FactorGradientComponent: FunctionComponent<BaseComponentProps<FactorGradient>>;
+export const FactorGradientComponent: FunctionComponent<PrimitiveProps<FactorGradient>>;
 /**
  * Component wrapper for Color3Gradient that provides color picker and gradient step slider
  * @param props - Component props containing Color3Gradient value and change handler
  * @returns A React component
  */
-export const Color3GradientComponent: FunctionComponent<BaseComponentProps<Color3Gradient>>;
+export const Color3GradientComponent: FunctionComponent<PrimitiveProps<Color3Gradient>>;
 /**
  * Component wrapper for Color4Gradient that provides color pickers for color1, color2, and gradient step slider
  * @param props - Component props containing Color4Gradient value and change handler
  * @returns A React component
  */
-export const Color4GradientComponent: FunctionComponent<BaseComponentProps<Color4Gradient>>;
+export const Color4GradientComponent: FunctionComponent<PrimitiveProps<Color4Gradient>>;
 /**
  * Component wrapper for GradientBlockColorStep that provides color picker and step slider
  * @param props - Component props containing GradientBlockColorStep value and change handler
  * @returns A React component
  */
-export const ColorStepGradientComponent: FunctionComponent<BaseComponentProps<GradientBlockColorStep>>;
+export const ColorStepGradientComponent: FunctionComponent<PrimitiveProps<GradientBlockColorStep>>;
 
 }
 declare module "babylonjs-node-editor/fluent/primitives/dropdown" {
 import { FunctionComponent } from "react";
-import { BaseComponentProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
 import { Nullable } from "babylonjs/types";
 type DropdownOptionValue = string | number;
 export type AcceptedDropdownValue = Nullable<DropdownOptionValue> | undefined;
@@ -3950,7 +4041,7 @@ export type DropdownOption = {
      */
     value: DropdownOptionValue;
 };
-export type DropdownProps<V extends AcceptedDropdownValue> = BaseComponentProps<V> & {
+export type DropdownProps<V extends AcceptedDropdownValue> = PrimitiveProps<V> & {
     options: readonly DropdownOption[];
     includeNullAs?: "null" | "undefined";
 };
@@ -3975,16 +4066,31 @@ export type DraggableLineProps = {
 export const DraggableLine: React.FunctionComponent<DraggableLineProps>;
 
 }
+declare module "babylonjs-node-editor/fluent/primitives/comboBox" {
+import { FunctionComponent } from "react";
+export type ComboBoxProps = {
+    label: string;
+    value: string[];
+    onChange: (value: string) => void;
+};
+/**
+ * Wrapper around a Fluent ComboBox that allows for filtering options
+ * @param props
+ * @returns
+ */
+export const ComboBox: FunctionComponent<ComboBoxProps>;
+
+}
 declare module "babylonjs-node-editor/fluent/primitives/colorPicker" {
 import { FunctionComponent } from "react";
 import { Color3, Color4 } from "babylonjs/Maths/math.color";
-import { BaseComponentProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
 export type ColorPickerProps<C extends Color3 | Color4> = {
     isLinearMode?: boolean;
-} & BaseComponentProps<C>;
+} & PrimitiveProps<C>;
 export const ColorPickerPopup: FunctionComponent<ColorPickerProps<Color3 | Color4>>;
 type HsvKey = "h" | "s" | "v";
-export type InputHexProps = BaseComponentProps<Color3 | Color4> & {
+export type InputHexProps = PrimitiveProps<Color3 | Color4> & {
     label?: string;
     linearHex?: boolean;
     isLinearMode?: boolean;
@@ -4018,14 +4124,13 @@ export {};
 }
 declare module "babylonjs-node-editor/fluent/primitives/checkbox" {
 import { FunctionComponent } from "react";
-import { BaseComponentProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
-export type CheckboxProps = BaseComponentProps<boolean>;
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
 /**
  * This is a primitive fluent checkbox that can both read and write checked state
  * @param props
  * @returns Checkbox component
  */
-export const Checkbox: FunctionComponent<CheckboxProps>;
+export const Checkbox: FunctionComponent<PrimitiveProps<boolean>>;
 
 }
 declare module "babylonjs-node-editor/fluent/primitives/button" {
@@ -4132,10 +4237,11 @@ export const ButtonLine: FunctionComponent<ButtonProps>;
 }
 declare module "babylonjs-node-editor/fluent/hoc/propertyLines/vectorPropertyLine" {
 import { FunctionComponent } from "react";
-import { BaseComponentProps, PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
-import { Quaternion, Vector4 } from "babylonjs/Maths/math.vector";
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
+import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
 import { Vector3 } from "babylonjs/Maths/math.vector";
-export type TensorPropertyLineProps<V extends Vector3 | Vector4 | Quaternion> = BaseComponentProps<V> & PropertyLineProps & {
+import { Quaternion, Vector2, Vector4 } from "babylonjs/Maths/math.vector";
+export type TensorPropertyLineProps<V extends Vector2 | Vector3 | Vector4 | Quaternion> = PropertyLineProps<V> & PrimitiveProps<V> & {
     /**
      * If passed, all sliders will use this for the min value
      */
@@ -4172,31 +4278,40 @@ type QuaternionPropertyLineProps = TensorPropertyLineProps<Quaternion> & {
     useDegrees?: boolean;
 };
 export const QuaternionPropertyLine: FunctionComponent<QuaternionPropertyLineProps>;
+export const Vector2PropertyLine: FunctionComponent<TensorPropertyLineProps<Vector2>>;
 export const Vector3PropertyLine: FunctionComponent<TensorPropertyLineProps<Vector3>>;
 export const Vector4PropertyLine: FunctionComponent<TensorPropertyLineProps<Vector4>>;
 export {};
 
 }
 declare module "babylonjs-node-editor/fluent/hoc/propertyLines/textPropertyLine" {
+import { ImmutablePrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
 import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
 import { FunctionComponent } from "react";
-type TextProps = {
-    value: string;
-    tooltip?: string;
-};
 /**
  * Wraps text in a property line
  * @param props - PropertyLineProps and TextProps
  * @returns property-line wrapped text
  */
-export const TextPropertyLine: FunctionComponent<PropertyLineProps & TextProps>;
-export {};
+export const TextPropertyLine: FunctionComponent<PropertyLineProps<string> & ImmutablePrimitiveProps<string>>;
+
+}
+declare module "babylonjs-node-editor/fluent/hoc/propertyLines/textAreaPropertyLine" {
+import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
+import { FunctionComponent } from "react";
+import { TextareaProps } from "babylonjs-node-editor/fluent/primitives/textarea";
+/**
+ * Wraps textarea in a property line
+ * @param props - PropertyLineProps and TextProps
+ * @returns property-line wrapped text
+ */
+export const TextAreaPropertyLine: FunctionComponent<PropertyLineProps<string> & TextareaProps>;
 
 }
 declare module "babylonjs-node-editor/fluent/hoc/propertyLines/syncedSliderPropertyLine" {
 import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
 import { SyncedSliderProps } from "babylonjs-node-editor/fluent/primitives/syncedSlider";
-type SyncedSliderPropertyProps = SyncedSliderProps & PropertyLineProps;
+type SyncedSliderPropertyProps = SyncedSliderProps & PropertyLineProps<number>;
 /**
  * Renders a simple wrapper around the SyncedSliderInput
  * @param props
@@ -4215,12 +4330,38 @@ import { SwitchProps } from "babylonjs-node-editor/fluent/primitives/switch";
  * @param props - The properties for the switch and property line
  * @returns A React element representing the property line with a switch
  */
-export const SwitchPropertyLine: FunctionComponent<PropertyLineProps & SwitchProps>;
+export const SwitchPropertyLine: FunctionComponent<PropertyLineProps<boolean> & SwitchProps>;
+
+}
+declare module "babylonjs-node-editor/fluent/hoc/propertyLines/stringifiedPropertyLine" {
+import { ImmutablePrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
+import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
+import { FunctionComponent } from "react";
+type StringifiedPropertyLineProps = PropertyLineProps<number> & ImmutablePrimitiveProps<number> & {
+    precision?: number;
+    units?: string;
+};
+/**
+ * Expects a numerical value and converts it toFixed(if precision is supplied) or toLocaleString
+ * Can pass optional units to be appending to the end of the string
+ * @param props
+ * @returns
+ */
+export const StringifiedPropertyLine: FunctionComponent<StringifiedPropertyLineProps>;
+export {};
+
+}
+declare module "babylonjs-node-editor/fluent/hoc/propertyLines/spinButtonPropertyLine" {
+import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
+import { FunctionComponent } from "react";
+import { SpinButtonProps } from "babylonjs-node-editor/fluent/primitives/spinButton";
+export const SpinButtonPropertyLine: FunctionComponent<PropertyLineProps<number> & SpinButtonProps>;
 
 }
 declare module "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine" {
 import { FunctionComponent, HTMLProps, PropsWithChildren } from "react";
-export type PropertyLineProps = {
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
+type BasePropertyLineProps = {
     /**
      * The name of the property to display in the property line.
      */
@@ -4237,10 +4378,17 @@ export type PropertyLineProps = {
      * Link to the documentation for this property, available from the info icon either linked from the description (if provided) or default 'docs' text
      */
     docLink?: string;
-} & ({
-    expandedContent?: undefined;
-    expandByDefault?: never;
-} | {
+};
+type NullableProperty<ValueT> = {
+    nullable: true;
+    value: ValueT;
+    onChange: (value: ValueT) => void;
+    defaultValue?: ValueT;
+};
+type NonNullableProperty = {
+    nullable?: false;
+};
+type ExpandableProperty = {
     /**
      * If supplied, an 'expand' icon will be shown which, when clicked, renders this component within the property line.
      */
@@ -4249,26 +4397,11 @@ export type PropertyLineProps = {
      * If true, the expanded content will be shown by default.
      */
     expandByDefault?: boolean;
-});
-
-export type BaseComponentProps<T> = {
-    /**
-     * The value of the property to be displayed and modified.
-     */
-    value: T;
-    /**
-     * Callback function to handle changes to the value
-     */
-    onChange: (value: T) => void;
-    /**
-     * Optional flag to disable the component, preventing any interaction.
-     */
-    disabled?: boolean;
-    /**
-     * Optional class name to apply custom styles to the component.
-     */
-    className?: string;
 };
+type NonExpandableProperty = {
+    expandedContent?: undefined;
+};
+export type PropertyLineProps<ValueT> = BasePropertyLineProps & (NullableProperty<ValueT> | NonNullableProperty) & (ExpandableProperty | NonExpandableProperty);
 /**
  * A reusable component that renders a property line with a label and child content, and an optional description, copy button, and expandable section.
  *
@@ -4277,15 +4410,16 @@ export type BaseComponentProps<T> = {
  *
  */
 
-export const PlaceholderPropertyLine: FunctionComponent<BaseComponentProps<any> & PropertyLineProps>;
+
+export const PlaceholderPropertyLine: FunctionComponent<PrimitiveProps<any> & PropertyLineProps<any>>;
+export {};
 
 }
 declare module "babylonjs-node-editor/fluent/hoc/propertyLines/linkPropertyLine" {
+import { ImmutablePrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
 import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
 import { FunctionComponent } from "react";
-type LinkProps = {
-    value: string;
-    tooltip?: string;
+type LinkProps = ImmutablePrimitiveProps<string> & {
     onLink?: () => void;
     url?: string;
 };
@@ -4294,7 +4428,7 @@ type LinkProps = {
  * @param props - PropertyLineProps and LinkProps
  * @returns property-line wrapped link
  */
-export const LinkPropertyLine: FunctionComponent<PropertyLineProps & LinkProps>;
+export const LinkPropertyLine: FunctionComponent<PropertyLineProps<string> & LinkProps>;
 export {};
 
 }
@@ -4307,61 +4441,41 @@ import { InputProps } from "babylonjs-node-editor/fluent/primitives/input";
  * @param props - PropertyLineProps and InputProps
  * @returns property-line wrapped input component
  */
-export const TextInputPropertyLine: FunctionComponent<InputProps<string> & PropertyLineProps>;
+export const TextInputPropertyLine: FunctionComponent<InputProps<string> & PropertyLineProps<string>>;
 /**
  * Wraps a number input in a property line
  * @param props - PropertyLineProps and InputProps
  * @returns property-line wrapped input component
  */
-export const NumberInputPropertyLine: FunctionComponent<InputProps<number> & PropertyLineProps>;
+export const NumberInputPropertyLine: FunctionComponent<InputProps<number> & PropertyLineProps<number>>;
 
 }
 declare module "babylonjs-node-editor/fluent/hoc/propertyLines/hexPropertyLine" {
 import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
 import { FunctionComponent } from "react";
 import { InputHexProps } from "babylonjs-node-editor/fluent/primitives/colorPicker";
+import { Color3, Color4 } from "babylonjs/Maths/math.color";
 /**
  * Wraps a hex input in a property line
  * @param props - PropertyLineProps and InputHexProps
  * @returns property-line wrapped input hex component
  */
-export const HexPropertyLine: FunctionComponent<InputHexProps & PropertyLineProps>;
+export const HexPropertyLine: FunctionComponent<InputHexProps & PropertyLineProps<Color3 | Color4>>;
 
 }
 declare module "babylonjs-node-editor/fluent/hoc/propertyLines/dropdownPropertyLine" {
-import { Nullable } from "babylonjs/types";
 import { AcceptedDropdownValue, DropdownProps } from "babylonjs-node-editor/fluent/primitives/dropdown";
 import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
 import { FunctionComponent } from "react";
-type DropdownPropertyLineProps<V extends AcceptedDropdownValue> = Omit<DropdownProps<V>, "includeNullAs"> & PropertyLineProps;
+type DropdownPropertyLineProps<V extends AcceptedDropdownValue> = Omit<DropdownProps<V>, "includeNullAs"> & PropertyLineProps<AcceptedDropdownValue>;
 /**
- * Dropdown component for explicitly defined number values.
- * If value can be undefined, use OptionalNumberDropdownPropertyLine instead.
- * If value can be null, use NullableNumberDropdownPropertyLine instead.
+ * Dropdown component for number values.
  */
 export const NumberDropdownPropertyLine: FunctionComponent<DropdownPropertyLineProps<number>>;
 /**
- * Dropdown component for explicitly defined string values.
- * If value can be undefined, use OptionalStringDropdownPropertyLine instead.
- * If value can be null, use NullableStringDropdownPropertyLine instead.
+ * Dropdown component for string values
  */
 export const StringDropdownPropertyLine: FunctionComponent<DropdownPropertyLineProps<string>>;
-/**
- * Dropdown component for Nullable<number> values.
- */
-export const NullableNumberDropdownPropertyLine: FunctionComponent<DropdownPropertyLineProps<Nullable<number>>>;
-/**
- * Dropdown component for Nullable<string> values.
- */
-export const NullableStringDropdownPropertyLine: FunctionComponent<DropdownPropertyLineProps<Nullable<string>>>;
-/**
- * Dropdown component for number | undefined values
- */
-export const OptionalNumberDropdownPropertyLine: FunctionComponent<DropdownPropertyLineProps<number | undefined>>;
-/**
- * Dropdown component for string | undefined values
- */
-export const OptionalStringDropdownPropertyLine: FunctionComponent<DropdownPropertyLineProps<string | undefined>>;
 export {};
 
 }
@@ -4371,34 +4485,33 @@ import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLine
 import { Color3 } from "babylonjs/Maths/math.color";
 import { Color4 } from "babylonjs/Maths/math.color";
 import { ColorPickerProps } from "babylonjs-node-editor/fluent/primitives/colorPicker";
-export type ColorPropertyLineProps = ColorPickerProps<Color3 | Color4> & PropertyLineProps;
-export const Color3PropertyLine: FunctionComponent<ColorPickerProps<Color3> & PropertyLineProps>;
-export const Color4PropertyLine: FunctionComponent<ColorPickerProps<Color4> & PropertyLineProps>;
+export type ColorPropertyLineProps = ColorPickerProps<Color3 | Color4> & PropertyLineProps<Color3 | Color4>;
+export const Color3PropertyLine: FunctionComponent<ColorPickerProps<Color3> & PropertyLineProps<Color3>>;
+export const Color4PropertyLine: FunctionComponent<ColorPickerProps<Color4> & PropertyLineProps<Color4>>;
 
 }
 declare module "babylonjs-node-editor/fluent/hoc/propertyLines/checkboxPropertyLine" {
+import { PrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
 import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
 import { FunctionComponent } from "react";
-import { CheckboxProps } from "babylonjs-node-editor/fluent/primitives/checkbox";
 /**
  * Wraps a checkbox in a property line
  * @param props - PropertyLineProps and CheckboxProps
  * @returns property-line wrapped checkbox
  */
-export const CheckboxPropertyLine: FunctionComponent<PropertyLineProps & CheckboxProps>;
+export const CheckboxPropertyLine: FunctionComponent<PropertyLineProps<boolean> & PrimitiveProps<boolean>>;
 
 }
 declare module "babylonjs-node-editor/fluent/hoc/propertyLines/booleanBadgePropertyLine" {
 import { FunctionComponent } from "react";
+import { ImmutablePrimitiveProps } from "babylonjs-node-editor/fluent/primitives/primitive";
 import { PropertyLineProps } from "babylonjs-node-editor/fluent/hoc/propertyLines/propertyLine";
 /**
  * Displays an icon indicating enabled (green check) or disabled (red cross) state
  * @param props - The properties for the PropertyLine, including the boolean value to display.
  * @returns A PropertyLine component with a PresenceBadge indicating the boolean state.
  */
-export const BooleanBadgePropertyLine: FunctionComponent<PropertyLineProps & {
-    value: boolean;
-}>;
+export const BooleanBadgePropertyLine: FunctionComponent<PropertyLineProps<boolean> & ImmutablePrimitiveProps<boolean>>;
 
 }
 declare module "babylonjs-node-editor/components/propertyTabComponentBase" {
@@ -5615,6 +5728,7 @@ declare module BABYLON.NodeEditor {
         onPreviewSceneAfterRenderObservable: BABYLON.Observable<void>;
         onPreviewUpdatedObservable: BABYLON.Observable<BABYLON.NodeMaterial>;
         debugBlocksToRefresh: BABYLON.NodeMaterialDebugBlock[];
+        forcedDebugBlock: BABYLON.Nullable<BABYLON.NodeMaterialDebugBlock>;
         /** Gets the mode */
         get mode(): BABYLON.NodeMaterialModes;
         /** Sets the mode */
@@ -6111,6 +6225,15 @@ declare module BABYLON.NodeEditor {
         getHeaderText(nodeData: BABYLON.NodeEditor.SharedUIComponents.INodeData): string;
         getBackgroundColor(): string;
         updatePreviewContent(nodeData: BABYLON.NodeEditor.SharedUIComponents.INodeData, contentArea: HTMLDivElement): void;
+    }
+
+
+    export class DepthSourceDisplayManager implements BABYLON.NodeEditor.SharedUIComponents.IDisplayManager {
+        getHeaderClass(): string;
+        shouldDisplayPortLabels(): boolean;
+        getHeaderText(nodeData: BABYLON.NodeEditor.SharedUIComponents.INodeData): string;
+        getBackgroundColor(): string;
+        updatePreviewContent(): void;
     }
 
 
@@ -7219,7 +7342,9 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         onFilterChange(evt: React.ChangeEvent<HTMLInputElement>): void;
         onNewNodeRequested(name: string): void;
         onKeyDown(evt: React.KeyboardEvent): void;
-        render(): import("react/jsx-runtime").JSX.Element | null;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element | null;
+        render(): import("react/jsx-runtime").JSX.Element;
     }
 
 
@@ -9041,7 +9166,7 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        export type TextareaProps = BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<string> & {
+        export type TextareaProps = BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<string> & {
         placeholder?: string;
     };
     /**
@@ -9049,7 +9174,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
      * @param props
      * @returns
      */
-    export var Textarea: React.FunctionComponent<any>;
+    export var Textarea: React.FunctionComponent<TextareaProps>;
 
 
 
@@ -9059,7 +9184,7 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        export type SyncedSliderProps = BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<number> & {
+        export type SyncedSliderProps = BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<number> & {
         /** Minimum value for the slider */
         min?: number;
         /** Maximum value for the slider */
@@ -9084,7 +9209,7 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        export type SwitchProps = BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<boolean>;
+        export type SwitchProps = BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<boolean>;
     /**
      * This is a primitive fluent boolean switch component whose only knowledge is the shared styling across all tools
      * @param props
@@ -9100,14 +9225,33 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        export type SpinButtonProps = BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<number> & {
+        export type SpinButtonProps = BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<number> & {
         precision?: number;
         step?: number;
         min?: number;
         max?: number;
     };
     export var SpinButton: React.FunctionComponent<SpinButtonProps>;
-    export var SpinButtonPropertyLine: React.FunctionComponent<SpinButtonProps & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module BABYLON.NodeEditor {
+
+
+}
+declare module BABYLON.NodeEditor.SharedUIComponents {
+        type SearchBoxProps = {
+        items: string[];
+        onItemSelected: (item: string) => void;
+        title?: string;
+    };
+    /**
+     * SearchBox component that displays a popup with search functionality
+     * @param props - The component props
+     * @returns The search box component
+     */
+    export var SearchBox: React.FunctionComponent<SearchBoxProps>;
 
 
 
@@ -9121,7 +9265,61 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         onChange: (val: string) => void;
         placeholder?: string;
     };
-    export const SearchBox: (props: SearchProps) => import("react/jsx-runtime").JSX.Element;
+    export var SearchBar: import("react").ForwardRefExoticComponent<SearchProps & import("react").RefAttributes<HTMLInputElement>>;
+
+
+
+}
+declare module BABYLON.NodeEditor {
+
+
+}
+declare module BABYLON.NodeEditor.SharedUIComponents {
+        export type ImmutablePrimitiveProps<ValueT> = {
+        /**
+         * The value of the property to be displayed and modified.
+         */
+        value: ValueT;
+        /**
+         * Optional flag to disable the component, preventing any interaction.
+         */
+        disabled?: boolean;
+        /**
+         * Optional class name to apply custom styles to the component.
+         */
+        className?: string;
+        /**
+         * Optional title for the component, used for tooltips or accessibility.
+         */
+        title?: string;
+    };
+    export type PrimitiveProps<T> = ImmutablePrimitiveProps<T> & {
+        /**
+         * Called when the primitive value changes
+         */
+        onChange: (value: T) => void;
+    };
+
+
+
+}
+declare module BABYLON.NodeEditor {
+
+
+}
+declare module BABYLON.NodeEditor.SharedUIComponents {
+        type PositionedPopoverProps = {
+        x: number;
+        y: number;
+        visible: boolean;
+        hide: () => void;
+    };
+    /**
+     * PositionedPopover component that shows a popover at specific coordinates
+     * @param props - The component props
+     * @returns The positioned popover component
+     */
+    export var PositionedPopover: React.FunctionComponent<React.PropsWithChildren<PositionedPopoverProps>>;
 
 
 
@@ -9189,7 +9387,28 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        export type InputProps<T extends string | number> = BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<T> & {
+        type LazyComponentProps = {
+        spinnerSize?: any;
+        spinnerLabel?: string;
+    };
+    /**
+     * Creates a lazy component wrapper that only calls the async function to get the underlying component when the lazy component is actually mounted.
+     * This allows deferring imports until they are needed. While the underlying component is being loaded, a spinner is displayed.
+     * @param getComponentAsync A function that returns a promise resolving to the component.
+     * @param defaultProps Options for the loading spinner.
+     * @returns A React component that displays a spinner while loading the async component.
+     */
+    export function MakeLazyComponent<ComponentT extends React.ComponentType<any>>(getComponentAsync: () => Promise<ComponentT>, defaultProps?: LazyComponentProps): import("react").ForwardRefExoticComponent<import("react").PropsWithoutRef<React.ComponentProps<ComponentT> & LazyComponentProps> & import("react").RefAttributes<React.ElementRef<ComponentT | import("@fluentui/react-utilities").ForwardRefComponent<any>>>>;
+
+
+
+}
+declare module BABYLON.NodeEditor {
+
+
+}
+declare module BABYLON.NodeEditor.SharedUIComponents {
+        export type InputProps<T extends string | number> = BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<T> & {
         step?: number;
         placeholder?: string;
         min?: number;
@@ -9211,25 +9430,25 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
      * @param props - Component props containing BABYLON.FactorGradient value and change handler
      * @returns A React component
      */
-    export var FactorGradientComponent: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<BABYLON.FactorGradient>>;
+    export var FactorGradientComponent: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<BABYLON.FactorGradient>>;
     /**
      * Component wrapper for BABYLON.Color3Gradient that provides color picker and gradient step slider
      * @param props - Component props containing BABYLON.Color3Gradient value and change handler
      * @returns A React component
      */
-    export var Color3GradientComponent: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<BABYLON.Color3Gradient>>;
+    export var Color3GradientComponent: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<BABYLON.Color3Gradient>>;
     /**
      * Component wrapper for BABYLON.ColorGradient that provides color pickers for color1, color2, and gradient step slider
      * @param props - Component props containing BABYLON.ColorGradient value and change handler
      * @returns A React component
      */
-    export var Color4GradientComponent: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<BABYLON.ColorGradient>>;
+    export var Color4GradientComponent: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<BABYLON.ColorGradient>>;
     /**
      * Component wrapper for BABYLON.GradientBlockColorStep that provides color picker and step slider
      * @param props - Component props containing BABYLON.GradientBlockColorStep value and change handler
      * @returns A React component
      */
-    export var ColorStepGradientComponent: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<BABYLON.GradientBlockColorStep>>;
+    export var ColorStepGradientComponent: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<BABYLON.GradientBlockColorStep>>;
 
 
 
@@ -9251,7 +9470,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
          */
         value: DropdownOptionValue;
     };
-    export type DropdownProps<V extends AcceptedDropdownValue> = BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<V> & {
+    export type DropdownProps<V extends AcceptedDropdownValue> = BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<V> & {
         options: readonly DropdownOption[];
         includeNullAs?: "null" | "undefined";
     };
@@ -9288,12 +9507,32 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
+        export type ComboBoxProps = {
+        label: string;
+        value: string[];
+        onChange: (value: string) => void;
+    };
+    /**
+     * Wrapper around a Fluent ComboBox that allows for filtering options
+     * @param props
+     * @returns
+     */
+    export var ComboBox: React.FunctionComponent<ComboBoxProps>;
+
+
+
+}
+declare module BABYLON.NodeEditor {
+
+
+}
+declare module BABYLON.NodeEditor.SharedUIComponents {
         export type ColorPickerProps<C extends BABYLON.Color3 | BABYLON.Color4> = {
         isLinearMode?: boolean;
-    } & BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<C>;
+    } & BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<C>;
     export var ColorPickerPopup: React.FunctionComponent<ColorPickerProps<BABYLON.Color3 | BABYLON.Color4>>;
     type HsvKey = "h" | "s" | "v";
-    export type InputHexProps = BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<BABYLON.Color3 | BABYLON.Color4> & {
+    export type InputHexProps = BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<BABYLON.Color3 | BABYLON.Color4> & {
         label?: string;
         linearHex?: boolean;
         isLinearMode?: boolean;
@@ -9331,13 +9570,12 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        export type CheckboxProps = BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<boolean>;
-    /**
+        /**
      * This is a primitive fluent checkbox that can both read and write checked state
      * @param props
      * @returns Checkbox component
      */
-    export var Checkbox: React.FunctionComponent<CheckboxProps>;
+    export var Checkbox: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<boolean>>;
 
 
 
@@ -9475,7 +9713,7 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        export type TensorPropertyLineProps<V extends BABYLON.Vector3 | BABYLON.Vector4 | BABYLON.Quaternion> = BABYLON.NodeEditor.SharedUIComponents.BaseComponentProps<V> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps & {
+        export type TensorPropertyLineProps<V extends BABYLON.Vector2 | BABYLON.Vector3 | BABYLON.Vector4 | BABYLON.Quaternion> = BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<V> & BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<V> & {
         /**
          * If passed, all sliders will use this for the min value
          */
@@ -9512,6 +9750,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
         useDegrees?: boolean;
     };
     export var QuaternionPropertyLine: React.FunctionComponent<QuaternionPropertyLineProps>;
+    export var Vector2PropertyLine: React.FunctionComponent<TensorPropertyLineProps<BABYLON.Vector2>>;
     export var Vector3PropertyLine: React.FunctionComponent<TensorPropertyLineProps<BABYLON.Vector3>>;
     export var Vector4PropertyLine: React.FunctionComponent<TensorPropertyLineProps<BABYLON.Vector4>>;
 
@@ -9523,16 +9762,12 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        type TextProps = {
-        value: string;
-        tooltip?: string;
-    };
-    /**
+        /**
      * Wraps text in a property line
      * @param props - BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps and TextProps
      * @returns property-line wrapped text
      */
-    export var TextPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps & TextProps>;
+    export var TextPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<string> & BABYLON.NodeEditor.SharedUIComponents.ImmutablePrimitiveProps<string>>;
 
 
 
@@ -9542,7 +9777,22 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        type SyncedSliderPropertyProps = BABYLON.NodeEditor.SharedUIComponents.SyncedSliderProps & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps;
+        /**
+     * Wraps textarea in a property line
+     * @param props - BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps and TextProps
+     * @returns property-line wrapped text
+     */
+    export var TextAreaPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<string> & BABYLON.NodeEditor.SharedUIComponents.TextareaProps>;
+
+
+
+}
+declare module BABYLON.NodeEditor {
+
+
+}
+declare module BABYLON.NodeEditor.SharedUIComponents {
+        type SyncedSliderPropertyProps = BABYLON.NodeEditor.SharedUIComponents.SyncedSliderProps & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<number>;
     /**
      * Renders a simple wrapper around the SyncedSliderInput
      * @param props
@@ -9563,7 +9813,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
      * @param props - The properties for the switch and property line
      * @returns A React element representing the property line with a switch
      */
-    export var SwitchPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps & BABYLON.NodeEditor.SharedUIComponents.SwitchProps>;
+    export var SwitchPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<boolean> & BABYLON.NodeEditor.SharedUIComponents.SwitchProps>;
 
 
 
@@ -9573,7 +9823,37 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        export type PropertyLineProps = {
+        type StringifiedPropertyLineProps = BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<number> & BABYLON.NodeEditor.SharedUIComponents.ImmutablePrimitiveProps<number> & {
+        precision?: number;
+        units?: string;
+    };
+    /**
+     * Expects a numerical value and converts it toFixed(if precision is supplied) or toLocaleString
+     * Can pass optional units to be appending to the end of the string
+     * @param props
+     * @returns
+     */
+    export var StringifiedPropertyLine: React.FunctionComponent<StringifiedPropertyLineProps>;
+
+
+
+}
+declare module BABYLON.NodeEditor {
+
+
+}
+declare module BABYLON.NodeEditor.SharedUIComponents {
+        export var SpinButtonPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<number> & BABYLON.NodeEditor.SharedUIComponents.SpinButtonProps>;
+
+
+
+}
+declare module BABYLON.NodeEditor {
+
+
+}
+declare module BABYLON.NodeEditor.SharedUIComponents {
+        type BasePropertyLineProps = {
         /**
          * The name of the property to display in the property line.
          */
@@ -9590,10 +9870,17 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
          * Link to the documentation for this property, available from the info icon either linked from the description (if provided) or default 'docs' text
          */
         docLink?: string;
-    } & ({
-        expandedContent?: undefined;
-        expandByDefault?: never;
-    } | {
+    };
+    type NullableProperty<ValueT> = {
+        nullable: true;
+        value: ValueT;
+        onChange: (value: ValueT) => void;
+        defaultValue?: ValueT;
+    };
+    type NonNullableProperty = {
+        nullable?: false;
+    };
+    type ExpandableProperty = {
         /**
          * If supplied, an 'expand' icon will be shown which, when clicked, renders this component within the property line.
          */
@@ -9602,26 +9889,11 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
          * If true, the expanded content will be shown by default.
          */
         expandByDefault?: boolean;
-    });
-    export var LineContainer: import("react").ForwardRefExoticComponent<Omit<React.PropsWithChildren<React.HTMLProps<HTMLDivElement>>, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
-    export type BaseComponentProps<T> = {
-        /**
-         * The value of the property to be displayed and modified.
-         */
-        value: T;
-        /**
-         * Callback function to handle changes to the value
-         */
-        onChange: (value: T) => void;
-        /**
-         * Optional flag to disable the component, preventing any interaction.
-         */
-        disabled?: boolean;
-        /**
-         * Optional class name to apply custom styles to the component.
-         */
-        className?: string;
     };
+    type NonExpandableProperty = {
+        expandedContent?: undefined;
+    };
+    export type PropertyLineProps<ValueT> = BasePropertyLineProps & (NullableProperty<ValueT> | NonNullableProperty) & (ExpandableProperty | NonExpandableProperty);
     /**
      * A reusable component that renders a property line with a label and child content, and an optional description, copy button, and expandable section.
      *
@@ -9629,8 +9901,9 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
      * @returns A React element representing the property line.
      *
      */
-    export var PropertyLine: import("react").ForwardRefExoticComponent<React.PropsWithChildren<PropertyLineProps> & import("react").RefAttributes<HTMLDivElement>>;
-    export var PlaceholderPropertyLine: React.FunctionComponent<BaseComponentProps<any> & PropertyLineProps>;
+    export var PropertyLine: import("react").ForwardRefExoticComponent<React.PropsWithChildren<PropertyLineProps<any>> & import("react").RefAttributes<HTMLDivElement>>;
+    export var LineContainer: import("react").ForwardRefExoticComponent<Omit<React.PropsWithChildren<React.HTMLProps<HTMLDivElement>>, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
+    export var PlaceholderPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<any> & PropertyLineProps<any>>;
 
 
 
@@ -9640,9 +9913,7 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        type LinkProps = {
-        value: string;
-        tooltip?: string;
+        type LinkProps = BABYLON.NodeEditor.SharedUIComponents.ImmutablePrimitiveProps<string> & {
         onLink?: () => void;
         url?: string;
     };
@@ -9651,7 +9922,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
      * @param props - BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps and LinkProps
      * @returns property-line wrapped link
      */
-    export var LinkPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps & LinkProps>;
+    export var LinkPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<string> & LinkProps>;
 
 
 
@@ -9666,13 +9937,13 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
      * @param props - BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps and BABYLON.NodeEditor.SharedUIComponents.InputProps
      * @returns property-line wrapped input component
      */
-    export var TextInputPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.InputProps<string> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps>;
+    export var TextInputPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.InputProps<string> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<string>>;
     /**
      * Wraps a number input in a property line
      * @param props - BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps and BABYLON.NodeEditor.SharedUIComponents.InputProps
      * @returns property-line wrapped input component
      */
-    export var NumberInputPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.InputProps<number> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps>;
+    export var NumberInputPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.InputProps<number> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<number>>;
 
 
 
@@ -9687,7 +9958,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
      * @param props - BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps and BABYLON.NodeEditor.SharedUIComponents.InputHexProps
      * @returns property-line wrapped input hex component
      */
-    export var HexPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.InputHexProps & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps>;
+    export var HexPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.InputHexProps & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<BABYLON.Color3 | BABYLON.Color4>>;
 
 
 
@@ -9697,35 +9968,15 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        type DropdownPropertyLineProps<V extends BABYLON.NodeEditor.SharedUIComponents.AcceptedDropdownValue> = Omit<BABYLON.NodeEditor.SharedUIComponents.DropdownProps<V>, "includeNullAs"> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps;
+        type DropdownPropertyLineProps<V extends BABYLON.NodeEditor.SharedUIComponents.AcceptedDropdownValue> = Omit<BABYLON.NodeEditor.SharedUIComponents.DropdownProps<V>, "includeNullAs"> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<BABYLON.NodeEditor.SharedUIComponents.AcceptedDropdownValue>;
     /**
-     * Dropdown component for explicitly defined number values.
-     * If value can be undefined, use OptionalNumberDropdownPropertyLine instead.
-     * If value can be null, use NullableNumberDropdownPropertyLine instead.
+     * Dropdown component for number values.
      */
     export var NumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<number>>;
     /**
-     * Dropdown component for explicitly defined string values.
-     * If value can be undefined, use OptionalStringDropdownPropertyLine instead.
-     * If value can be null, use NullableStringDropdownPropertyLine instead.
+     * Dropdown component for string values
      */
     export var StringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<string>>;
-    /**
-     * Dropdown component for BABYLON.Nullable<number> values.
-     */
-    export var NullableNumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<BABYLON.Nullable<number>>>;
-    /**
-     * Dropdown component for BABYLON.Nullable<string> values.
-     */
-    export var NullableStringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<BABYLON.Nullable<string>>>;
-    /**
-     * Dropdown component for number | undefined values
-     */
-    export var OptionalNumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<number | undefined>>;
-    /**
-     * Dropdown component for string | undefined values
-     */
-    export var OptionalStringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<string | undefined>>;
 
 
 
@@ -9735,9 +9986,9 @@ declare module BABYLON.NodeEditor {
 
 }
 declare module BABYLON.NodeEditor.SharedUIComponents {
-        export type ColorPropertyLineProps = BABYLON.NodeEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color3 | BABYLON.Color4> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps;
-    export var Color3PropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color3> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps>;
-    export var Color4PropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color4> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps>;
+        export type ColorPropertyLineProps = BABYLON.NodeEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color3 | BABYLON.Color4> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<BABYLON.Color3 | BABYLON.Color4>;
+    export var Color3PropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color3> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<BABYLON.Color3>>;
+    export var Color4PropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.ColorPickerProps<BABYLON.Color4> & BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<BABYLON.Color4>>;
 
 
 
@@ -9749,10 +10000,10 @@ declare module BABYLON.NodeEditor {
 declare module BABYLON.NodeEditor.SharedUIComponents {
         /**
      * Wraps a checkbox in a property line
-     * @param props - BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps and BABYLON.NodeEditor.SharedUIComponents.CheckboxProps
+     * @param props - BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps and CheckboxProps
      * @returns property-line wrapped checkbox
      */
-    export var CheckboxPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps & BABYLON.NodeEditor.SharedUIComponents.CheckboxProps>;
+    export var CheckboxPropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<boolean> & BABYLON.NodeEditor.SharedUIComponents.PrimitiveProps<boolean>>;
 
 
 
@@ -9767,9 +10018,7 @@ declare module BABYLON.NodeEditor.SharedUIComponents {
      * @param props - The properties for the PropertyLine, including the boolean value to display.
      * @returns A PropertyLine component with a PresenceBadge indicating the boolean state.
      */
-    export var BooleanBadgePropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps & {
-        value: boolean;
-    }>;
+    export var BooleanBadgePropertyLine: React.FunctionComponent<BABYLON.NodeEditor.SharedUIComponents.PropertyLineProps<boolean> & BABYLON.NodeEditor.SharedUIComponents.ImmutablePrimitiveProps<boolean>>;
 
 
 

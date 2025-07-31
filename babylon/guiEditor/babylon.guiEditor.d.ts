@@ -1963,7 +1963,9 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         onFilterChange(evt: React.ChangeEvent<HTMLInputElement>): void;
         onNewNodeRequested(name: string): void;
         onKeyDown(evt: React.KeyboardEvent): void;
-        render(): import("react/jsx-runtime").JSX.Element | null;
+        renderFluent(): import("react/jsx-runtime").JSX.Element;
+        renderOriginal(): import("react/jsx-runtime").JSX.Element | null;
+        render(): import("react/jsx-runtime").JSX.Element;
     }
 
 
@@ -3785,7 +3787,7 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export type TextareaProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<string> & {
+        export type TextareaProps = BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<string> & {
         placeholder?: string;
     };
     /**
@@ -3793,7 +3795,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props
      * @returns
      */
-    export var Textarea: React.FunctionComponent<any>;
+    export var Textarea: React.FunctionComponent<TextareaProps>;
 
 
 
@@ -3803,7 +3805,7 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export type SyncedSliderProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<number> & {
+        export type SyncedSliderProps = BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<number> & {
         /** Minimum value for the slider */
         min?: number;
         /** Maximum value for the slider */
@@ -3828,7 +3830,7 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export type SwitchProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<boolean>;
+        export type SwitchProps = BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<boolean>;
     /**
      * This is a primitive fluent boolean switch component whose only knowledge is the shared styling across all tools
      * @param props
@@ -3844,14 +3846,33 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export type SpinButtonProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<number> & {
+        export type SpinButtonProps = BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<number> & {
         precision?: number;
         step?: number;
         min?: number;
         max?: number;
     };
     export var SpinButton: React.FunctionComponent<SpinButtonProps>;
-    export var SpinButtonPropertyLine: React.FunctionComponent<SpinButtonProps & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type SearchBoxProps = {
+        items: string[];
+        onItemSelected: (item: string) => void;
+        title?: string;
+    };
+    /**
+     * SearchBox component that displays a popup with search functionality
+     * @param props - The component props
+     * @returns The search box component
+     */
+    export var SearchBox: React.FunctionComponent<SearchBoxProps>;
 
 
 
@@ -3865,7 +3886,61 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         onChange: (val: string) => void;
         placeholder?: string;
     };
-    export const SearchBox: (props: SearchProps) => import("react/jsx-runtime").JSX.Element;
+    export var SearchBar: import("react").ForwardRefExoticComponent<SearchProps & import("react").RefAttributes<HTMLInputElement>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type ImmutablePrimitiveProps<ValueT> = {
+        /**
+         * The value of the property to be displayed and modified.
+         */
+        value: ValueT;
+        /**
+         * Optional flag to disable the component, preventing any interaction.
+         */
+        disabled?: boolean;
+        /**
+         * Optional class name to apply custom styles to the component.
+         */
+        className?: string;
+        /**
+         * Optional title for the component, used for tooltips or accessibility.
+         */
+        title?: string;
+    };
+    export type PrimitiveProps<T> = ImmutablePrimitiveProps<T> & {
+        /**
+         * Called when the primitive value changes
+         */
+        onChange: (value: T) => void;
+    };
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type PositionedPopoverProps = {
+        x: number;
+        y: number;
+        visible: boolean;
+        hide: () => void;
+    };
+    /**
+     * PositionedPopover component that shows a popover at specific coordinates
+     * @param props - The component props
+     * @returns The positioned popover component
+     */
+    export var PositionedPopover: React.FunctionComponent<React.PropsWithChildren<PositionedPopoverProps>>;
 
 
 
@@ -3933,7 +4008,28 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export type InputProps<T extends string | number> = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<T> & {
+        type LazyComponentProps = {
+        spinnerSize?: any;
+        spinnerLabel?: string;
+    };
+    /**
+     * Creates a lazy component wrapper that only calls the async function to get the underlying component when the lazy component is actually mounted.
+     * This allows deferring imports until they are needed. While the underlying component is being loaded, a spinner is displayed.
+     * @param getComponentAsync A function that returns a promise resolving to the component.
+     * @param defaultProps Options for the loading spinner.
+     * @returns A React component that displays a spinner while loading the async component.
+     */
+    export function MakeLazyComponent<ComponentT extends React.ComponentType<any>>(getComponentAsync: () => Promise<ComponentT>, defaultProps?: LazyComponentProps): import("react").ForwardRefExoticComponent<import("react").PropsWithoutRef<React.ComponentProps<ComponentT> & LazyComponentProps> & import("react").RefAttributes<React.ElementRef<ComponentT | import("@fluentui/react-utilities").ForwardRefComponent<any>>>>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type InputProps<T extends string | number> = BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<T> & {
         step?: number;
         placeholder?: string;
         min?: number;
@@ -3955,25 +4051,25 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props - Component props containing FactorGradient value and change handler
      * @returns A React component
      */
-    export var FactorGradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<FactorGradient>>;
+    export var FactorGradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<FactorGradient>>;
     /**
      * Component wrapper for Color3Gradient that provides color picker and gradient step slider
      * @param props - Component props containing Color3Gradient value and change handler
      * @returns A React component
      */
-    export var Color3GradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<Color3Gradient>>;
+    export var Color3GradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<Color3Gradient>>;
     /**
      * Component wrapper for BABYLON.ColorGradient that provides color pickers for color1, color2, and gradient step slider
      * @param props - Component props containing BABYLON.ColorGradient value and change handler
      * @returns A React component
      */
-    export var Color4GradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<BABYLON.ColorGradient>>;
+    export var Color4GradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<BABYLON.ColorGradient>>;
     /**
      * Component wrapper for GradientBlockColorStep that provides color picker and step slider
      * @param props - Component props containing GradientBlockColorStep value and change handler
      * @returns A React component
      */
-    export var ColorStepGradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<GradientBlockColorStep>>;
+    export var ColorStepGradientComponent: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<GradientBlockColorStep>>;
 
 
 
@@ -3995,7 +4091,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
          */
         value: DropdownOptionValue;
     };
-    export type DropdownProps<V extends AcceptedDropdownValue> = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<V> & {
+    export type DropdownProps<V extends AcceptedDropdownValue> = BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<V> & {
         options: readonly DropdownOption[];
         includeNullAs?: "null" | "undefined";
     };
@@ -4032,12 +4128,32 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
+        export type ComboBoxProps = {
+        label: string;
+        value: string[];
+        onChange: (value: string) => void;
+    };
+    /**
+     * Wrapper around a Fluent ComboBox that allows for filtering options
+     * @param props
+     * @returns
+     */
+    export var ComboBox: React.FunctionComponent<ComboBoxProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
         export type ColorPickerProps<C extends Color3 | Color4> = {
         isLinearMode?: boolean;
-    } & BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<C>;
+    } & BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<C>;
     export var ColorPickerPopup: React.FunctionComponent<ColorPickerProps<Color3 | Color4>>;
     type HsvKey = "h" | "s" | "v";
-    export type InputHexProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<Color3 | Color4> & {
+    export type InputHexProps = BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<Color3 | Color4> & {
         label?: string;
         linearHex?: boolean;
         isLinearMode?: boolean;
@@ -4075,13 +4191,12 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export type CheckboxProps = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<boolean>;
-    /**
+        /**
      * This is a primitive fluent checkbox that can both read and write checked state
      * @param props
      * @returns Checkbox component
      */
-    export var Checkbox: React.FunctionComponent<CheckboxProps>;
+    export var Checkbox: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<boolean>>;
 
 
 
@@ -4219,7 +4334,7 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export type TensorPropertyLineProps<V extends Vector3 | Vector4 | Quaternion> = BABYLON.GuiEditor.SharedUIComponents.BaseComponentProps<V> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & {
+        export type TensorPropertyLineProps<V extends Vector2 | Vector3 | Vector4 | Quaternion> = BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<V> & BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<V> & {
         /**
          * If passed, all sliders will use this for the min value
          */
@@ -4256,6 +4371,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
         useDegrees?: boolean;
     };
     export var QuaternionPropertyLine: React.FunctionComponent<QuaternionPropertyLineProps>;
+    export var Vector2PropertyLine: React.FunctionComponent<TensorPropertyLineProps<Vector2>>;
     export var Vector3PropertyLine: React.FunctionComponent<TensorPropertyLineProps<Vector3>>;
     export var Vector4PropertyLine: React.FunctionComponent<TensorPropertyLineProps<Vector4>>;
 
@@ -4267,16 +4383,12 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        type TextProps = {
-        value: string;
-        tooltip?: string;
-    };
-    /**
+        /**
      * Wraps text in a property line
      * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and TextProps
      * @returns property-line wrapped text
      */
-    export var TextPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & TextProps>;
+    export var TextPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<string> & BABYLON.GuiEditor.SharedUIComponents.ImmutablePrimitiveProps<string>>;
 
 
 
@@ -4286,7 +4398,22 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        type SyncedSliderPropertyProps = BABYLON.GuiEditor.SharedUIComponents.SyncedSliderProps & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps;
+        /**
+     * Wraps textarea in a property line
+     * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and TextProps
+     * @returns property-line wrapped text
+     */
+    export var TextAreaPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<string> & BABYLON.GuiEditor.SharedUIComponents.TextareaProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type SyncedSliderPropertyProps = BABYLON.GuiEditor.SharedUIComponents.SyncedSliderProps & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<number>;
     /**
      * Renders a simple wrapper around the SyncedSliderInput
      * @param props
@@ -4307,7 +4434,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props - The properties for the switch and property line
      * @returns A React element representing the property line with a switch
      */
-    export var SwitchPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & BABYLON.GuiEditor.SharedUIComponents.SwitchProps>;
+    export var SwitchPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<boolean> & BABYLON.GuiEditor.SharedUIComponents.SwitchProps>;
 
 
 
@@ -4317,7 +4444,37 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export type PropertyLineProps = {
+        type StringifiedPropertyLineProps = BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<number> & BABYLON.GuiEditor.SharedUIComponents.ImmutablePrimitiveProps<number> & {
+        precision?: number;
+        units?: string;
+    };
+    /**
+     * Expects a numerical value and converts it toFixed(if precision is supplied) or toLocaleString
+     * Can pass optional units to be appending to the end of the string
+     * @param props
+     * @returns
+     */
+    export var StringifiedPropertyLine: React.FunctionComponent<StringifiedPropertyLineProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        export var SpinButtonPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<number> & BABYLON.GuiEditor.SharedUIComponents.SpinButtonProps>;
+
+
+
+}
+declare module BABYLON {
+
+
+}
+declare module BABYLON.GuiEditor.SharedUIComponents {
+        type BasePropertyLineProps = {
         /**
          * The name of the property to display in the property line.
          */
@@ -4334,10 +4491,17 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
          * Link to the documentation for this property, available from the info icon either linked from the description (if provided) or default 'docs' text
          */
         docLink?: string;
-    } & ({
-        expandedContent?: undefined;
-        expandByDefault?: never;
-    } | {
+    };
+    type NullableProperty<ValueT> = {
+        nullable: true;
+        value: ValueT;
+        onChange: (value: ValueT) => void;
+        defaultValue?: ValueT;
+    };
+    type NonNullableProperty = {
+        nullable?: false;
+    };
+    type ExpandableProperty = {
         /**
          * If supplied, an 'expand' icon will be shown which, when clicked, renders this component within the property line.
          */
@@ -4346,26 +4510,11 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
          * If true, the expanded content will be shown by default.
          */
         expandByDefault?: boolean;
-    });
-    export var LineContainer: import("react").ForwardRefExoticComponent<Omit<React.PropsWithChildren<React.HTMLProps<HTMLDivElement>>, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
-    export type BaseComponentProps<T> = {
-        /**
-         * The value of the property to be displayed and modified.
-         */
-        value: T;
-        /**
-         * Callback function to handle changes to the value
-         */
-        onChange: (value: T) => void;
-        /**
-         * Optional flag to disable the component, preventing any interaction.
-         */
-        disabled?: boolean;
-        /**
-         * Optional class name to apply custom styles to the component.
-         */
-        className?: string;
     };
+    type NonExpandableProperty = {
+        expandedContent?: undefined;
+    };
+    export type PropertyLineProps<ValueT> = BasePropertyLineProps & (NullableProperty<ValueT> | NonNullableProperty) & (ExpandableProperty | NonExpandableProperty);
     /**
      * A reusable component that renders a property line with a label and child content, and an optional description, copy button, and expandable section.
      *
@@ -4373,8 +4522,9 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @returns A React element representing the property line.
      *
      */
-    export var PropertyLine: import("react").ForwardRefExoticComponent<React.PropsWithChildren<PropertyLineProps> & import("react").RefAttributes<HTMLDivElement>>;
-    export var PlaceholderPropertyLine: React.FunctionComponent<BaseComponentProps<any> & PropertyLineProps>;
+    export var PropertyLine: import("react").ForwardRefExoticComponent<React.PropsWithChildren<PropertyLineProps<any>> & import("react").RefAttributes<HTMLDivElement>>;
+    export var LineContainer: import("react").ForwardRefExoticComponent<Omit<React.PropsWithChildren<React.HTMLProps<HTMLDivElement>>, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
+    export var PlaceholderPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<any> & PropertyLineProps<any>>;
 
 
 
@@ -4384,9 +4534,7 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        type LinkProps = {
-        value: string;
-        tooltip?: string;
+        type LinkProps = BABYLON.GuiEditor.SharedUIComponents.ImmutablePrimitiveProps<string> & {
         onLink?: () => void;
         url?: string;
     };
@@ -4395,7 +4543,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and LinkProps
      * @returns property-line wrapped link
      */
-    export var LinkPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & LinkProps>;
+    export var LinkPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<string> & LinkProps>;
 
 
 
@@ -4410,13 +4558,13 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and BABYLON.GuiEditor.SharedUIComponents.InputProps
      * @returns property-line wrapped input component
      */
-    export var TextInputPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.InputProps<string> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+    export var TextInputPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.InputProps<string> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<string>>;
     /**
      * Wraps a number input in a property line
      * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and BABYLON.GuiEditor.SharedUIComponents.InputProps
      * @returns property-line wrapped input component
      */
-    export var NumberInputPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.InputProps<number> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+    export var NumberInputPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.InputProps<number> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<number>>;
 
 
 
@@ -4431,7 +4579,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and BABYLON.GuiEditor.SharedUIComponents.InputHexProps
      * @returns property-line wrapped input hex component
      */
-    export var HexPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.InputHexProps & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+    export var HexPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.InputHexProps & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<Color3 | Color4>>;
 
 
 
@@ -4441,35 +4589,15 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        type DropdownPropertyLineProps<V extends BABYLON.GuiEditor.SharedUIComponents.AcceptedDropdownValue> = Omit<BABYLON.GuiEditor.SharedUIComponents.DropdownProps<V>, "includeNullAs"> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps;
+        type DropdownPropertyLineProps<V extends BABYLON.GuiEditor.SharedUIComponents.AcceptedDropdownValue> = Omit<BABYLON.GuiEditor.SharedUIComponents.DropdownProps<V>, "includeNullAs"> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<BABYLON.GuiEditor.SharedUIComponents.AcceptedDropdownValue>;
     /**
-     * Dropdown component for explicitly defined number values.
-     * If value can be undefined, use OptionalNumberDropdownPropertyLine instead.
-     * If value can be null, use NullableNumberDropdownPropertyLine instead.
+     * Dropdown component for number values.
      */
     export var NumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<number>>;
     /**
-     * Dropdown component for explicitly defined string values.
-     * If value can be undefined, use OptionalStringDropdownPropertyLine instead.
-     * If value can be null, use NullableStringDropdownPropertyLine instead.
+     * Dropdown component for string values
      */
     export var StringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<string>>;
-    /**
-     * Dropdown component for Nullable<number> values.
-     */
-    export var NullableNumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<Nullable<number>>>;
-    /**
-     * Dropdown component for Nullable<string> values.
-     */
-    export var NullableStringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<Nullable<string>>>;
-    /**
-     * Dropdown component for number | undefined values
-     */
-    export var OptionalNumberDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<number | undefined>>;
-    /**
-     * Dropdown component for string | undefined values
-     */
-    export var OptionalStringDropdownPropertyLine: React.FunctionComponent<DropdownPropertyLineProps<string | undefined>>;
 
 
 
@@ -4479,9 +4607,9 @@ declare module BABYLON {
 
 }
 declare module BABYLON.GuiEditor.SharedUIComponents {
-        export type ColorPropertyLineProps = BABYLON.GuiEditor.SharedUIComponents.ColorPickerProps<Color3 | Color4> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps;
-    export var Color3PropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.ColorPickerProps<Color3> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
-    export var Color4PropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.ColorPickerProps<Color4> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps>;
+        export type ColorPropertyLineProps = BABYLON.GuiEditor.SharedUIComponents.ColorPickerProps<Color3 | Color4> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<Color3 | Color4>;
+    export var Color3PropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.ColorPickerProps<Color3> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<Color3>>;
+    export var Color4PropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.ColorPickerProps<Color4> & BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<Color4>>;
 
 
 
@@ -4493,10 +4621,10 @@ declare module BABYLON {
 declare module BABYLON.GuiEditor.SharedUIComponents {
         /**
      * Wraps a checkbox in a property line
-     * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and BABYLON.GuiEditor.SharedUIComponents.CheckboxProps
+     * @param props - BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps and CheckboxProps
      * @returns property-line wrapped checkbox
      */
-    export var CheckboxPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & BABYLON.GuiEditor.SharedUIComponents.CheckboxProps>;
+    export var CheckboxPropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<boolean> & BABYLON.GuiEditor.SharedUIComponents.PrimitiveProps<boolean>>;
 
 
 
@@ -4511,9 +4639,7 @@ declare module BABYLON.GuiEditor.SharedUIComponents {
      * @param props - The properties for the PropertyLine, including the boolean value to display.
      * @returns A PropertyLine component with a PresenceBadge indicating the boolean state.
      */
-    export var BooleanBadgePropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps & {
-        value: boolean;
-    }>;
+    export var BooleanBadgePropertyLine: React.FunctionComponent<BABYLON.GuiEditor.SharedUIComponents.PropertyLineProps<boolean> & BABYLON.GuiEditor.SharedUIComponents.ImmutablePrimitiveProps<boolean>>;
 
 
 
